@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Media Upload Form</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg1: #000000;
+      --bg2: #1a1a1a;
+      --bg3: #2b2b2b;
+      --text: #ffffff;
+      --muted: #bfbfbf;
+      --panel: rgba(255, 255, 255, 0.06);
+      --accent: #ff6a00;
+      --accent-hover: #ff2d55;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: radial-gradient(circle at top, var(--bg3), var(--bg1));
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .upload-container {
+      background: var(--panel);
+      backdrop-filter: blur(12px);
+      border-radius: 20px;
+      padding: 35px;
+      width: 450px;
+      box-shadow: 0 0 25px rgba(0,0,0,0.6);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    h2 {
+      text-align: center;
+      color: var(--accent);
+      margin-bottom: 30px;
+      font-weight: 600;
+      letter-spacing: 1px;
+    }
+
+    label {
+      margin-top: 15px;
+      display: block;
+      font-size: 14px;
+      opacity: 0.9;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    input[type="text"],
+    select,
+    textarea,
+    input[type="file"] {
+      width: 100%;
+      padding: 12px;
+      margin-top: 6px;
+      border-radius: 10px;
+      border: none;
+      outline: none;
+      background: rgba(255, 255, 255, 0.12);
+      color: #fff;
+      font-size: 14px;
+      box-shadow: 0 0 8px rgba(0,0,0,0.3);
+    }
+
+    textarea { resize: none; }
+
+    select option { background: var(--bg2); color: #fff; }
+
+    button {
+      width: 100%;
+      margin-top: 25px;
+      padding: 12px;
+      font-size: 16px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      background: var(--accent);
+      color: #101010;
+      font-weight: bold;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      transform: scale(1.05);
+      background: var(--accent-hover);
+      color: #fff;
+    }
+
+    /* Media preview box */
+    .preview-container {
+      margin-top: 15px;
+      text-align: center;
+    }
+
+    .preview-container video,
+    .preview-container img,
+    .preview-container audio {
+      max-width: 100%;
+      max-height: 200px;
+      margin-top: 10px;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: var(--bg2);
+    }
+
+    /* Scrollbar for textarea if needed */
+    textarea { overflow-y: auto; }
+
+    @media(max-width: 500px){
+      .upload-container { width: 90%; padding: 25px; }
+    }
+
+  </style>
+</head>
+<body>
+
+  <div class="upload-container">
+    <h2>Upload Your Media 📁</h2>
+
+    <form action="/upload/" method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
+
+      <label>Name</label>
+      <input type="text" name="name" required>
+
+      <label>Media Type</label>
+      <select name="mediatype" required>
+        <option value="">Select Type</option>
+        <option value="video">Video</option>
+        <option value="image">Image</option>
+        <option value="audio">Audio</option>
+      </select>
+
+      <label>Category</label>
+      <select name="category" required>
+        <option value="">Select Category</option>
+        <option value="entertainment">Entertainment</option>
+        <option value="news">News</option>
+        <option value="petsandanimals">Pet & Animals</option>
+        <option value="education">Education</option>
+        <option value="music">Music</option>
+        <option value="gaming">Gaming</option>
+        <option value="sports">Sports</option>
+        <option value="advertisement">Advertisement</option>
+        <option value="travel">Travel</option>
+      </select>
+
+      <label>Description</label>
+      <textarea name="description" rows="4" required></textarea>
+
+      <label>Browse Media File</label>
+      <input type="file" name="media" accept="audio/*,video/*,image/*" required onchange="previewMedia(event)">
+
+      <!-- Media Preview -->
+      <div class="preview-container" id="previewContainer"></div>
+
+      <button type="submit">Upload</button>
+
+    </form>
+  </div>
+
+<script>
+function previewMedia(event) {
+    const previewContainer = document.getElementById('previewContainer');
+    previewContainer.innerHTML = ''; // Clear previous preview
+
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const fileType = file.type;
+
+    if (fileType.startsWith('video/')) {
+        const video = document.createElement('video');
+        video.src = URL.createObjectURL(file);
+        video.controls = true;
+        previewContainer.appendChild(video);
+    } else if (fileType.startsWith('image/')) {
+        const img = document.createElement('img');
+        img.src = URL.createObjectURL(file);
+        previewContainer.appendChild(img);
+    } else if (fileType.startsWith('audio/')) {
+        const audio = document.createElement('audio');
+        audio.src = URL.createObjectURL(file);
+        audio.controls = true;
+        previewContainer.appendChild(audio);
+    } else {
+        previewContainer.innerText = "Preview not available for this file type.";
+    }
+}
+</script>
+
+</body>
+</html>

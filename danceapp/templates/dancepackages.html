@@ -1,0 +1,279 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Dance Package Form</title>
+
+<style>
+:root{
+  --gap: 18px;
+  --label-w: 140px;
+  --bg1:#000000;
+  --bg2:#1a1a1a;
+  --bg3:#2b2b2b;
+  --text:#ffffff;
+  --muted:#bfbfbf;
+  --panel:rgba(255,255,255,0.06);
+  --border:rgba(255,255,255,0.15);
+}
+
+body{
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto;
+  background: linear-gradient(135deg,var(--bg1),var(--bg2),var(--bg3));
+  margin:0;
+  padding:28px;
+  color:var(--text);
+  min-height:100vh;
+}
+
+.container{
+  max-width:720px;
+  margin:18px auto;
+  background:var(--panel);
+  border-radius:16px;
+  padding:26px;
+  border:1px solid var(--border);
+  box-shadow:0 0 30px rgba(255,255,255,0.08);
+  backdrop-filter: blur(14px);
+}
+
+h1{
+  margin:0 0 16px 0;
+  font-size:22px;
+  color:#ffffff;
+  letter-spacing:1px;
+}
+
+form { 
+  display:grid; 
+  gap:var(--gap); 
+}
+
+.row{ 
+  display:flex; 
+  gap:16px; 
+  flex-wrap:wrap; 
+}
+
+label{
+  width:var(--label-w);
+  font-weight:600;
+  color:var(--muted);
+  margin-top:6px;
+}
+
+.control{ 
+  flex:1; 
+  min-width:180px; 
+}
+
+input[type="text"],
+input[type="number"],
+select,
+textarea{
+  width:100%;
+  padding:11px 12px;
+  border-radius:10px;
+  border:1px solid var(--border);
+  font-size:14px;
+  background:rgba(255,255,255,0.05);
+  color:#ffffff;
+  outline:none;
+  transition:0.3s;
+}
+
+/* Dropdown fix */
+select option{
+  background:#1a1a1a;
+  color:#ffffff;
+}
+
+input:focus,
+select:focus,
+textarea:focus{
+  border-color:#ffffff;
+  box-shadow:0 0 8px rgba(255,255,255,0.3);
+}
+
+textarea{ 
+  min-height:140px; 
+  resize:vertical; 
+}
+
+.desc-wrap{ 
+  display:flex; 
+  gap:16px; 
+  width:100%; 
+  flex-wrap:wrap; 
+}
+
+.image-box{
+  width:160px;
+  height:140px;
+  border:1px dashed rgba(255,255,255,0.3);
+  border-radius:10px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:rgba(255,255,255,0.05);
+  color:var(--muted);
+  overflow:hidden;
+  transition:0.3s;
+}
+
+.image-box:hover{
+  background:rgba(255,255,255,0.1);
+}
+
+.image-box img{ 
+  max-width:100%; 
+  max-height:100%; 
+}
+
+.file-row{ 
+  display:flex; 
+  flex-direction:column; 
+  margin-top:6px; 
+}
+
+small{
+  color:var(--muted);
+}
+
+.btn{
+  background:#ffffff;
+  color:#000000;
+  border:none;
+  padding:11px 22px;
+  border-radius:25px;
+  font-weight:600;
+  cursor:pointer;
+  transition:0.3s;
+}
+
+.btn:hover{
+  background:#e6e6e6;
+  transform:scale(1.05);
+}
+
+@media(max-width:600px){
+  label{
+    width:100%;
+  }
+}
+</style>
+</head>
+
+<body>
+<div class="container">
+<h1>Dance Packages</h1>
+
+{% if trainer_name %}
+<p style="color:var(--muted); margin-bottom:10px;">
+Logged in as: <strong>{{ trainer_name }}</strong>
+</p>
+{% endif %}
+
+<form id="packageForm" method="POST" enctype="multipart/form-data">
+{% csrf_token %}
+
+<div class="row">
+<label>Trainer ID</label>
+<div class="control">
+<input type="text" value="{{ trainer_id }}" readonly />
+</div>
+</div>
+
+<div class="row">
+<label>Package Name</label>
+<div class="control">
+<input type="text" name="packageName" placeholder="Enter package name" />
+</div>
+</div>
+
+<div class="row">
+<label>Description</label>
+<div class="control desc-wrap">
+<textarea name="description" placeholder="Write a short description..."></textarea>
+
+<div>
+<div class="image-box" id="imagePreviewBox">
+<span>No image</span>
+</div>
+
+<div class="file-row">
+<input id="imageFile" name="imageFile" type="file" accept="image/*" />
+<small>Preview appears above.</small>
+</div>
+</div>
+</div>
+</div>
+
+<div class="row">
+<label>ID</label>
+<div class="control">
+<input type="text" name="itemId" placeholder="e.g. PKG-001" />
+</div>
+</div>
+
+<div class="row">
+<label>Fees</label>
+<div class="control">
+<input type="number" name="fees" min="0" placeholder="Amount (₹)" />
+</div>
+</div>
+
+<div class="row">
+<label>Duration</label>
+<div class="control">
+<input type="text" name="duration" placeholder="e.g. 3 months / 12 sessions" />
+</div>
+</div>
+
+<div class="row">
+<label>How</label>
+<div class="control">
+<input type="text" name="how" placeholder="How the package is delivered" />
+</div>
+</div>
+
+<div class="row">
+<label>Type</label>
+<div class="control">
+<select name="type">
+<option value="">Select type</option>
+<option value="beginner">Beginner</option>
+<option value="intermediate">Intermediate</option>
+<option value="advanced">Advanced</option>
+<option value="workshop">Workshop</option>
+</select>
+</div>
+</div>
+
+<div class="row" style="justify-content:center;">
+<button type="submit" class="btn">Submit</button>
+</div>
+
+</form>
+</div>
+
+<script>
+const imageFile = document.getElementById('imageFile');
+const imagePreviewBox = document.getElementById('imagePreviewBox');
+
+imageFile.addEventListener('change', e => {
+  const file = e.target.files[0];
+  if(file){
+    const img = document.createElement('img');
+    img.src = URL.createObjectURL(file);
+    imagePreviewBox.innerHTML = '';
+    imagePreviewBox.appendChild(img);
+  } else {
+    imagePreviewBox.innerHTML = 'No image';
+  }
+});
+</script>
+
+</body>
+</html>

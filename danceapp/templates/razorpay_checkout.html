@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Razorpay Payment</title>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+</head>
+<body>
+  <script>
+    var options = {
+        "key": "{{ api_key }}",
+        "amount": "{{ amount|floatformat:2|floatformat:'0' }}00",
+        "currency": "INR",
+        "name": "My Shop",
+        "description": "Product Payment",
+        "order_id": "{{ order_id }}",
+        "handler": function (response){
+            // Redirect based on whether single buy (id is passed) or group buy
+            {% if id %}
+                window.location.href = "/payment_success/{{ id }}/";
+            {% else %}
+                window.location.href = "/payment_success/";
+            {% endif %}
+        },
+        "prefill": {
+            "name": "{{ user.name }}",
+            "email": "{{ user.email }}"
+        },
+        "theme": {
+            "color": "#F37254"
+        }
+    };
+    var rzp1 = new Razorpay(options);
+    rzp1.open();
+</script>
+
+</body>
+</html>

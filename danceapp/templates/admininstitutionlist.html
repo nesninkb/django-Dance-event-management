@@ -1,0 +1,198 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin – Institution List</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --bg-dark: #000000;
+  --panel: rgba(255,255,255,0.05);
+  --card-bg: rgba(255,255,255,0.03);
+  --text: #ffffff;
+  --muted: #cccccc;
+  --accent: #ffffff;
+  --approved: #ffffff;
+  --rejected: #888888;
+  --pending: #dddddd;
+  --radius: 12px;
+  --shadow: 0 10px 30px rgba(0,0,0,0.8);
+}
+
+body {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  background: #000;
+  color: var(--text);
+  padding: 30px;
+  display: flex;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+/* Container */
+.container {
+  width: 100%;
+  max-width: 1000px;
+  background: var(--panel);
+  backdrop-filter: blur(10px);
+  border-radius: var(--radius);
+  padding: 25px;
+  box-shadow: var(--shadow);
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+/* Heading */
+h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 26px;
+  font-weight: 700;
+  color: #fff;
+}
+
+/* Back button */
+.back-btn {
+  display: inline-block;
+  background: #ffffff;
+  color: #000;
+  padding: 12px 24px;
+  text-decoration: none;
+  border-radius: var(--radius);
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 20px;
+  transition: 0.3s;
+}
+
+.back-btn:hover {
+  background: #dddddd;
+  transform: scale(1.05);
+}
+
+/* Table styles */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+
+th, td {
+  padding: 14px 12px;
+  text-align: left;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+th {
+  background: #ffffff;
+  color: #000;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+tr:hover {
+  background: rgba(255,255,255,0.05);
+}
+
+/* Badges */
+.badge {
+  padding: 5px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #000;
+}
+
+.approved { background: #ffffff; }
+.rejected { background: #888888; color:#fff; }
+.pending { background: #dddddd; }
+
+/* Action buttons */
+.btn {
+  padding: 6px 12px;
+  border-radius: var(--radius);
+  border: none;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  color: #000;
+  margin-right: 5px;
+  transition: 0.3s;
+}
+
+.approve-btn { background: #ffffff; }
+.approve-btn:hover { background:#dcdcdc; transform: scale(1.05); }
+
+.reject-btn { background: #aaaaaa; color:#fff; }
+.reject-btn:hover { background:#888888; transform: scale(1.05); }
+
+.delete-btn { background: #555555; color:#fff; }
+.delete-btn:hover { background:#333333; transform: scale(1.05); }
+
+/* Responsive */
+@media(max-width: 768px) {
+  th, td { font-size: 13px; padding: 10px; }
+  .btn { padding: 5px 10px; font-size: 12px; }
+}
+</style>
+</head>
+
+<body>
+<div class="container">
+  <a href="/adminhome/" class="back-btn">Back</a>
+
+  <h2>Registered Dance Institutions</h2>
+
+  <table>
+      <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Owner</th>
+          <th>Email</th>
+          <th>Phone</th>
+          <th>Status</th>
+          <th>Actions</th>
+      </tr>
+
+      {% for inst in institutions %}
+      <tr>
+          <td>{{ inst.id }}</td>
+          <td>{{ inst.name }}</td>
+          <td>{{ inst.owner_name }}</td>
+          <td>{{ inst.email }}</td>
+          <td>{{ inst.phone }}</td>
+          <td>
+              {% if inst.isapproved %}
+                  <span class="badge approved">Approved</span>
+              {% elif inst.isrejected %}
+                  <span class="badge rejected">Rejected</span>
+              {% else %}
+                  <span class="badge pending">Pending</span>
+              {% endif %}
+          </td>
+          <td>
+              {% if not inst.isapproved %}
+                  <a href="{% url 'approveinstitution' inst.id %}" class="btn approve-btn">Approve</a>
+              {% endif %}
+              {% if not inst.isrejected %}
+                  <a href="{% url 'rejectinstitution' inst.id %}" class="btn reject-btn">Reject</a>
+              {% endif %}
+              <a href="{% url 'deleteinstitution' inst.id %}" class="btn delete-btn"
+                 onclick="return confirm('Are you sure you want to delete this institution?');">
+                  Delete
+              </a>
+          </td>
+      </tr>
+      {% endfor %}
+  </table>
+
+</div>
+</body>
+</html>

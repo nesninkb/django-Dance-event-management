@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Upload Media</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root {
+    --bg1: #000000;
+    --bg2: #1a1a1a;
+    --bg3: #2b2b2b;
+    --text: #0e0c0c;
+    --muted: #bfbfbf;
+    --accent1: #ff0099;
+    --accent2: #7a00ff;
+    --panel: rgba(255,255,255,0.05);
+    --radius: 20px;
+}
+
+/* Global */
+* {
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins', sans-serif;
+}
+
+body {
+    background: radial-gradient(circle at top, var(--bg3), var(--bg1));
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 30px 15px;
+}
+
+/* Container */
+.container {
+    width: 100%;
+    max-width: 550px;
+    background: var(--panel);
+    border-radius: var(--radius);
+    border: 1px solid rgba(255,255,255,0.15);
+    backdrop-filter: blur(20px);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.6);
+    overflow: hidden;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+.container:hover {
+    transform: scale(1.02);
+    box-shadow: 0 25px 50px rgba(0,0,0,0.8);
+}
+
+/* Header */
+.header {
+    background: linear-gradient(90deg, var(--accent1), var(--accent2));
+    color: #fff;
+    padding: 24px 32px;
+    text-align: center;
+    font-weight: 600;
+    font-size: 1.8rem;
+    border-bottom: 1px solid rgba(255,255,255,0.2);
+    border-radius: var(--radius) var(--radius) 0 0;
+}
+
+/* Form Content */
+.form-content {
+    padding: 32px;
+}
+
+label {
+    display: block;
+    margin: 1.5rem 0 0.5rem;
+    font-weight: 600;
+    color: var(--accent2);
+    font-size: 0.95rem;
+}
+
+input[type="text"],
+input[type="file"],
+select,
+textarea {
+    width: 100%;
+    padding: 12px 14px;
+    border-radius: 15px;
+    border: 1px solid rgba(255,255,255,0.15);
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background: rgba(245, 239, 239, 0.979);
+    color: var(--text);
+}
+
+/* Glow effect on focus & hover */
+input[type="text"]:focus,
+input[type="text"]:hover,
+select:focus,
+select:hover,
+textarea:focus,
+textarea:hover,
+input[type="file"]:hover {
+    outline: none;
+    border-color: var(--accent1);
+    box-shadow: 0 0 12px var(--accent1);
+    background: rgba(255,255,255,0.12);
+}
+
+/* Textarea */
+textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+/* Buttons */
+button {
+    margin-top: 2rem;
+    width: 100%;
+    padding: 14px;
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--text);
+    background: linear-gradient(90deg, var(--accent1), var(--accent2));
+    border: none;
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: all 0.25s ease;
+    box-shadow: 0 4px 10px rgba(255,0,150,0.4);
+}
+button:hover {
+    background: linear-gradient(90deg, var(--accent2), var(--accent1));
+    transform: translateY(-2px);
+    box-shadow: 0 12px 20px rgba(255,0,200,0.6);
+}
+button:active {
+    transform: translateY(0);
+}
+
+/* Back button */
+.back-button {
+    display: inline-block;
+    margin-bottom: 1.5rem;
+    padding: 10px 16px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--accent2);
+    background: transparent;
+    border-radius: 15px;
+    text-decoration: none;
+    border: 1px solid var(--accent1);
+    transition: all 0.2s ease;
+}
+.back-button:hover {
+    background: var(--accent1);
+    color: #fff;
+    box-shadow: 0 0 15px var(--accent1);
+    transform: translateY(-2px);
+}
+
+/* Field hint */
+.field-hint {
+    font-size: 0.82rem;
+    color: var(--muted);
+    margin-top: 6px;
+}
+
+/* Responsive */
+@media(max-width:480px){
+    .form-content { padding: 24px; }
+    .header { font-size: 1.6rem; }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">Upload Media</div>
+
+    <div class="form-content">
+        <a href="/user_my_reels/" class="back-button">← Back</a>
+
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <label for="name">Name / Title</label>
+            <input type="text" id="name" name="name" required placeholder="e.g. Funny Cat Compilation 2025">
+
+            <label for="mediatype">Media Type</label>
+            <select id="mediatype" name="mediatype" required>
+                <option value="">— Select Type —</option>
+                <option value="video">Video</option>
+                <option value="image">Image</option>
+                <option value="audio">Audio</option>
+            </select>
+
+            <label for="category">Category</label>
+            <select name="category" required>
+                <option value="entertainment">Entertainment</option>
+                <option value="news">News</option>
+                <option value="petsandanimals">Pets & Animals</option>
+                <option value="education">Education</option>
+                <option value="music">Music</option>
+                <option value="gaming">Gaming</option>
+                <option value="sports">Sports</option>
+                <option value="advertisement">Advertisement</option>
+                <option value="travel">Travel</option>
+            </select>
+
+            <label for="description">Description</label>
+            <textarea id="description" name="description" rows="4" required placeholder="Brief description of the content..."></textarea>
+
+            <label for="media">Media File</label>
+            <input type="file" id="media" name="media" accept="audio/*,video/*,image/*" required>
+            <div class="field-hint">Max size: usually 100–500 MB depending on your server settings</div>
+
+            <button type="submit">Upload Media</button>
+        </form>
+    </div>
+</div>
+
+</body>
+</html>

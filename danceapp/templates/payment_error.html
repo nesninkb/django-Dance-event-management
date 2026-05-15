@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Payment Error</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-red-50 min-h-screen flex flex-col items-center justify-center">
+  <div class="bg-white p-8 rounded-lg shadow-xl text-center">
+    <h1 class="text-3xl text-red-700 font-bold mb-4">Payment Failed!</h1>
+
+    <p class="text-lg text-gray-700">
+      {% if user %}
+        Sorry, {{ user.name }}, your payment could not be processed.
+      {% else %}
+        Sorry, your payment could not be processed.
+      {% endif %}
+    </p>
+
+    {% if error %}
+      <p class="text-red-600 mt-2">{{ error }}</p>
+    {% endif %}
+
+    <a href="/listcostumes/" class="mt-6 inline-block bg-red-600 text-white px-6 py-2 rounded-full hover:bg-red-700">
+      Back to Home
+    </a>
+  </div>
+</body>
+</html>

@@ -1,0 +1,291 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Select Seats – {{ booking.event.name }}</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+<style>
+:root {
+    --primary: #3f7fff;
+    --secondary: #0985c9;
+}
+
+body {
+    background-image: linear-gradient(rgba(0,0,0,.6), rgba(0,0,0,.6)),
+        url('https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1');
+    background-size: cover;
+    background-attachment: fixed;
+    min-height: 100vh;
+    color: white;
+    padding: 40px 20px;
+}
+
+.container { max-width: 1000px; margin: auto; }
+
+.seat-container {
+    background: rgba(255,255,255,.12);
+    backdrop-filter: blur(20px);
+    border-radius: 20px;
+    padding: 30px;
+    text-align: center;
+}
+
+.seat-grid {
+    display: grid;
+    grid-template-columns: repeat(5,1fr);
+    gap: 12px;
+    max-width: 600px;
+    margin: 20px auto;
+}
+
+.seat {
+    width: 70px;
+    height: 70px;
+    border-radius: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.seat.available { background: #10b981; }
+.seat.booked { background: #ef4444; cursor: not-allowed; }
+.seat.selected { background: #3b82f6; }
+
+.pay-btn {
+    margin-top: 30px;
+    padding: 16px 40px;
+    background: linear-gradient(90deg,var(--primary),var(--secondary));
+    border-radius: 12px;
+    border: none;
+    font-size: 1.2rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+.pay-btn:disabled { background: gray; cursor: not-allowed; }
+.row-highlight {
+    background: rgba(255,255,255,0.15);
+    border-radius: 15px;
+    padding: 10px;
+}
+.back-btn {
+    display: inline-block;
+    margin-bottom: 20px;
+    padding: 10px 22px;
+    border-radius: 12px;
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(10px);
+    color: white;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.back-btn:hover {
+    background: linear-gradient(90deg,var(--primary),var(--secondary));
+    transform: translateY(-2px);
+}
+</style>
+</head>
+
+<body>
+<div class="container">
+<a href="{% url 'usereventlist' %}" class="back-btn">
+    ← Back to Events
+</a>
+    <h1 class="text-center text-3xl mb-4">Select Seats</h1>
+    <p class="text-center mb-6">
+        {{ booking.event.name }} – {{ booking.event.location }}<br>
+        {{ booking.event.date|date:"d M Y" }}
+    </p>
+
+    <div class="seat-container">
+        <!-- AUTO SEAT SELECT -->
+<div style="margin-bottom:20px;">
+    <input type="text" id="startSeat"
+        placeholder="Start Seat (e.g. A1)"
+        style="padding:8px;border-radius:6px;color:black;width:150px;">
+
+    <input type="number" id="seatCount"
+        placeholder="Count"
+        min="1"
+        style="padding:8px;border-radius:6px;color:black;width:100px;">
+
+    <button onclick="autoSelectSeats()"
+        style="padding:8px 15px;border-radius:6px;background:#3b82f6;">
+        Auto Select
+    </button>
+</div>
+        <div class="seat-grid">
+            {% for seat in venue.seat_layout %}
+                {% if seat in booking.event.booked_venue %}
+                    <div class="seat booked">{{ seat }}</div>
+                {% elif seat in booking.seats %}
+                    <div class="seat selected" data-seat="{{ seat }}" data-row="{{ seat|slice:':1' }}">
+                        {{ seat }}
+                    </div>
+                {% else %}
+                    <div class="seat available" data-seat="{{ seat }}" data-row="{{ seat|slice:':1' }}">
+                        {{ seat }}
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+
+        <p>Selected: <span id="selectedSeats">None</span></p>
+        <h2 class="text-2xl mt-4">₹<span id="totalPrice">0</span></h2>
+
+        <button id="payButton" class="pay-btn" disabled>
+            Confirm & Pay 💳
+        </button>
+    </div>
+</div>
+
+<script>
+let selectedSeats = JSON.parse('{{ booking.seats|default:"[]"|escapejs }}');
+const pricePerSeat = {{ booking.event.totalprice|default:booking.event.priceperperson|default:0 }};
+const selectedSeatsDisplay = document.getElementById('selectedSeats');
+const totalPriceDisplay = document.getElementById('totalPrice');
+const payButton = document.getElementById('payButton');
+
+document.querySelectorAll('.seat.available, .seat.selected').forEach(seat => {
+    if (!seat.dataset.seat) return;
+
+    seat.onclick = () => {
+        const code = seat.dataset.seat;
+
+        if (selectedSeats.includes(code)) {
+            selectedSeats = selectedSeats.filter(s => s !== code);
+            seat.className = 'seat available';
+        } else {
+            selectedSeats.push(code);
+            seat.className = 'seat selected';
+        }
+
+        updateUI();
+    };
+});
+
+function updateUI() {
+    selectedSeatsDisplay.innerText =
+        selectedSeats.length ? selectedSeats.join(', ') : 'None';
+
+    totalPriceDisplay.innerText =
+        selectedSeats.length * pricePerSeat;
+
+    payButton.disabled = selectedSeats.length === 0;
+
+    updateRowHighlight();   // ADD THIS LINE
+}
+function updateRowHighlight() {
+
+    // Remove old highlights
+    document.querySelectorAll('.seat').forEach(seat => {
+        seat.style.boxShadow = '';
+    });
+
+    const rows = {};
+
+    selectedSeats.forEach(seatCode => {
+        const row = seatCode.match(/^([A-Z]+)/)[1];
+        if (!rows[row]) rows[row] = [];
+        rows[row].push(seatCode);
+    });
+
+    Object.keys(rows).forEach(row => {
+
+        document.querySelectorAll(`.seat[data-row="${row}"]`)
+            .forEach(seat => {
+                seat.style.boxShadow = "0 0 15px 4px rgba(59,130,246,0.6)";
+            });
+
+    });
+}
+
+payButton.onclick = () => {
+    fetch("{% url 'create_razorpay_order' booking.id %}", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": "{{ csrf_token }}"
+        },
+        body: JSON.stringify({ amount: selectedSeats.length * pricePerSeat })
+    })
+    .then(res => res.json())
+    .then(order => {
+        new Razorpay({
+            key: "rzp_test_X5OfG2jiWrAzSj",
+            order_id: order.id,
+            amount: order.amount,
+            handler: response => {
+                fetch("", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded",
+                        "X-CSRFToken": "{{ csrf_token }}"
+                    },
+                    body: new URLSearchParams({
+                        selected_seats: JSON.stringify(selectedSeats),
+                        razorpay_payment_id: response.razorpay_payment_id
+                    })
+                })
+                .then(() => window.location.href = "{% url 'user_my_bookings' %}");
+            }
+        }).open();
+    });
+};
+
+updateUI();
+function autoSelectSeats() {
+
+    const startSeat = document.getElementById('startSeat').value.trim().toUpperCase();
+    const count = parseInt(document.getElementById('seatCount').value);
+
+    if (!startSeat || !count || count <= 0) {
+        alert("Enter valid seat name and count");
+        return;
+    }
+
+    const match = startSeat.match(/^([A-Z]+)(\d+)$/);
+
+    if (!match) {
+        alert("Invalid seat format. Example: A1");
+        return;
+    }
+
+    const row = match[1];
+    let number = parseInt(match[2]);
+
+    for (let i = 0; i < count; i++) {
+
+        const seatCode = row + (number + i);
+
+        const seatElement = document.querySelector(`[data-seat="${seatCode}"]`);
+
+        if (!seatElement) {
+            alert("Seat " + seatCode + " does not exist");
+            break;
+        }
+
+        if (seatElement.classList.contains('booked')) {
+            alert("Seat " + seatCode + " already booked");
+            break;
+        }
+
+        if (!selectedSeats.includes(seatCode)) {
+            selectedSeats.push(seatCode);
+            seatElement.className = 'seat selected';
+        }
+    }
+
+    updateUI();
+}
+</script>
+</body>
+</html>

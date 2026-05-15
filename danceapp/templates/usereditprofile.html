@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Edit Profile - Trainer Dashboard</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root{
+--bg1:#000000;
+--bg2:#1a1a1a;
+--panel:rgba(255,255,255,0.06);
+--text:#ffffff;
+--muted:#bfbfbf;
+--accent:#ff0099;
+--accent2:#7a00ff;
+--radius:20px;
+}
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Poppins',sans-serif;
+}
+
+body{
+background:radial-gradient(circle at top,var(--bg2),var(--bg1));
+color:var(--text);
+min-height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+padding:30px 15px;
+}
+
+.container{
+width:100%;
+max-width:440px;
+background:var(--panel);
+border-radius:var(--radius);
+border:1px solid rgba(255,255,255,0.15);
+backdrop-filter:blur(18px);
+box-shadow:0 15px 40px rgba(0,0,0,0.6);
+overflow:hidden;
+}
+
+.header{
+background:linear-gradient(90deg,var(--accent),var(--accent2));
+color:#fff;
+padding:24px 32px;
+text-align:center;
+}
+
+.header h1{
+font-size:1.8rem;
+font-weight:600;
+}
+
+.form-content{
+padding:32px;
+}
+
+label{
+display:block;
+margin:1.2rem 0 0.4rem;
+font-weight:600;
+color:var(--accent2);
+font-size:0.95rem;
+}
+
+input[type="text"],
+input[type="email"],
+textarea{
+width:100%;
+padding:12px 14px;
+border-radius:12px;
+border:1px solid rgba(255,255,255,0.15);
+font-size:1rem;
+background:rgba(255,255,255,0.05);
+color:var(--text);
+}
+
+input:focus,textarea:focus{
+outline:none;
+border-color:var(--accent);
+box-shadow:0 0 10px var(--accent);
+background:rgba(255,255,255,0.1);
+}
+
+textarea{
+min-height:80px;
+resize:vertical;
+}
+
+.avatar-wrapper{
+display:flex;
+justify-content:center;
+margin-bottom:20px;
+position:relative;
+}
+
+.avatar{
+width:100px;
+height:100px;
+border-radius:50%;
+border:3px solid var(--accent);
+object-fit:cover;
+box-shadow:0 0 15px var(--accent);
+}
+
+.edit-icon{
+position:absolute;
+bottom:0;
+right:35%;
+background:var(--accent);
+color:black;
+border-radius:50%;
+padding:6px;
+cursor:pointer;
+font-size:14px;
+}
+
+button{
+margin-top:2rem;
+width:100%;
+padding:14px;
+font-size:1.05rem;
+font-weight:600;
+color:white;
+background:linear-gradient(90deg,var(--accent),var(--accent2));
+border:none;
+border-radius:var(--radius);
+cursor:pointer;
+}
+
+button:hover{
+transform:translateY(-2px);
+box-shadow:0 10px 20px rgba(255,0,200,0.5);
+}
+
+@media(max-width:480px){
+.form-content{padding:24px;}
+.header h1{font-size:1.6rem;}
+.avatar{width:90px;height:90px;}
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="header">
+<h1>Edit Profile</h1>
+</div>
+
+<div class="form-content">
+
+<form method="POST" enctype="multipart/form-data">
+{% csrf_token %}
+
+<!-- PROFILE IMAGE -->
+<div class="avatar-wrapper">
+{% if client.image %}
+<img src="{{client.image.url}}" class="avatar" alt="Avatar">
+{% else %}
+<img src="https://cdn-icons-png.flaticon.com/512/149/149071.png" class="avatar">
+{% endif %}
+
+<label class="edit-icon" for="avatar-input">✏️</label>
+<input type="file" id="avatar-input" name="image" accept="image/*" style="display:none;">
+</div>
+
+<label>Username</label>
+<input type="text" name="username" value="{{client.username}}">
+
+<label>Email</label>
+<input type="email" value="{{client.email}}" disabled>
+
+<label>Bio</label>
+<textarea name="bio">{{client.bio}}</textarea>
+
+<label>Links</label>
+<input type="text" name="links" value="{{client.links}}">
+
+<button type="submit">Save Changes</button>
+
+</form>
+
+</div>
+</div>
+
+</body>
+</html>

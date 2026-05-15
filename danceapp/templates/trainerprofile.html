@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="en">
+{% load static %}
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ trainer.name }} — Trainer Profile</title>
+
+<style>
+:root {
+  --bg:#000;
+  --panel:#111;
+  --card:#0d0d0d;
+  --border:#222;
+  --text:#fff;
+  --muted:#aaa;
+  --accent:#fff;
+  --container-w:850px;
+  font-family:'Segoe UI', system-ui, sans-serif;
+}
+
+html, body {
+  height:100%;
+  margin:0;
+}
+
+body {
+  background: var(--bg);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:30px;
+  color:var(--text);
+}
+
+.wrap {
+  width:100%;
+  max-width:var(--container-w);
+  display:grid;
+  grid-template-columns:300px 1fr;
+  gap:25px;
+  background: var(--panel);
+  border-radius:18px;
+  padding:35px;
+  border:1px solid var(--border);
+  box-shadow:0 0 40px rgba(255,255,255,0.05);
+}
+
+/* LEFT PROFILE CARD */
+
+.profile-card {
+  background: var(--card);
+  border-radius:16px;
+  padding:25px;
+  text-align:center;
+  border:1px solid var(--border);
+}
+
+.avatar {
+  width:140px;
+  height:140px;
+  border-radius:50%;
+  margin:0 auto 15px;
+  overflow:hidden;
+  border:3px solid #fff;
+}
+
+.avatar img {
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+h2 {
+  font-size:22px;
+  margin:8px 0 4px;
+}
+
+.sub {
+  font-size:13px;
+  color:var(--muted);
+}
+
+.meta {
+  display:flex;
+  gap:10px;
+  justify-content:center;
+  margin:18px 0;
+  flex-wrap:wrap;
+}
+
+.meta .pill {
+  background:#fff;
+  color:#000;
+  padding:6px 14px;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:600;
+}
+
+/* Buttons */
+
+.btn {
+  display:inline-block;
+  padding:10px 20px;
+  border-radius:25px;
+  background:#fff;
+  color:#000;
+  font-weight:600;
+  text-decoration:none;
+  margin-top:12px;
+  transition:0.3s ease;
+}
+
+.btn:hover {
+  background:#ccc;
+  transform:translateY(-2px);
+}
+
+.back-btn {
+  background:transparent;
+  color:#fff;
+  border:1px solid #fff;
+  margin-left:8px;
+}
+
+.back-btn:hover {
+  background:#fff;
+  color:#000;
+}
+
+/* RIGHT SIDE */
+
+.right .section {
+  background: var(--card);
+  border-radius:14px;
+  padding:18px;
+  margin-bottom:18px;
+  border:1px solid var(--border);
+}
+
+.section h3 {
+  margin:0 0 12px;
+  font-size:15px;
+  letter-spacing:0.5px;
+  border-bottom:1px solid var(--border);
+  padding-bottom:6px;
+}
+
+.section p {
+  font-size:14px;
+  margin:6px 0;
+  color:var(--muted);
+}
+
+.status-approved {
+  color:#00ff99;
+  font-weight:600;
+}
+
+.status-rejected {
+  color:#ff6a6a;
+  font-weight:600;
+}
+
+.status-pending {
+  color:#ccc;
+  font-weight:600;
+}
+
+@media(max-width:768px){
+  .wrap{
+    grid-template-columns:1fr;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="wrap">
+
+  <!-- LEFT PROFILE CARD -->
+  <div class="profile-card">
+
+    {% if trainer.image %}
+      <div class="avatar">
+        <img src="{{ trainer.image.url }}" alt="Trainer photo">
+      </div>
+    {% else %}
+      <div class="avatar">
+        <img src="{% static 'images/default_profile.png' %}" alt="No photo">
+      </div>
+    {% endif %}
+
+    <h2>{{ trainer.name }}</h2>
+    <div class="sub">{{ trainer.email }}</div>
+
+    <div class="meta">
+      {% if trainer.experience %}
+        <div class="pill">{{ trainer.experience }} yrs experience</div>
+      {% endif %}
+      {% if trainer.gender %}
+        <div class="pill">
+          {% if trainer.gender == 'M' %}Male
+          {% elif trainer.gender == 'F' %}Female
+          {% else %}Other
+          {% endif %}
+        </div>
+      {% endif %}
+    </div>
+
+    <a class="btn" href="/edit_trainerprofile/{{ trainer.id }}/">Edit</a>
+    <a class="btn back-btn" href="/trainerhome/">Back</a>
+
+  </div>
+
+  <!-- RIGHT DETAILS -->
+  <div class="right">
+
+    <div class="section">
+      <h3>Contact Info</h3>
+      <p>📧 {{ trainer.email }}</p>
+      {% if trainer.phone %}
+        <p>📞 {{ trainer.phone }}</p>
+      {% endif %}
+    </div>
+
+    <div class="section">
+      <h3>Verification Status</h3>
+      {% if trainer.isapproved %}
+        <p class="status-approved">✔ Approved Trainer</p>
+      {% elif trainer.isrejected %}
+        <p class="status-rejected">✖ Rejected</p>
+      {% else %}
+        <p class="status-pending">⏳ Pending Approval</p>
+      {% endif %}
+    </div>
+
+  </div>
+
+</div>
+
+</body>
+</html>

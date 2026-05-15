@@ -1,0 +1,243 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Bookings</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root {
+    --bg1: #000000;
+    --bg2: #1a1a1a;
+    --bg3: #2b2b2b;
+    --text: #ffffff;
+    --muted: #bfbfbf;
+    --accent: #ff0099;
+    --accent2: #7a00ff;
+    --panel: rgba(255,255,255,0.06);
+    --radius: 20px;
+}
+
+/* Body */
+body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    background: radial-gradient(circle at top, var(--bg3), var(--bg1));
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Header */
+header {
+    background: rgba(0,0,0,0.85);
+    backdrop-filter: blur(12px);
+    text-align: center;
+    padding: 1.5em 0;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+}
+
+header h1 {
+    font-size: 2rem;
+    color: var(--accent);
+}
+
+/* Main */
+main {
+    flex: 1;
+    padding: 2em;
+    display: flex;
+    flex-direction: column;
+    gap: 2em;
+}
+
+/* Back Button */
+.btn-home {
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    color: #fff;
+    padding: 0.6em 1.2em;
+    border-radius: var(--radius);
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s;
+}
+.btn-home:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 15px var(--accent);
+}
+
+/* Venue Card */
+.venue-card {
+    background: var(--panel);
+    border-radius: var(--radius);
+    backdrop-filter: blur(18px);
+    border: 1px solid rgba(255,255,255,0.15);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.6);
+    padding: 2em;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.venue-card:hover {
+    transform: scale(1.02);
+    box-shadow: 0 25px 50px rgba(0,0,0,0.7);
+}
+
+/* Venue Card Text */
+.venue-card h2 {
+    color: var(--accent);
+    margin-bottom: 0.5em;
+}
+.venue-card p strong {
+    color: var(--accent2);
+}
+
+/* Seat Grid */
+.seat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
+    gap: 12px;
+    margin-top: 15px;
+}
+
+.seat {
+    width: 50px;
+    height: 50px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    transition: transform 0.2s;
+}
+
+.seat:hover {
+    transform: scale(1.1);
+}
+
+/* Your booked seats */
+.seat.yours {
+    background: linear-gradient(135deg, #6a11cb, #2575fc);
+    color: #fff;
+}
+
+/* Other users' booked seats */
+.seat.others {
+    background: #ff4d4d;
+    color: #fff;
+}
+
+/* Available seats */
+.seat.available {
+    background: rgba(255,255,255,0.1);
+    color: var(--muted);
+}
+
+/* Legend */
+.legend {
+    margin-top: 20px;
+    display: flex;
+    gap: 30px;
+    align-items: center;
+    font-weight: 500;
+    color: var(--muted);
+}
+.legend div {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.legend-color {
+    width: 25px;
+    height: 25px;
+    border-radius: 5px;
+}
+.legend-color.yours { background: linear-gradient(135deg, #6a11cb, #2575fc); }
+.legend-color.others { background: #ff4d4d; }
+.legend-color.available { background: rgba(255,255,255,0.1); }
+
+/* No bookings */
+.no-bookings {
+    text-align: center;
+    font-size: 1.2rem;
+    color: var(--accent);
+    margin-top: 3em;
+}
+
+/* Footer */
+footer {
+    background: rgba(0,0,0,0.85);
+    backdrop-filter: blur(12px);
+    color: var(--muted);
+    text-align: center;
+    padding: 1em 0;
+    font-size: 0.9rem;
+}
+
+/* Responsive */
+@media(max-width:600px){
+    .seat { width: 40px; height: 40px; }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>My Bookings</h1>
+</header>
+
+<main>
+
+    <div style="text-align: right; margin-bottom: 1em;">
+        <a href="/usereventlist/" class="btn-home">🏠 Back to Home</a>
+    </div>
+
+    {% if bookings %}
+        {% for booking in bookings %}
+            <div class="venue-card">
+                <h2>{{ booking.event.name }}</h2>
+                <p><strong>Venue:</strong> {{ booking.event.venue.name }}</p>
+                <p><strong>Total Amount:</strong> ₹{{ booking.totalamount }}</p>
+                <p><strong>Status:</strong> <span style="color:#00ff99;">Paid ✅</span></p>
+
+                <div class="seat-grid">
+                    {% for seat in booking.event.venue.seat_layout %}
+                        {% if seat in booking.seats %}
+                            <div class="seat yours">{{ seat }}</div>
+                        {% elif seat in booking.event.booked_venue %}
+                            <div class="seat others">{{ seat }}</div>
+                        {% else %}
+                            <div class="seat available">{{ seat }}</div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+
+                <div class="legend">
+                    <div>
+                        <div class="legend-color yours"></div> Your Seats
+                    </div>
+                    <div>
+                        <div class="legend-color others"></div> Booked (Others)
+                    </div>
+                    <div>
+                        <div class="legend-color available"></div> Available
+                    </div>
+                </div>
+
+            </div>
+        {% endfor %}
+    {% else %}
+        <p class="no-bookings">You have no confirmed bookings yet.</p>
+    {% endif %}
+
+</main>
+
+<footer>
+    &copy; 2026 Dance Project
+</footer>
+
+</body>
+</html>

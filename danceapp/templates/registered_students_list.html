@@ -1,0 +1,224 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Registered Students | Admin Dashboard</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+:root{
+    --bg:#000;
+    --panel:#111;
+    --white:#fff;
+    --text:#ddd;
+    --radius:14px;
+    --shadow:0 0 25px rgba(255,255,255,0.08);
+    --approved:#28a745;
+    --pending:#ffc107;
+    --rejected:#dc3545;
+}
+
+body{
+    margin:0;
+    font-family:'Poppins',sans-serif;
+    background:var(--bg);
+    color:var(--white);
+    padding:40px 20px;
+}
+
+/* CONTAINER */
+
+.container{
+    width:95%;
+    max-width:1200px;
+    margin:auto;
+    background:var(--panel);
+    padding:30px;
+    border-radius:var(--radius);
+    box-shadow:var(--shadow);
+}
+
+/* HEADING */
+
+h1{
+    text-align:center;
+    font-size:30px;
+    margin-bottom:25px;
+    font-weight:700;
+    color:#fff;
+}
+
+/* BACK BUTTON */
+
+.back-btn{
+    display:inline-block;
+    background:#fff;
+    color:#000;
+    padding:10px 22px;
+    text-decoration:none;
+    border-radius:10px;
+    font-size:15px;
+    font-weight:600;
+    margin-bottom:20px;
+    transition:0.3s;
+}
+
+.back-btn:hover{
+    background:#ddd;
+}
+
+/* TABLE */
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    background:#0a0a0a;
+    border-radius:10px;
+    overflow:hidden;
+}
+
+/* HEADER */
+
+th{
+    background:#fff;
+    color:#000;
+    padding:14px;
+    font-size:14px;
+    font-weight:600;
+    text-align:center;
+}
+
+/* BODY */
+
+td{
+    padding:14px;
+    text-align:center;
+    color:var(--text);
+    border-bottom:1px solid rgba(255,255,255,0.08);
+    font-size:14px;
+}
+
+/* HOVER */
+
+tbody tr:hover{
+    background:#1a1a1a;
+    transition:0.3s;
+}
+
+/* PAYMENT STATUS */
+
+.payment-approved{
+    color:var(--approved);
+    font-weight:600;
+}
+
+.payment-pending{
+    color:var(--pending);
+    font-weight:600;
+}
+
+.payment-rejected{
+    color:var(--rejected);
+    font-weight:600;
+}
+
+/* NO DATA */
+
+.no-data{
+    text-align:center;
+    font-size:18px;
+    padding:40px;
+    color:#fff;
+}
+
+/* RESPONSIVE */
+
+@media(max-width:768px){
+
+th,td{
+    font-size:13px;
+    padding:10px;
+}
+
+.container{
+    padding:20px;
+}
+
+}
+
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<a href="/adminhome/" class="back-btn">Back</a>
+
+<h1>Registered Students</h1>
+
+{% if register %}
+
+<table>
+
+<thead>
+<tr>
+<th>Student Name</th>
+<th>Email</th>
+<th>Course</th>
+<th>Institution</th>
+<th>Quantity</th>
+<th>Total Price</th>
+<th>Payment Status</th>
+<th>Registered At</th>
+</tr>
+</thead>
+
+<tbody>
+
+{% for r in register %}
+
+<tr>
+<td>{{ r.user.username }}</td>
+<td>{{ r.user.email }}</td>
+<td>{{ r.course.course_name }}</td>
+<td>{{ r.course.institution.name }}</td>
+<td>{{ r.quantity }}</td>
+<td>{{ r.total_price }}</td>
+
+<td>
+{% if r.payment_status == 'Approved' %}
+<span class="payment-approved">{{ r.payment_status }}</span>
+
+{% elif r.payment_status == 'Pending' %}
+<span class="payment-pending">{{ r.payment_status }}</span>
+
+{% else %}
+<span class="payment-rejected">{{ r.payment_status }}</span>
+
+{% endif %}
+</td>
+
+<td>{{ r.ordered_at|date:"Y-m-d H:i" }}</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+{% else %}
+
+<div class="no-data">No students have registered for courses yet.</div>
+
+{% endif %}
+
+</div>
+
+</body>
+</html>

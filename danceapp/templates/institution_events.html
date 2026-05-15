@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="en">
+{% load static %}
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Institution Events</title>
+
+<style>
+:root {
+  --bg1: #000;
+  --bg2: #111;
+  --bg3: #222;
+  --glass-bg: rgba(255, 255, 255, 0.08);
+  --glass-hover: rgba(255, 255, 255, 0.15);
+  --font: 'Poppins', system-ui, sans-serif;
+  --shadow: 0 14px 30px rgba(0, 0, 0, 0.5);
+  --transition: 0.35s;
+}
+
+/* Global Styles */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: var(--font);
+  min-height: 100vh;
+  background: linear-gradient(135deg, var(--bg1), var(--bg2), var(--bg3));
+  color: #fff;
+  padding: 24px;
+}
+
+/* Header */
+.header {
+  max-width: 700px;
+  margin: 0 auto 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.header h2 {
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.header-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.header-actions a {
+  padding: 8px 18px;
+  border-radius: 24px;
+  font-weight: 700;
+  font-size: 13px;
+  text-decoration: none;
+  transition: transform 0.3s;
+  box-shadow: 0 8px 18px rgba(0,0,0,0.5);
+}
+
+.add-btn { background: #555; color:#fff; }
+.back-btn { background: #333; color:#fff; }
+.view-btn { background: #777; color:#fff; }
+
+.header-actions a:hover { transform: scale(1.08); }
+
+/* Event Grid */
+.event-grid {
+  max-width: 1000px;
+  margin: auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+/* Event Card */
+.event-card {
+  background: var(--glass-bg);
+  border-radius: 20px;
+  overflow: hidden;
+  backdrop-filter: blur(14px);
+  box-shadow: var(--shadow);
+  transition: transform var(--transition), background var(--transition);
+}
+
+.event-card:hover {
+  transform: translateY(-6px);
+  background: var(--glass-hover);
+}
+
+/* Poster */
+.poster {
+  height: 140px;
+  background: #111;
+}
+
+.poster img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Event Body */
+.event-body {
+  padding: 16px;
+}
+
+.event-body h3 {
+  margin: 6px 0;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.desc {
+  font-size: 13px;
+  opacity: 0.85;
+  margin-bottom: 8px;
+}
+
+/* Meta Info */
+.meta {
+  font-size: 13px;
+  line-height: 1.5;
+  opacity: 0.85;
+}
+
+.meta strong { font-weight: 600; }
+
+/* Status Badge */
+.status {
+  display: inline-block;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.up { background: #fff; color: #111; }
+.co { background: #888; color: #111; }
+.ca { background: #333; color: #fff; }
+
+/* Footer */
+.event-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 12px;
+  font-size: 12px;
+  opacity: 0.8;
+}
+
+/* Action Buttons */
+.actions {
+  display: flex;
+  gap: 8px;
+}
+
+.edit-btn,
+.delete-btn {
+  padding: 6px 14px;
+  border-radius: 18px;
+  font-size: 12px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: transform 0.3s;
+}
+
+.edit-btn { background: #555; color:#fff; }
+.delete-btn { background: #900; color:#fff; }
+
+.edit-btn:hover,
+.delete-btn:hover { transform: scale(1.08); }
+
+/* Empty State */
+.empty {
+  text-align: center;
+  font-size: 15px;
+  opacity: 0.85;
+  grid-column: 1 / -1;
+}
+
+/* Responsive Adjustments */
+@media(max-width: 600px){
+  .header { flex-direction: column; align-items: flex-start; }
+  .header-actions { justify-content: flex-start; }
+}
+</style>
+</head>
+
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <h2>Institution Events</h2>
+  <div class="header-actions">
+    <a href="{% url 'add_event' %}" class="add-btn">+ Add Event</a>
+    <a href="{% url 'institutionhome' %}" class="back-btn">&larr; Back</a>
+    <a href="{% url 'view_event_booking' %}" class="view-btn">View Bookings</a>
+  </div>
+</div>
+
+<!-- EVENT GRID -->
+<div class="event-grid">
+
+{% for event in events %}
+  <div class="event-card">
+
+    <!-- Poster -->
+    <div class="poster">
+      {% if event.poster %}
+        <img src="{{ event.poster.url }}" alt="{{ event.name }}">
+      {% else %}
+        <img src="{% static 'images/default_event.jpg' %}" alt="No Poster">
+      {% endif %}
+    </div>
+
+    <!-- Body -->
+    <div class="event-body">
+
+      <span class="status
+        {% if event.status == 'UP' %}up
+        {% elif event.status == 'CO' %}co
+        {% else %}ca{% endif %}">
+        {{ event.get_status_display }}
+      </span>
+
+      <h3>{{ event.name }}</h3>
+
+      {% if event.description %}
+        <div class="desc">{{ event.description|truncatechars:60 }}</div>
+      {% endif %}
+
+      <div class="meta">
+        <strong>{{ event.date|date:"d M Y" }}</strong><br>
+        {{ event.start_time }}{% if event.end_time %} - {{ event.end_time }}{% endif %}<br>
+        {% if event.trainer %}
+          Trainer: {{ event.trainer.full_name }} ({{ event.trainer_position }})<br>
+        {% else %}
+          Trainer: None<br>
+        {% endif %}
+        Age: {{ event.get_age_category_display|default:"N/A" }} |
+        Seats: {% if event.venue %}{{ event.venue.total_seats }}{% else %}N/A{% endif %} |
+        Price Per Person: {{ event.priceperperson|default:"N/A" }}
+      </div>
+
+      <div class="event-footer">
+        <span>Created: {{ event.created_at|date:"d M Y" }}</span>
+
+        <div class="actions">
+          <a href="{% url 'edit_event' event.id %}" class="edit-btn">Edit</a>
+          <a href="{% url 'delete_event' event.id %}" class="delete-btn"
+             onclick="return confirm('Delete this event?');">Delete</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+{% empty %}
+  <div class="empty">No events created yet.</div>
+{% endfor %}
+
+</div>
+
+</body>
+</html>

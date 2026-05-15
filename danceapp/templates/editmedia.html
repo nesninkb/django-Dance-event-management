@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Edit Paid Media</title>
+  <style>
+    /* Same CSS as paidmedia_form.html */
+  </style>
+</head>
+
+<body>
+  <div class="upload-container">
+    <h2>Edit Paid Media ✏️</h2>
+
+    <form action="" method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
+
+      <label>Session Name</label>
+      <input type="text" name="session_name" value="{{ item.session_name }}" required>
+
+      <label>Session Number</label>
+      <input type="text" name="session_number" value="{{ item.session_number }}" required>
+
+      <label>Trainer Email</label>
+      <input type="text" name="trainer_email" value="{{ item.trainer_email }}" required>
+
+      <label>Language</label>
+      <select name="language" required>
+        <option value="{{ item.language }}">{{ item.language }}</option>
+        <option value="English">English</option>
+        <option value="Malayalam">Malayalam</option>
+        <option value="Hindi">Hindi</option>
+      </select>
+
+      <label>Description</label>
+      <textarea name="description" rows="4">{{ item.description }}</textarea>
+
+      <label>Replace Video (Optional)</label>
+      <input type="file" name="class_video" accept="video/*">
+
+      <label>Start Date</label>
+      <input type="date" name="start_date" value="{{ item.start_date|date:'Y-m-d' }}" required>
+
+      <label>End Date</label>
+      <input type="date" name="end_date" value="{{ item.end_date|date:'Y-m-d' }}" required>
+
+      <label>Status</label>
+      <select name="status">
+        <option value="{{ item.status }}">{{ item.status }}</option>
+        <option value="Not Started">Not Started</option>
+        <option value="Ongoing">Ongoing</option>
+        <option value="Completed">Completed</option>
+      </select>
+
+      <button type="submit">Save Changes</button>
+    </form>
+
+  </div>
+</body>
+</html>

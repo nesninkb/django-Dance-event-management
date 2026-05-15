@@ -1,0 +1,213 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Add Trainer — Dance App</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+:root {
+  --bg1:#000000;
+  --bg2:#111111;
+  --bg3:#222222;
+  --text:#ffffff;
+  --muted:#cccccc;
+  --accent:#ffffff;
+  --panel:rgba(255,255,255,0.08);
+}
+
+body{
+  margin:0;
+  font-family:'Poppins',sans-serif;
+  color:var(--text);
+  background:linear-gradient(120deg,var(--bg1),var(--bg2),var(--bg3));
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+}
+
+.container{
+  width:100%;
+  max-width:500px;
+  background:var(--panel);
+  border-radius:20px;
+  padding:28px;
+  backdrop-filter:blur(12px);
+  box-shadow:0 10px 30px rgba(255,255,255,0.1);
+  animation:fadeIn 0.8s ease forwards;
+  border:1px solid rgba(255,255,255,0.15);
+}
+
+@keyframes fadeIn{
+  from{opacity:0;transform:translateY(25px);}
+  to{opacity:1;transform:translateY(0);}
+}
+
+h1{
+  text-align:center;
+  margin-bottom:25px;
+  text-shadow:0 0 10px #ffffff;
+}
+
+label{
+  font-size:14px;
+  font-weight:600;
+  display:block;
+  margin-bottom:6px;
+  margin-top:14px;
+}
+
+input, select{
+  width:100%;
+  padding:10px 12px;
+  border-radius:10px;
+  border:1px solid rgba(255,255,255,0.2);
+  outline:none;
+  background:rgba(255,255,255,0.05);
+  color:var(--text);
+  font-size:14px;
+  transition:all 0.3s ease;
+}
+
+input::placeholder{
+  color:var(--muted);
+}
+
+input:focus, select:focus{
+  box-shadow:0 0 12px #ffffff;
+  background:rgba(255,255,255,0.12);
+}
+
+/* FIX FOR DROPDOWN VISIBILITY */
+
+select option{
+  background:#ffffff;
+  color:#000000;
+}
+
+input[type="file"]{
+  padding:6px;
+}
+
+.checkbox{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  margin-top:15px;
+  font-size:14px;
+}
+
+.actions{
+  display:flex;
+  justify-content:space-between;
+  margin-top:25px;
+  gap:10px;
+}
+
+.btn{
+  flex:1;
+  padding:12px;
+  border-radius:25px;
+  border:1px solid white;
+  font-weight:600;
+  cursor:pointer;
+  background:black;
+  color:white;
+  transition:transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.btn-submit{
+  background:white;
+  color:black;
+}
+
+.btn-cancel{
+  background:black;
+  color:white;
+}
+
+.btn:hover{
+  transform:scale(1.05);
+  box-shadow:0 0 15px #ffffff;
+}
+
+a{
+  flex:1;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>Add Trainer</h1>
+
+<form method="POST" enctype="multipart/form-data">
+{% csrf_token %}
+
+<label>Full Name</label>
+<input type="text" name="full_name" placeholder="Trainer name" required>
+
+<label>Gender</label>
+<select name="gender" required>
+<option value="">Select Gender</option>
+<option value="M">Male</option>
+<option value="F">Female</option>
+<option value="O">Other</option>
+</select>
+
+<label>Phone Number</label>
+<input type="text" name="phone_number" placeholder="Phone number" required>
+
+<label>Email</label>
+<input type="email" name="email" placeholder="Email address" required>
+
+<label>Photo</label>
+<input type="file" name="photo" accept="image/*">
+
+<label>Portfolio</label>
+<input type="file" name="portfolio" accept=".pdf,.doc,.docx,.ppt,.pptx,.jpg,.png,.mp4,.mov">
+
+<label>Dance Styles</label>
+<input type="text" name="dance_styles" placeholder="Hip-Hop, Contemporary" required>
+
+<label>Years of Experience</label>
+<input type="number" name="years_of_experience" min="0" required>
+
+<label>Teaching Experience (Years)</label>
+<input type="number" name="teaching_experience" min="0" required>
+
+<label>Trainer Type</label>
+<select name="trainer_type" required>
+<option value="">Select Type</option>
+<option value="FT">Full Time</option>
+<option value="PT">Part Time</option>
+<option value="GT">Guest</option>
+</select>
+
+<div class="checkbox">
+<input type="checkbox" name="is_active" checked>
+<span>Active Trainer</span>
+</div>
+
+<div class="actions">
+<a href="{% url 'listTrainer' %}">
+<button type="button" class="btn btn-cancel">Cancel</button>
+</a>
+
+<button type="submit" class="btn btn-submit">Save Trainer</button>
+</div>
+
+</form>
+
+</div>
+
+</body>
+</html>

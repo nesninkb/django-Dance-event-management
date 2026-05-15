@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Admin Dashboard</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --bg1: #000000;
+  --bg2: #1a1a1a;
+  --bg3: #2b2b2b;
+  --text: #ffffff;
+  --muted: #bfbfbf;
+  --panel: rgba(255, 255, 255, 0.06);
+  --accent: linear-gradient(135deg,#ff7a59,#ff5fa8 60%);
+  --radius:18px;
+}
+
+*{box-sizing:border-box;}
+
+body{
+  font-family:'Poppins',sans-serif;
+  margin:0;
+  background: radial-gradient(circle at top, var(--bg3), var(--bg1));
+  color: var(--text);
+  min-height:100vh;
+  padding:0;
+}
+
+/* SIDEBAR */
+.sidebar{
+  position: fixed;
+  left:0;
+  top:0;
+  height:100%;
+  width:250px;
+  background: var(--bg2);
+  display:flex;
+  flex-direction:column;
+  padding:30px 20px;
+  gap:20px;
+  border-right:1px solid rgba(255,255,255,0.08);
+}
+
+.sidebar .logo{
+  font-weight:700;
+  font-size:24px;
+  background: var(--accent);
+  padding:10px;
+  border-radius: var(--radius);
+  text-align:center;
+  color:#fff;
+}
+
+.sidebar nav a{
+  color: var(--muted);
+  text-decoration:none;
+  padding:10px 12px;
+  border-radius: var(--radius);
+  display:block;
+  transition:0.3s;
+  font-weight:500;
+}
+
+.sidebar nav a:hover,
+.sidebar nav a.active{
+  background: rgba(255,255,255,0.1);
+  color:#fff;
+}
+
+/* MAIN CONTENT */
+.main{
+  margin-left:270px;
+  padding:30px;
+  display:flex;
+  flex-direction:column;
+  gap:30px;
+}
+
+/* METRICS */
+.metrics{
+  display:flex;
+  gap:20px;
+  flex-wrap:wrap;
+}
+
+.metric-box{
+  flex:1;
+  text-align:center;
+  font-weight:bold;
+  font-size:18px;
+  padding:25px;
+  border-radius: var(--radius);
+  background: var(--panel);
+  backdrop-filter:blur(12px);
+  border:1px solid rgba(255,255,255,0.08);
+  transition:0.3s ease;
+}
+
+.metric-box:hover{
+  transform:translateY(-5px);
+  background:rgba(255,255,255,0.12);
+}
+
+/* CARDS */
+.card{
+  background: var(--panel);
+  border-radius: var(--radius);
+  padding:22px;
+  backdrop-filter:blur(12px);
+  border:1px solid rgba(255,255,255,0.08);
+  transition:0.3s ease;
+}
+
+.card:hover{
+  transform:translateY(-5px);
+  background: rgba(255,255,255,0.1);
+}
+
+h2,h3{
+  color:#ffffff;
+  font-weight:600;
+  margin-bottom:15px;
+}
+
+/* TABLE */
+table{
+  width:100%;
+  border-collapse:collapse;
+}
+
+th,td{
+  padding:12px;
+  border-bottom:1px solid rgba(255,255,255,0.08);
+  font-size:14px;
+  text-align:left;
+}
+
+th{
+  color: var(--muted);
+  font-weight:500;
+}
+
+tbody tr:hover{
+  background: rgba(255,255,255,0.05);
+}
+
+/* Responsive */
+@media(max-width:768px){
+  .metrics{flex-direction:column;}
+  .main{margin-left:0;padding:20px;}
+  .sidebar{position:relative;width:100%;height:auto;}
+}
+</style>
+</head>
+
+<body>
+
+<div class="sidebar">
+  <div class="logo">AD</div>
+  <nav>
+    <a href="#" class="active">Dashboard</a>
+    <a href="/userlist">Users</a>
+    <a href="/feedbacklist">Feedback</a>
+    <a href="/trainerlist/">Trainers</a>
+    <a href="/adminpackagelist/">Dance Packages</a>
+    <a href="/admininstitutionlist/">Institution</a>
+    <a href="/eventlist/">Events</a>
+    <a href="/ownerlist/">Shop Owners</a>
+    <a href="/admincostumesview/">Costumes</a>
+    <a href="/adminsubscriptionlist/">Subscriptions</a>
+    <a href="/registered_students_list/">Registered Students</a>
+    <a href="/logout">Logout</a>
+  </nav>
+</div>
+
+<div class="main">
+
+  <h1>Welcome Admin</h1>
+  <p style="color:var(--muted)">Manage users, trainers, shops & platform data efficiently</p>
+
+  <div class="metrics">
+    <div class="metric-box">{{ user.count }} Users</div>
+    <div class="metric-box">{{ trainers.count }} Trainers</div>
+    <div class="metric-box">{{ shops.count }} Shops</div>
+  </div>
+
+  <div class="card">
+    <h2>Platform Overview</h2>
+    <div class="metrics">
+      <div class="metric-box">{{ user.count }} Total Users</div>
+      <div class="metric-box">{{ trainers.count }} Total Trainers</div>
+      <div class="metric-box">{{ shops.count }} Total Shops</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Recent Users</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>User</th>
+          <th>Email</th>
+          <th>Role</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Priya</td>
+          <td>priya@example.com</td>
+          <td>Instructor</td>
+          <td>Active</td>
+        </tr>
+        <tr>
+          <td>Arjun</td>
+          <td>arjun@example.com</td>
+          <td>Student</td>
+          <td>Pending</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+</body>
+</html>

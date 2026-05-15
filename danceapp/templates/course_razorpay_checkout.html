@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Razorpay Payment</title>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+</head>
+<body>
+  <script>
+    var options = {
+        "key": "{{ api_key }}",
+        "amount": "{{ amount|floatformat:0 }}00",
+        "currency": "INR",
+        "order_id": "{{ order_id }}",
+
+        "handler": function (response){
+            {% if id %}
+                window.location.href = "/course_payment_success/{{ id }}/";
+            {% else %}
+                window.location.href = "/course_payment_success/";
+            {% endif %}
+        },
+
+        "prefill": {
+            "name": "{{ user.name }}",
+            "email": "{{ user.email }}"
+        },
+    };
+    var rzp1 = new Razorpay(options);
+    rzp1.open();
+    </script>
+
+
+</body>
+</html>

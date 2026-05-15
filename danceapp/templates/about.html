@@ -1,0 +1,206 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About Us | DanceX</title>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+    :root {
+      --bg1: #ff6a00;
+      --bg2: #ee0979;
+      --text: #fff;
+      --accent: #00eaff;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Poppins", sans-serif;
+      color: var(--text);
+      background: linear-gradient(-45deg, var(--bg1), var(--bg2), #7f00ff, #00eaff);
+      background-size: 400% 400%;
+      animation: gradientBG 10s ease infinite;
+      overflow-x: hidden;
+    }
+
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    header {
+      text-align: center;
+      padding: 80px 20px 40px;
+    }
+
+    header h1 {
+      font-size: 3rem;
+      font-weight: 600;
+      letter-spacing: 2px;
+      color: var(--accent);
+      text-shadow: 0 0 10px rgba(0, 234, 255, 0.8);
+    }
+
+    header p {
+      font-size: 1.2rem;
+      max-width: 700px;
+      margin: 10px auto;
+      color: #f1f1f1;
+    }
+
+    .content {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      gap: 40px;
+      padding: 60px 20px;
+    }
+
+    .about-card {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      backdrop-filter: blur(12px);
+      padding: 40px;
+      width: 350px;
+      text-align: center;
+      transition: all 0.3s ease;
+      box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
+    }
+
+    .about-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 0 25px rgba(0, 234, 255, 0.3);
+    }
+
+    .about-card h2 {
+      color: var(--accent);
+      font-weight: 600;
+      margin-bottom: 15px;
+    }
+
+    .about-card p {
+      font-size: 0.95rem;
+      color: #f8f8f8;
+      line-height: 1.6;
+    }
+
+    .team-section {
+      text-align: center;
+      padding: 60px 20px;
+    }
+
+    .team-section h2 {
+      color: var(--accent);
+      font-size: 2rem;
+      margin-bottom: 40px;
+    }
+
+    .team {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      flex-wrap: wrap;
+    }
+
+    .team-member {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 15px;
+      padding: 20px;
+      width: 220px;
+      text-align: center;
+      transition: 0.3s;
+    }
+
+    .team-member:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 20px rgba(0, 234, 255, 0.3);
+    }
+
+    .team-member img {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      border: 3px solid var(--accent);
+      margin-bottom: 10px;
+    }
+
+    .team-member h3 {
+      color: var(--accent);
+      font-size: 1.2rem;
+      margin: 5px 0;
+    }
+
+    .team-member p {
+      font-size: 0.9rem;
+      color: #f1f1f1;
+    }
+
+    footer {
+      text-align: center;
+      padding: 30px;
+      color: #ddd;
+      font-size: 0.9rem;
+      background: rgba(0, 0, 0, 0.2);
+      border-top: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>About DanceX</h1>
+    <p>Welcome to DanceX — your ultimate platform connecting passionate dancers, skilled trainers, and creative shop owners in one rhythm-filled community.</p>
+  </header>
+
+  <section class="content">
+    <div class="about-card">
+      <h2>Our Mission</h2>
+      <p>To empower dancers and trainers with technology — making dance more accessible, organized, and connected. We believe every move matters!</p>
+    </div>
+    <div class="about-card">
+      <h2>Our Vision</h2>
+      <p>To become the leading digital hub for dance enthusiasts, promoting collaboration, growth, and opportunities for everyone in the dance ecosystem.</p>
+    </div>
+    <div class="about-card">
+      <h2>Our Values</h2>
+      <p>Creativity, Collaboration, and Community. DanceX stands for passion, performance, and positive energy — every step of the way!</p>
+    </div>
+  </section>
+
+  <section class="team-section">
+    <h2>Meet Our Team</h2>
+    <div class="team">
+      <div class="team-member">
+        <img src="{% static 'images/team1.jpg' %}" alt="Team Member">
+        <h3>Nesnin</h3>
+        <p>Founder & Lead Developer</p>
+      </div>
+      <div class="team-member">
+        <img src="{% static 'images/team2.jpg' %}" alt="Team Member">
+        <h3>Chaithanya</h3>
+        <p>Creative Designer</p>
+      </div>
+      <div class="team-member">
+        <img src="{% static 'images/team3.jpg' %}" alt="Team Member">
+        <h3>Devika</h3>
+        <p>Backend Engineer</p>
+      </div>
+      <div class="team-member">
+        <img src="{% static 'images/team4.jpg' %}" alt="Team Member">
+        <h3>Punnya</h3>
+        <p>Marketing & PR</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>© 2025 DanceX | Designed with ❤️ and rhythm</p>
+  </footer>
+</body>
+</html>

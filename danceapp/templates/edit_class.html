@@ -1,0 +1,168 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Edit Dance Class</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+
+:root {
+  --bg: linear-gradient(135deg, #0a0a0a, #1a1a1a);
+  --panel: rgba(255,255,255,0.08);
+  --panel-hover: rgba(255,255,255,0.15);
+  --text: #fff;
+  --input-bg: rgba(255,255,255,0.1);
+  --input-hover: rgba(255,255,255,0.2);
+  --btn-bg: linear-gradient(135deg, #0c0c0c, #260917);
+  --btn-hover: linear-gradient(135deg, #332d30, #b9b0c2);
+  --placeholder: rgba(255,255,255,0.5);
+}
+
+body {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  padding: 20px;
+}
+
+/* Container */
+.container {
+  max-width: 700px;
+  margin: 50px auto;
+  background: var(--panel);
+  border-radius: 20px;
+  padding: 30px 40px;
+  backdrop-filter: blur(12px);
+}
+
+/* Heading */
+h2 {
+  text-align: center;
+  margin-bottom: 25px;
+  font-weight: 600;
+}
+
+/* Back Button */
+.back-btn {
+  display: inline-block;
+  margin-bottom: 20px;
+  padding: 8px 16px;
+  border-radius: 10px;
+  text-decoration: none;
+  background: var(--btn-bg);
+  color: #fff;
+  font-weight: 600;
+  transition: 0.3s;
+}
+.back-btn:hover {
+  background: var(--btn-hover);
+  opacity: 0.9;
+}
+
+/* Form */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+form label {
+  font-weight: 500;
+  margin-bottom: 6px;
+}
+form input[type="text"],
+form textarea,
+form select,
+form input[type="file"] {
+  width: 100%;
+  padding: 10px 14px;
+  border: none;
+  border-radius: 10px;
+  background: var(--input-bg);
+  color: var(--text);
+  font-size: 16px;
+  transition: 0.3s;
+}
+form input[type="text"]:focus,
+form textarea:focus,
+form select:focus,
+form input[type="file"]:focus {
+  outline: none;
+  background: var(--input-hover);
+}
+textarea {
+  resize: vertical;
+}
+
+/* Current Video Link */
+.current-video a {
+  color: #7f00ff;
+  text-decoration: underline;
+}
+
+/* Submit Button */
+button[type="submit"] {
+  padding: 12px;
+  font-size: 18px;
+  font-weight: 600;
+  border: none;
+  border-radius: 10px;
+  background: var(--btn-bg);
+  color: #fff;
+  cursor: pointer;
+  transition: 0.3s;
+}
+button[type="submit"]:hover {
+  background: var(--btn-hover);
+  transform: scale(1.03);
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+  <a href="{% url 'list_class' dance_class.course.id %}" class="back-btn">&larr; Back</a>
+  <h2>Edit Dance Class</h2>
+
+  <form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <label for="id_course_name">Course Name</label>
+    <input type="text" id="id_course_name" value="{{ dance_class.course.course_name }}" readonly>
+
+    <label for="id_name">Class Name</label>
+    <input type="text" name="name" id="id_name" value="{{ dance_class.name }}" required>
+
+    <label for="id_description">Description</label>
+    <textarea name="description" id="id_description" rows="4">{{ dance_class.description }}</textarea>
+
+    <label for="id_dance_style">Dance Style</label>
+    <input type="text" name="dance_style" id="id_dance_style" value="{{ dance_class.dance_style }}">
+
+    <label for="id_trainer">Trainer</label>
+    <select name="trainer" id="id_trainer">
+      <option value="">-- Select Trainer --</option>
+      {% for trainer in trainers %}
+        <option value="{{ trainer.id }}" {% if dance_class.trainer and dance_class.trainer.id == trainer.id %}selected{% endif %}>
+          {{ trainer.full_name }} ({{ trainer.trainer_type }})
+        </option>
+      {% endfor %}
+    </select>
+
+    <label for="id_uploaded_video">Upload Video</label>
+    {% if dance_class.uploaded_video %}
+      <p class="current-video">Current Video: <a href="{{ dance_class.uploaded_video.url }}" target="_blank">View</a></p>
+    {% endif %}
+    <input type="file" name="uploaded_video" id="id_uploaded_video" accept="video/*">
+
+    <button type="submit">Update Class</button>
+  </form>
+</div>
+
+</body>
+</html>

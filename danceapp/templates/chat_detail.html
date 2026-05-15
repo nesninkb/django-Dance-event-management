@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chat</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-black min-h-screen flex justify-center items-center">
+
+<div class="w-full max-w-lg bg-gray-900 rounded shadow flex flex-col">
+
+    <!-- Header -->
+    <div class="bg-gray-800 text-white p-4 flex items-center gap-3">
+        <!-- Back Button -->
+        <a href="javascript:history.back()" 
+           class="bg-gray-600 text-white px-4 py-2 rounded-full text-sm font-semibold hover:bg-gray-500 transition">
+            ⬅ Back
+        </a>
+        
+        <img src="{% if receiver.profile_pic %}{{ receiver.profile_pic.url }}{% elif receiver.image %}{{ receiver.image.url }}{% else %}https://via.placeholder.com/40{% endif %}"
+             class="w-10 h-10 rounded-full">
+        <h2 class="font-semibold">{{ receiver.email }}</h2>
+    </div>
+
+    <!-- Messages -->
+    <div class="flex-1 p-4 overflow-y-auto bg-gray-700 space-y-3">
+        {% for message in messages %}
+            <div class="flex {% if message.sender == sender.email %}justify-end{% else %}justify-start{% endif %}">
+                <div class="max-w-xs p-3 rounded-lg
+                    {% if message.sender == sender.email %}
+                        bg-gray-600 text-white
+                    {% else %}
+                        bg-gray-500 text-white
+                    {% endif %}">
+
+                    {% if message.content %}
+                        <p>{{ message.content }}</p>
+                    {% endif %}
+
+                    {% if message.media %}
+                        {% if message.media_type == 'image' %}
+                            <img src="{{ message.media.url }}" class="mt-2 rounded w-40">
+                        {% elif message.media_type == 'video' %}
+                            <video controls class="mt-2 w-48 rounded">
+                                <source src="{{ message.media.url }}">
+                            </video>
+                        {% else %}
+                            <a href="{{ message.media.url }}" class="underline text-sm mt-2 block text-gray-300">
+                                Download file
+                            </a>
+                        {% endif %}
+                    {% endif %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <!-- Input -->
+    <form method="post" enctype="multipart/form-data" class="p-3 flex gap-2 border-t border-gray-700">
+        {% csrf_token %}
+        <input type="text" name="content" placeholder="Type message..."
+               class="flex-1 border rounded px-3 py-2 bg-gray-800 text-white">
+        <input type="file" name="media" id="media" class="hidden">
+        <label for="media" class="cursor-pointer px-3 py-2 bg-gray-600 rounded text-white">📎</label>
+        <button class="bg-gray-800 text-white px-4 rounded">Send</button>
+    </form>
+
+</div>
+
+</body>
+</html>

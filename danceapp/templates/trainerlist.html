@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trainers List — Dance App</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --bg-dark:#000;
+  --panel:rgba(255,255,255,0.06);
+  --card-bg:rgba(255,255,255,0.05);
+  --text:#ffffff;
+  --muted:#bfbfbf;
+  --accent:#ffffff;
+  --radius:14px;
+  --shadow:0 10px 30px rgba(0,0,0,0.8);
+}
+
+*{box-sizing:border-box;}
+
+body{
+margin:0;
+font-family:'Poppins',sans-serif;
+background:linear-gradient(135deg,#000,#111,#1a1a1a);
+color:var(--text);
+display:flex;
+justify-content:center;
+min-height:100vh;
+padding:30px;
+}
+
+/* Container */
+
+.container{
+width:100%;
+max-width:800px;
+background:var(--panel);
+backdrop-filter:blur(12px);
+border-radius:var(--radius);
+padding:25px;
+box-shadow:var(--shadow);
+border:1px solid rgba(255,255,255,0.1);
+}
+
+/* Heading */
+
+h1{
+text-align:center;
+font-size:28px;
+margin-bottom:20px;
+font-weight:700;
+color:#fff;
+letter-spacing:1px;
+text-shadow:0 0 8px rgba(255,255,255,0.4);
+}
+
+/* Back button */
+
+.back-btn{
+display:inline-block;
+background:#111;
+color:#fff;
+padding:12px 24px;
+text-decoration:none;
+border-radius:var(--radius);
+font-size:16px;
+font-weight:600;
+margin-bottom:20px;
+border:1px solid rgba(255,255,255,0.2);
+transition:0.3s;
+}
+
+.back-btn:hover{
+transform:scale(1.05);
+box-shadow:0 0 10px rgba(255,255,255,0.5);
+}
+
+/* Search Bar */
+
+.search-bar{
+display:flex;
+gap:10px;
+flex-wrap:wrap;
+margin-bottom:20px;
+}
+
+.search-bar input{
+flex:1;
+padding:12px 14px;
+border-radius:var(--radius);
+border:1px solid rgba(255,255,255,0.2);
+background:rgba(255,255,255,0.06);
+color:var(--text);
+font-size:14px;
+outline:none;
+transition:0.3s;
+}
+
+.search-bar input:focus{
+box-shadow:0 0 10px rgba(255,255,255,0.5);
+}
+
+/* Trainer Cards */
+
+.user-list{
+display:flex;
+flex-direction:column;
+gap:16px;
+}
+
+.user-card{
+display:flex;
+align-items:center;
+background:var(--card-bg);
+padding:16px;
+border-radius:var(--radius);
+transition:0.3s;
+border-left:4px solid #fff;
+}
+
+.user-card:hover{
+transform:translateY(-3px);
+box-shadow:0 8px 25px rgba(255,255,255,0.15);
+}
+
+/* Avatar */
+
+.avatar{
+width:55px;
+height:55px;
+border-radius:50%;
+overflow:hidden;
+margin-right:16px;
+border:2px solid #fff;
+transition:0.3s;
+}
+
+.avatar img{
+width:100%;
+height:100%;
+object-fit:cover;
+}
+
+.avatar:hover{
+transform:scale(1.1);
+box-shadow:0 0 15px rgba(255,255,255,0.6);
+}
+
+/* Info */
+
+.info{
+flex:1;
+}
+
+.name{
+font-size:16px;
+font-weight:600;
+margin:0;
+}
+
+.sub{
+font-size:13px;
+color:var(--muted);
+margin-top:2px;
+}
+
+/* Buttons */
+
+.delete-btn,
+.approve-btn,
+.reject-btn{
+padding:8px 16px;
+border-radius:var(--radius);
+font-weight:600;
+font-size:14px;
+border:1px solid rgba(255,255,255,0.2);
+cursor:pointer;
+transition:0.3s;
+margin-left:8px;
+background:#111;
+color:#fff;
+}
+
+.delete-btn:hover,
+.approve-btn:hover,
+.reject-btn:hover{
+transform:scale(1.05);
+box-shadow:0 0 10px rgba(255,255,255,0.6);
+}
+
+/* Responsive */
+
+@media(max-width:500px){
+
+.user-card{
+flex-direction:column;
+align-items:flex-start;
+}
+
+.delete-btn,
+.approve-btn,
+.reject-btn{
+width:100%;
+margin-top:8px;
+}
+
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<a href="/adminhome/" class="back-btn">Back</a>
+
+<h1>Trainers</h1>
+
+<div class="search-bar">
+<input type="text" id="searchInput" placeholder="Search trainers...">
+</div>
+
+<div class="user-list" id="userList">
+
+{% for t in trainer %}
+
+<div class="user-card">
+
+<div class="avatar">
+{% if t.image %}
+<img src="{{t.image.url}}" alt="avatar">
+{% endif %}
+</div>
+
+<div class="info">
+<p class="name">{{t.name}}</p>
+<p class="sub">{{t.email}}</p>
+</div>
+
+<a href="/deletetrainer/{{t.id}}">
+<button class="delete-btn">Delete</button>
+</a>
+
+{% if not t.isapproved %}
+<a href="/approveuser/{{t.id}}">
+<button class="approve-btn">Approve</button>
+</a>
+
+{% elif not t.isrejected %}
+<a href="/rejectuser/{{t.id}}">
+<button class="reject-btn">Reject</button>
+</a>
+{% endif %}
+
+</div>
+
+{% endfor %}
+
+</div>
+</div>
+
+<script>
+document.getElementById("searchInput").addEventListener("keyup", function () {
+
+const filter=this.value.toLowerCase();
+const cards=document.querySelectorAll(".user-card");
+
+cards.forEach(card=>{
+
+const name=card.querySelector(".name")?.innerText.toLowerCase()||"";
+const email=card.querySelector(".sub")?.innerText.toLowerCase()||"";
+
+card.style.display=(name.includes(filter)||email.includes(filter))?"flex":"none";
+
+});
+
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,178 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trainer Details | Dance App</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root {
+    --bg1: #000000;
+    --bg2: #1a1a1a;
+    --bg3: #2b2b2b;
+    --text: #ffffff;
+    --muted: #bfbfbf;
+    --accent: #ff0099;
+    --accent2: #7a00ff;
+    --panel: rgba(255,255,255,0.06);
+    --radius: 20px;
+}
+
+/* Body */
+body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    background: radial-gradient(circle at top, var(--bg3), var(--bg1));
+    color: var(--text);
+    min-height: 100vh;
+    padding: 30px 20px;
+}
+
+/* Back Button */
+.btn-back {
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border: none;
+    border-radius: var(--radius);
+    font-weight: 600;
+    color: var(--text);
+    padding: 10px 20px;
+    margin-bottom: 25px;
+    display: inline-block;
+    transition: 0.3s;
+    text-decoration: none;
+}
+.btn-back:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 15px var(--accent);
+}
+
+/* Trainer Card */
+.trainer-card {
+    background: var(--panel);
+    border-radius: var(--radius);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,255,255,0.08);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.5);
+    padding: 30px;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.trainer-card:hover {
+    transform: scale(1.02);
+    box-shadow: 0 25px 50px rgba(0,0,0,0.6);
+}
+
+/* Trainer Image */
+.trainer-img {
+    width: 180px;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 4px solid var(--accent);
+    box-shadow: 0 0 20px var(--accent);
+    margin-bottom: 20px;
+}
+
+/* Labels and Values */
+.label {
+    color: var(--accent);
+    font-weight: 600;
+}
+.value {
+    color: var(--muted);
+}
+
+/* Info Grid */
+.row > .col-md-6 {
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+/* Portfolio / Feedback Buttons */
+.trainer-card .btn-back {
+    margin-top: 15px;
+    margin-right: 10px;
+    min-width: 140px;
+}
+
+/* Responsive */
+@media(max-width:768px){
+    .trainer-card {
+        padding: 20px;
+    }
+    .trainer-img {
+        width: 140px;
+        height: 140px;
+    }
+    .row > .col-md-6 {
+        margin-bottom: 12px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <a href="{% url 'institution_courses' course.institution.id %}" class="btn-back">
+        ← Back to Courses
+    </a>
+
+    {% if trainer %}
+    <div class="trainer-card">
+
+        {% if trainer.photo %}
+            <img src="{{ trainer.photo.url }}" alt="Trainer Photo" class="trainer-img">
+        {% endif %}
+
+        <h2 style="color: var(--accent); margin-bottom: 25px;">{{ trainer.full_name }}</h2>
+
+        <div class="row">
+            <div class="col-md-6">
+                <span class="label">Gender:</span>
+                <div class="value">{{ trainer.get_gender_display }}</div>
+            </div>
+            <div class="col-md-6">
+                <span class="label">Trainer Type:</span>
+                <div class="value">{{ trainer.get_trainer_type_display }}</div>
+            </div>
+            <div class="col-md-6">
+                <span class="label">Dance Styles:</span>
+                <div class="value">{{ trainer.dance_styles }}</div>
+            </div>
+            <div class="col-md-6">
+                <span class="label">Years of Experience:</span>
+                <div class="value">{{ trainer.years_of_experience }} years</div>
+            </div>
+            <div class="col-md-6">
+                <span class="label">Teaching Experience:</span>
+                <div class="value">{{ trainer.teaching_experience }} years</div>
+            </div>
+            <div class="col-md-6">
+                <span class="label">Phone:</span>
+                <div class="value">{{ trainer.phone_number }}</div>
+            </div>
+            <div class="col-md-6">
+                <span class="label">Email:</span>
+                <div class="value">{{ trainer.email }}</div>
+            </div>
+        </div>
+
+        {% if trainer.portfolio %}
+            <a href="{{ trainer.portfolio.url }}" target="_blank" class="btn-back">View Portfolio</a>
+        {% endif %}
+        <a href="{% url 'trainer_feedback_list' trainer.id %}" class="btn-back">View Feedback</a>
+
+    </div>
+    {% else %}
+        <h4 class="text-center mt-5">No trainer assigned for this course.</h4>
+    {% endif %}
+
+</div>
+
+</body>
+</html>

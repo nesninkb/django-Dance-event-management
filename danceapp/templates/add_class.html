@@ -1,0 +1,167 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Add Dance Class</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+
+:root {
+  --bg: linear-gradient(135deg, #0a0a0a, #1a1a1a);
+  --panel: rgba(255,255,255,0.08);
+  --panel-hover: rgba(255,255,255,0.15);
+  --text: #fff;
+  --input-bg: rgba(255,255,255,0.1);
+  --input-hover: rgba(255,255,255,0.2);
+  --btn-bg: linear-gradient(135deg, #272628, #9a9195);
+  --btn-hover: linear-gradient(135deg, #0d0107, #666368);
+  --placeholder: rgba(255,255,255,0.5);
+}
+
+body {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  padding: 20px;
+}
+
+/* Container */
+.container {
+  max-width: 700px;
+  margin: 50px auto;
+  background: var(--panel);
+  border-radius: 20px;
+  padding: 30px 40px;
+  backdrop-filter: blur(12px);
+}
+
+/* Heading */
+h2 {
+  text-align: center;
+  margin-bottom: 25px;
+  font-weight: 600;
+}
+
+/* Form Styles */
+form .form-group {
+  margin-bottom: 20px;
+}
+form label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+form input[type="text"],
+form textarea,
+form select,
+form input[type="file"] {
+  width: 100%;
+  padding: 10px 14px;
+  border: none;
+  border-radius: 10px;
+  background: var(--input-bg);
+  color: var(--text);
+  font-size: 16px;
+  transition: 0.3s;
+}
+form input[type="text"]:focus,
+form textarea:focus,
+form select:focus,
+form input[type="file"]:focus {
+  background: var(--input-hover);
+  outline: none;
+}
+form textarea {
+  resize: vertical;
+}
+form option {
+  background: #1a1a1a;
+  color: #fff;
+}
+
+/* Button */
+button[type="submit"] {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  font-size: 18px;
+  font-weight: 600;
+  border: none;
+  border-radius: 10px;
+  background: var(--btn-bg);
+  color: white;
+  cursor: pointer;
+  transition: 0.3s;
+}
+button[type="submit"]:hover {
+  background: var(--btn-hover);
+}
+
+/* Optional text */
+.optional {
+  font-size: 13px;
+  color: var(--placeholder);
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Add New Dance Class</h2>
+
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <div class="form-group">
+            <label for="id_course_name">Course Name</label>
+            <input type="text" value="{{ course.course_name }}" id="id_course_name" readonly>
+        </div>
+
+        <div class="form-group">
+            <label for="id_trainer">Trainer <span class="optional">*</span></label>
+            <select name="trainer" id="id_trainer" required>
+                <option value="">Select Trainer</option>
+                {% for trainer in trainers %}
+                    <option value="{{ trainer.id }}">{{ trainer.full_name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="id_name">Class Name</label>
+            <input type="text" name="name" id="id_name" maxlength="100" required>
+        </div>
+
+        <div class="form-group">
+            <label for="id_description">Description <span class="optional">*</span></label>
+            <textarea name="description" id="id_description" rows="4" required></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="id_dance_style">Dance Style <span class="optional">*</span></label>
+            <select name="dance_style" id="id_dance_style" required>
+                <option value="">Select Dance Style</option>
+                <option value="bharatanatyam">Bharatanatyam</option>
+                <option value="hiphop">Hip Hop</option>
+                <option value="kathak">Kathak</option>
+                <option value="salsa">Salsa</option>
+                <option value="contemporary">Contemporary</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="id_uploaded_video">Upload Video <span class="optional">*</span></label>
+            <input type="file" name="uploaded_video" id="id_uploaded_video" required>
+        </div>
+
+        <button type="submit">Add Class</button>
+    </form>
+</div>
+
+</body>
+</html>

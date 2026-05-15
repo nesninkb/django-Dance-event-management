@@ -1,0 +1,82 @@
+<div class="bg-white p-6 rounded-xl shadow">
+    <h2 class="text-center font-bold text-xl mb-4">Seat Selection</h2>
+
+    <div class="flex justify-center mb-4">
+        <div class="bg-gray-300 px-12 py-2 rounded">FRONT</div>
+    </div>
+
+    <div id="seatGrid" class="flex flex-col items-center gap-3"></div>
+
+    <p class="text-center mt-4 text-sm">
+        Selected Seats: <span id="seatText">None</span>
+    </p>
+
+    <div class="flex justify-center gap-4 mt-4 text-xs">
+        <span class="flex gap-1 items-center">
+            <span class="w-4 h-4 bg-green-500"></span>Available
+        </span>
+        <span class="flex gap-1 items-center">
+            <span class="w-4 h-4 bg-blue-500"></span>Selected
+        </span>
+        <span class="flex gap-1 items-center">
+            <span class="w-4 h-4 bg-red-500"></span>Booked
+        </span>
+    </div>
+</div>
+
+<script>
+const seatLayout = {{ seat_layout|safe }};
+const bookedSeats = {{ booked_seats|safe }};
+
+const seatGrid = document.getElementById("seatGrid");
+const seatText = document.getElementById("seatText");
+
+let selectedSeats = [];
+let rowDiv = document.createElement("div");
+rowDiv.className = "flex gap-3";
+let count = 0;
+
+seatLayout.forEach(seat => {
+
+    const seatCode = seat.seat;   // adjust if your structure differs
+    const s = document.createElement("div");
+
+    s.innerText = seatCode;
+    s.className = "w-10 h-10 flex items-center justify-center text-xs rounded text-white";
+
+    const isBooked = bookedSeats.includes(seatCode);
+
+    if (isBooked) {
+        s.classList.add("bg-red-500");
+    } else {
+        s.classList.add("bg-green-500", "cursor-pointer");
+
+        s.onclick = () => {
+
+            if (selectedSeats.includes(seatCode)) {
+                selectedSeats = selectedSeats.filter(x => x !== seatCode);
+                s.classList.remove("bg-blue-500");
+                s.classList.add("bg-green-500");
+            } else {
+                selectedSeats.push(seatCode);
+                s.classList.remove("bg-green-500");
+                s.classList.add("bg-blue-500");
+            }
+
+            seatText.innerText = selectedSeats.join(", ") || "None";
+        };
+    }
+
+    rowDiv.appendChild(s);
+    count++;
+
+    if (count === 5) {
+        seatGrid.appendChild(rowDiv);
+        rowDiv = document.createElement("div");
+        rowDiv.className = "flex gap-3";
+        count = 0;
+    }
+});
+
+if (count > 0) seatGrid.appendChild(rowDiv);
+</script>

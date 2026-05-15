@@ -1,0 +1,113 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>User Event List</title>
+
+    <style>
+      :root {
+        --bg1: #ff6a00;
+        --bg2: #ee0979;
+        --bg3: #7f00ff;
+        --text: #fff;
+        --muted: #e4d4ec;
+        --accent: #00eaff;
+        --panel: rgba(0, 0, 0, 0.35);
+      }
+
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: "Poppins", sans-serif;
+        background: linear-gradient(135deg, var(--bg1), var(--bg2), var(--bg3));
+        background-size: 400% 400%;
+        animation: gradient 10s infinite alternate;
+        color: var(--text);
+      }
+
+      @keyframes gradient {
+        0% { background-position: 0% 50%; }
+        100% { background-position: 100% 50%; }
+      }
+
+      .container {
+        width: 90%;
+        max-width: 1100px;
+        margin: 40px auto;
+      }
+
+      h2 {
+        text-align: center;
+        margin-bottom: 25px;
+        font-weight: 600;
+        font-size: 32px;
+      }
+
+      .event-card {
+        background: var(--panel);
+        border-radius: 15px;
+        padding: 20px;
+        margin-bottom: 20px;
+        backdrop-filter: blur(10px);
+        color: var(--text);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        transition: transform 0.3s;
+      }
+
+      .event-card:hover {
+        transform: translateY(-5px);
+      }
+
+      .event-title {
+        font-size: 22px;
+        margin-bottom: 10px;
+        font-weight: 600;
+      }
+
+      .event-info {
+        font-size: 15px;
+        color: var(--muted);
+        margin-bottom: 8px;
+      }
+
+      .event-btn {
+        display: inline-block;
+        padding: 10px 18px;
+        border: none;
+        background: var(--accent);
+        color: black;
+        font-weight: 600;
+        border-radius: 10px;
+        cursor: pointer;
+        text-decoration: none;
+        transition: 0.3s;
+      }
+
+      .event-btn:hover {
+        opacity: 0.8;
+      }
+    </style>
+</head>
+
+<body>
+
+  <div class="container">
+    <h2>User Event List</h2>
+
+    {% for event in events %}
+    <div class="event-card">
+      <div class="event-title">{{ event.title }}</div>
+      <div class="event-info"><b>Date:</b> {{ event.date }}</div>
+      <div class="event-info"><b>Location:</b> {{ event.location }}</div>
+      <div class="event-info"><b>Description:</b> {{ event.description }}</div>
+
+      <a href="{% url 'viewevent' event.id %}" class="event-btn">View Details</a>
+    </div>
+    {% endfor %}
+
+  </div>
+
+</body>
+</html>

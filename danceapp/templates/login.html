@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dance App - Login</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --bg1: #000000; /* Black background */
+      --primary: #ffffff; /* White for primary color */
+      --secondary: #bdbdbd; /* Light grey for secondary text */
+      --text: #ffffff; /* White text */
+      --muted: #888888; /* Muted grey for less prominent text */
+      --glass: rgba(0, 0, 0, 0.15); /* Semi-transparent glass effect */
+      --error: #ff4c4c; /* Error messages in red */
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #000000; /* Black background */
+      color: var(--text); /* White text */
+    }
+
+    .login-container {
+      background: var(--glass);
+      backdrop-filter: blur(18px);
+      border-radius: 20px;
+      padding: 40px;
+      width: 360px;
+      text-align: center;
+      box-shadow: 0 0 25px rgba(255, 255, 255, 0.35);
+      animation: fadeIn 1.2s ease;
+    }
+
+    h2 {
+      font-size: 30px;
+      color: var(--primary); /* White text for the title */
+      margin-bottom: 20px;
+    }
+
+    p { 
+      color: var(--muted); 
+      margin-bottom: 18px;
+    }
+
+    .input-box { 
+      margin: 15px 0; 
+      text-align: left; 
+    }
+
+    .input-box label {
+      display: block;
+      font-size: 14px;
+      margin-bottom: 6px;
+      color: var(--secondary); /* Light grey labels */
+    }
+
+    .input-box input {
+      width: 100%;
+      padding: 12px;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.25);
+      background: rgba(255,255,255,0.1);
+      color: var(--text); /* White text inside input */
+      font-size: 15px;
+    }
+
+    .error-msg {
+      font-size: 12px;
+      color: var(--error); /* Error messages in red */
+      margin-top: 4px;
+      display: none;
+    }
+
+    .login-btn {
+      width: 100%;
+      padding: 13px;
+      margin-top: 20px;
+      border: none;
+      border-radius: 25px;
+      background: #ffffff; /* White button */
+      color: #000000; /* Black text on button */
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .extra-links {
+      margin-top: 20px;
+      font-size: 14px;
+    }
+
+    .extra-links a {
+      color: #ffffff; /* White text for links */
+      text-decoration: none;
+    }
+
+    .extra-links a:hover {
+      text-decoration: underline; /* Underline effect on hover */
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="login-container">
+    <h2>💃 LOGIN</h2>
+    <p>Log in to start your dance journey!</p>
+
+    <form id="loginForm" method="POST" novalidate>
+      {% csrf_token %}
+
+      <div class="input-box">
+        <label>Email</label>
+        <input type="email" id="email" name="email" placeholder="Enter your email">
+        <div class="error-msg" id="emailError">Enter a valid email address</div>
+      </div>
+
+      <div class="input-box">
+        <label>Password</label>
+        <input type="password" id="password" name="password" placeholder="Enter your password">
+        <div class="error-msg" id="passwordError">Password cannot be empty</div>
+      </div>
+
+      <button type="submit" class="login-btn">Login</button>
+    </form>
+
+    <div class="extra-links">
+      <p><a href="#">Forgot Password?</a></p>
+      <p>Don't have an account? <a href="/registration/">Sign Up</a></p>
+    </div>
+  </div>
+
+  <script>
+    const form = document.getElementById("loginForm");
+    const email = document.getElementById("email");
+    const password = document.getElementById("password");
+
+    const showError = (id, show) => {
+      document.getElementById(id).style.display = show ? "block" : "none";
+    };
+
+    email.addEventListener("input", () => {
+      const pattern = /^[^ ]+@[^ ]+\.[a-z]{2,}$/;
+      showError("emailError", !email.value.match(pattern));
+    });
+
+    password.addEventListener("input", () => {
+      showError("passwordError", password.value.trim() === "");
+    });
+
+    form.addEventListener("submit", (e) => {
+      let valid = true;
+
+      if (!email.value.match(/^[^ ]+@[^ ]+\.[a-z]{2,}$/)) {
+        showError("emailError", true);
+        valid = false;
+      }
+
+      if (password.value.trim() === "") {
+        showError("passwordError", true);
+        valid = false;
+      }
+
+      if (!valid) e.preventDefault();
+    });
+  </script>
+</body>
+</html>

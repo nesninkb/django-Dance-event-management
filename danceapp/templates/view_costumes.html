@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Costumes</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+:root{
+  --bg1:#000000;
+  --bg2:#111111;
+  --bg3:#1a1a1a;
+  --text:#ffffff;
+}
+
+body{
+  font-family:'Poppins',sans-serif;
+  min-height:100vh;
+  background:linear-gradient(135deg,var(--bg1),var(--bg2),var(--bg3));
+  color:var(--text);
+  padding:40px 20px;
+}
+
+.main-container{
+  max-width:1200px;
+  margin:auto;
+}
+
+/* Header */
+.heading{
+  font-weight:700;
+  font-size:2rem;
+  margin-bottom:5px;
+}
+
+/* Buttons */
+.back-btn, .add-btn{
+  background:#ffffff;
+  border:none;
+  padding:8px 18px;
+  border-radius:30px;
+  color:#000000;
+  font-weight:600;
+  text-decoration:none;
+  transition:0.3s;
+}
+.back-btn:hover, .add-btn:hover{
+  background:#dddddd;
+  transform:translateY(-2px);
+}
+
+/* Costume Card */
+.costume-card{
+  background:rgba(255,255,255,0.05);
+  backdrop-filter:blur(15px);
+  border-radius:20px;
+  padding:20px;
+  box-shadow:0 15px 35px rgba(0,0,0,0.7);
+  border:1px solid rgba(255,255,255,0.1);
+  transition:0.3s;
+  height:100%;
+}
+.costume-card:hover{
+  transform:translateY(-5px);
+}
+
+/* Image */
+.costume-img{
+  width:100%;
+  height:200px;
+  object-fit:cover;
+  border-radius:12px;
+  margin-bottom:15px;
+}
+
+/* Variant badges */
+.variant-badge{
+  display:inline-block;
+  background:rgba(255,255,255,0.1);
+  padding:6px 10px;
+  border-radius:20px;
+  font-size:0.8rem;
+  margin:4px 4px 0 0;
+}
+
+.color-dot{
+  display:inline-block;
+  width:14px;
+  height:14px;
+  border-radius:50%;
+  margin-right:5px;
+  border:1px solid #ccc;
+}
+
+/* Actions */
+.btn-edit{
+  background:#ffffff;
+  border:none;
+  padding:6px 14px;
+  border-radius:20px;
+  color:#000000;
+  font-size:0.85rem;
+}
+.btn-delete{
+  background:transparent;
+  border:1px solid #ffffff;
+  padding:6px 14px;
+  border-radius:20px;
+  color:#ffffff;
+  font-size:0.85rem;
+}
+.btn-delete:hover{
+  background:#ffffff;
+  color:#000000;
+}
+
+.alert{
+  background:rgba(255,255,255,0.08);
+  color:#ffffff;
+  border:1px solid rgba(255,255,255,0.2);
+  border-radius:15px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="main-container">
+
+  <a href="/ownerhome/" class="back-btn mb-4 d-inline-block">← Back</a>
+
+  <div class="text-center mb-4">
+      <h2 class="heading">📦 My Costumes</h2>
+      <p class="text-light">All costumes uploaded by you</p>
+      <a href="/addcostumes/" class="add-btn mt-2 d-inline-block">+ Add New Costume</a>
+  </div>
+
+  {% if costumes %}
+  <div class="row g-4">
+
+    {% for item in costumes %}
+    <div class="col-md-6 col-lg-4">
+
+      <div class="costume-card">
+
+        <!-- Image -->
+        {% if item.image %}
+          <img src="{{ item.image.url }}" class="costume-img">
+        {% else %}
+          <div class="costume-img d-flex align-items-center justify-content-center">
+            No Image
+          </div>
+        {% endif %}
+
+        <!-- Title & Rate -->
+        <h5>{{ item.name }}</h5>
+        <p class="mb-2">₹ {{ item.rate }}</p>
+
+        <!-- Description -->
+        <p style="font-size:0.9rem;">
+          {{ item.description|truncatechars:80 }}
+        </p>
+
+        <!-- Variants -->
+        <div class="mb-3">
+          <strong>Variants:</strong><br>
+          {% for variant in item.variants.all %}
+            <span class="variant-badge">
+              {{ variant.size }} |
+              <span class="color-dot" style="background:{{ variant.color }}"></span>
+              {{ variant.quantity }}
+            </span>
+          {% empty %}
+            <span class="text-muted">No variants added</span>
+          {% endfor %}
+        </div>
+
+        <!-- Actions -->
+        <div class="d-flex justify-content-between">
+          <a href="{% url 'edit_costume' item.id %}" class="btn-edit">Edit</a>
+          <a href="{% url 'delete_costume' item.id %}"
+             class="btn-delete"
+             onclick="return confirm('Delete this costume?');">
+             Delete
+          </a>
+        </div>
+
+      </div>
+
+    </div>
+    {% endfor %}
+
+  </div>
+  {% else %}
+    <div class="alert text-center">
+      No costumes uploaded yet.
+    </div>
+  {% endif %}
+
+</div>
+
+</body>
+</html>

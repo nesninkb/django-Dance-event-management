@@ -1,0 +1,225 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Add Shop | Dance Training App</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --bg: #000;
+  --panel: #111;
+  --card: #0d0d0d;
+  --border: #222;
+  --text: #ffffff;
+  --muted: #aaaaaa;
+  --accent: #ffffff;
+  --error: #ff5c5c;
+  --success: #4dff9f;
+}
+
+*{box-sizing:border-box;}
+
+body {
+  margin:0;
+  font-family:'Poppins',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  min-height:100vh;
+  padding:20px;
+}
+
+.container{
+  width:100%;
+  max-width:450px;
+}
+
+h1{
+  text-align:center;
+  margin-bottom:25px;
+  color:var(--accent);
+  font-weight:600;
+}
+
+form{
+  background:var(--panel);
+  padding:30px;
+  border-radius:18px;
+  border:1px solid var(--border);
+  box-shadow:0 0 40px rgba(255,255,255,0.05);
+}
+
+label{
+  display:block;
+  margin-top:15px;
+  font-size:13px;
+  color:var(--muted);
+}
+
+input{
+  width:100%;
+  padding:10px;
+  margin-top:6px;
+  border-radius:10px;
+  border:1px solid var(--border);
+  background:var(--card);
+  color:var(--text);
+  font-size:14px;
+  outline:none;
+  transition:0.3s ease;
+}
+
+input:focus{
+  border-color:#ffffff;
+}
+
+input.valid{
+  box-shadow:0 0 8px var(--success);
+}
+
+input.invalid{
+  box-shadow:0 0 8px var(--error);
+}
+
+.error-msg{
+  font-size:12px;
+  color:var(--error);
+  display:none;
+  margin-top:4px;
+}
+
+button{
+  width:100%;
+  margin-top:25px;
+  padding:12px;
+  border:none;
+  border-radius:25px;
+  font-size:15px;
+  font-weight:bold;
+  background:#ffffff;
+  color:#000;
+  cursor:not-allowed;
+  opacity:0.6;
+  transition:0.3s ease;
+}
+
+button.enabled{
+  cursor:pointer;
+  opacity:1;
+}
+
+button.enabled:hover{
+  background:#cccccc;
+  transform:scale(1.03);
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+<h1>Add Shop Details 🛍️</h1>
+
+<form id="shopForm" method="POST" enctype="multipart/form-data">
+{% csrf_token %}
+
+<label>Shop Name</label>
+<input type="text" name="shopname" id="shopname">
+<span class="error-msg">Shop name must be at least 3 characters</span>
+
+<label>Owner Name</label>
+<input type="text" name="name" id="name">
+<span class="error-msg">Name must be at least 3 characters</span>
+
+<label>Email</label>
+<input type="email" name="email" id="email">
+<span class="error-msg">Enter a valid email</span>
+
+<label>Password</label>
+<input type="password" name="password" id="password">
+<span class="error-msg">Min 8 chars, 1 number & 1 symbol</span>
+
+<label>Phone Number</label>
+<input type="text" name="phone" id="phone">
+<span class="error-msg">Phone must be 10 digits</span>
+
+<label>Shop Image / Logo</label>
+<input type="file" name="image" id="image" accept="image/*">
+
+<label>License No</label>
+<input type="text" name="licenseno" id="licenseno">
+<span class="error-msg">License number required</span>
+
+<button type="submit" id="submitBtn" disabled>Submit</button>
+
+</form>
+</div>
+
+<script>
+const submitBtn=document.getElementById("submitBtn");
+
+const fields={
+shopname:{
+    el:document.getElementById("shopname"),
+    check:v=>v.length>=3
+},
+name:{
+    el:document.getElementById("name"),
+    check:v=>v.length>=3
+},
+email:{
+    el:document.getElementById("email"),
+    check:v=>/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)
+},
+password:{
+    el:document.getElementById("password"),
+    check:v=>/^(?=.*\d)(?=.*[@$!%*?&]).{8,}$/.test(v)
+},
+phone:{
+    el:document.getElementById("phone"),
+    check:v=>/^\d{10}$/.test(v)
+},
+licenseno:{
+    el:document.getElementById("licenseno"),
+    check:v=>v.length>0
+}
+};
+
+function validateField(field){
+const input=field.el;
+const error=input.nextElementSibling;
+const valid=field.check(input.value);
+
+input.classList.toggle("valid",valid);
+input.classList.toggle("invalid",!valid);
+error.style.display=valid?"none":"block";
+return valid;
+}
+
+function checkForm(){
+const allValid=Object.values(fields).every(f=>validateField(f));
+submitBtn.classList.toggle("enabled",allValid);
+submitBtn.disabled=!allValid;
+}
+
+Object.values(fields).forEach(field=>{
+field.el.addEventListener("input",checkForm);
+});
+
+document.getElementById("shopForm").addEventListener("submit",function(e){
+if(!Object.values(fields).every(f=>validateField(f))){
+e.preventDefault();
+}
+});
+// Run once on page load
+checkForm();
+</script>
+
+</body>
+</html>

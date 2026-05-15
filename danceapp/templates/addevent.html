@@ -1,0 +1,237 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Create Event | Dance Training App</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+:root {
+  --bg-dark: #000;
+  --panel: rgba(255,255,255,0.05);
+  --text: #ffffff;
+  --muted: #bdbdbd;
+  --accent: #ffffff;
+  --input-bg: rgba(255,255,255,0.06);
+  --btn-bg: #ffffff;
+  --btn-hover: #dcdcdc;
+  --radius: 14px;
+  --shadow: 0 10px 30px rgba(0,0,0,0.8);
+}
+
+*{
+box-sizing:border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  background: #000;
+  color: var(--text);
+  display: flex;
+  justify-content: center;
+  padding: 40px 20px;
+  min-height: 100vh;
+}
+
+/* Container */
+
+.container {
+  width: 100%;
+  max-width: 600px;
+  background: var(--panel);
+  backdrop-filter: blur(10px);
+  border-radius: var(--radius);
+  padding: 30px;
+  box-shadow: var(--shadow);
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+/* Heading */
+
+h2 {
+  text-align: center;
+  font-size: 26px;
+  margin-bottom: 25px;
+  color: #ffffff;
+  font-weight: 700;
+}
+
+/* Labels */
+
+label {
+  display: block;
+  margin: 12px 0 6px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+/* Inputs */
+
+input, select, textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: var(--radius);
+  border: 1px solid rgba(255,255,255,0.15);
+  background: rgba(255,255,255,0.08);
+  color: #ffffff;
+  font-size: 14px;
+  margin-bottom: 15px;
+  transition: 0.3s;
+}
+
+/* Focus */
+
+input:focus, select:focus, textarea:focus {
+  border-color: #ffffff;
+  box-shadow: 0 0 6px rgba(255,255,255,0.6);
+  outline: none;
+}
+
+/* Dropdown options fix */
+
+select option{
+  background:#ffffff;
+  color:#000000;
+}
+
+/* File input */
+
+input[type="file"] {
+  background: transparent;
+}
+
+/* Buttons */
+
+input[type="submit"], .back-btn {
+  width: 100%;
+  padding: 12px;
+  border-radius: var(--radius);
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 15px;
+  text-decoration: none;
+  text-align: center;
+  color: #000;
+  background: var(--btn-bg);
+  transition: 0.3s;
+  margin-top: 10px;
+  display: inline-block;
+}
+
+input[type="submit"]:hover, .back-btn:hover {
+  background: var(--btn-hover);
+  transform: scale(1.02);
+}
+
+/* Small text */
+
+p.text-sm {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: -10px;
+  margin-bottom: 10px;
+}
+
+/* Responsive */
+
+@media(max-width:480px){
+
+.container{
+padding:20px;
+}
+
+h2{
+font-size:22px;
+}
+
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>Create New Event</h2>
+
+<form method="POST" enctype="multipart/form-data">
+
+{% csrf_token %}
+
+<label>Event Name:</label>
+<input type="text" name="event_name" required>
+
+<label>Institution:</label>
+<select name="institution" required>
+<option value="">Select Institution</option>
+{% for inst in institutions %}
+<option value="{{ inst.id }}">{{ inst.name }}</option>
+{% endfor %}
+</select>
+
+<label>Trainer (Optional):</label>
+<select name="trainer">
+<option value="">Select Trainer</option>
+{% for tr in trainers %}
+<option value="{{ tr.id }}">{{ tr.full_name }}</option>
+{% endfor %}
+</select>
+
+<label>Location:</label>
+<textarea name="location" rows="3"></textarea>
+
+<label>Event Poster:</label>
+<input type="file" name="poster" accept="image/*">
+
+<label>Start Time:</label>
+<input type="time" name="start_time">
+
+<label>End Time:</label>
+<input type="time" name="end_time">
+
+<label>Date:</label>
+<input type="date" name="date">
+
+<label>Trainer Position:</label>
+<input type="text" name="trainer_position">
+
+<label>Age Category:</label>
+<select name="age_category" required>
+<option value="">Select</option>
+<option value="kids">Kids</option>
+<option value="teens">Teens</option>
+<option value="adults">Adults</option>
+</select>
+
+<label>Price Per Person:</label>
+<input type="number" name="priceperperson" placeholder="Price Per Person" required>
+
+<label>Assign Venue (Optional):</label>
+<select name="venue">
+<option value="">-- No Venue Assigned --</option>
+{% for v in venues %}
+<option value="{{ v.id }}">{{ v.name }} ({{ v.total_seats }} seats)</option>
+{% endfor %}
+</select>
+
+<p class="text-sm">
+Choose a venue for custom seat layout & booking. You can add venue from your dashboard.
+</p>
+
+<input type="submit" value="Create Event">
+
+</form>
+
+<a href="{% url 'eventlist' %}" class="back-btn">Back to Event List</a>
+
+</div>
+
+</body>
+</html>

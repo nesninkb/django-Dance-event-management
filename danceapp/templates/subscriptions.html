@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Subscription</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: #000000; /* Black background */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            color: #ffffff; /* White text */
+        }
+
+        .subscribe-box {
+            width: 100%;
+            max-width: 420px;
+            background: #222222; /* Dark grey background for the box */
+            padding: 35px 30px;
+            border-radius: 18px;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.35);
+        }
+
+        .subscribe-box h2 {
+            text-align: center;
+            margin-bottom: 25px;
+            color: #ffffff; /* White for the heading */
+            font-size: 28px;
+            letter-spacing: 1px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            color: #ccc; /* Light grey text for labels */
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 18px;
+            border-radius: 10px;
+            border: none;
+            outline: none;
+            background: #333333; /* Darker grey background for input fields */
+            color: #fff;
+            font-size: 15px;
+            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.4);
+        }
+
+        input:focus {
+            box-shadow: inset 0 0 0 2px #ffffff; /* White border on focus */
+        }
+
+        input[readonly] {
+            background: #444444;
+            color: #ffffff;
+            font-weight: 700;
+            cursor: not-allowed;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            border-radius: 12px;
+            border: none;
+            background: #444444; /* Dark grey button */
+            color: #fff;
+            font-size: 16px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 28px rgba(255, 255, 255, 0.4);
+        }
+
+        button:active {
+            transform: scale(0.97);
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="subscribe-box">
+    <h2>Subscribe</h2>
+
+    <form method="POST">
+        {% csrf_token %}
+
+        <label>Start Date</label>
+        <input type="date" id="startdate" name="startdate" required>
+
+        <label>End Date</label>
+        <input type="date" id="enddate" name="enddate" required>
+
+        <label>Number of Days</label>
+        <input type="number" id="days" readonly>
+
+        <label>Price (₹100 per day)</label>
+        <input type="number" id="price" readonly>
+
+        <button type="submit">Subscribe Now</button>
+
+    </form>
+</div>
+
+<script>
+    const startDate = document.getElementById("startdate");
+    const endDate = document.getElementById("enddate");
+    const daysField = document.getElementById("days");
+    const priceField = document.getElementById("price");
+
+    const PRICE_PER_DAY = 100;
+
+    function calculate() {
+        if (startDate.value && endDate.value) {
+            const start = new Date(startDate.value);
+            const end = new Date(endDate.value);
+
+            const diffTime = end - start;
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+            if (diffDays > 0) {
+                daysField.value = diffDays;
+                priceField.value = diffDays * PRICE_PER_DAY;
+            } else {
+                daysField.value = "";
+                priceField.value = "";
+            }
+        }
+    }
+
+    startDate.addEventListener("change", () => {
+        endDate.min = startDate.value;
+        daysField.value = "";
+        priceField.value = "";
+    });
+
+    endDate.addEventListener("change", calculate);
+</script>
+</body>
+</html>

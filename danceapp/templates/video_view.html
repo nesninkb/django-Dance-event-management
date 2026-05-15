@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Media Gallery</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+    :root {
+        --bg1: #000000;
+        --bg2: #1a1a1a;
+        --bg3: #2b2b2b;
+        --text: #ffffff;
+        --muted: #bfbfbf;
+        --panel: rgba(255, 255, 255, 0.06);
+        --accent: #ff6a00;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+        font-family: 'Poppins', sans-serif;
+        margin: 0;
+        background: radial-gradient(circle at top, var(--bg3), var(--bg1));
+        background-attachment: fixed;
+        color: var(--text);
+        min-height: 100vh;
+    }
+
+    nav {
+        background: rgba(0,0,0,0.85);
+        backdrop-filter: blur(12px);
+        padding: 15px 30px;
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 12px;
+        border-bottom: 1px solid rgba(255,255,255,0.08);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+    }
+
+    nav a {
+        color: var(--text);
+        text-decoration: none;
+        font-weight: 500;
+        padding: 8px 14px;
+        border-radius: 20px;
+        transition: 0.3s ease;
+    }
+
+    nav a:hover {
+        background: var(--accent);
+        color: #fff;
+    }
+
+    .container {
+        max-width: 1100px;
+        margin: auto;
+        padding: 30px;
+        display: flex;
+        flex-direction: column;
+        gap: 25px;
+    }
+
+    h2 {
+        color: #fff;
+        font-weight: 600;
+        margin-bottom: 10px;
+        text-align: center;
+    }
+
+    .side-actions {
+        position: fixed;
+        top: 50%;
+        right: 20px;
+        transform: translateY(-50%);
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        z-index: 1000;
+    }
+
+    .side-actions a {
+        text-decoration: none;
+        padding: 12px 18px;
+        border-radius: 30px;
+        font-weight: 600;
+        color: #fff;
+        background: var(--panel);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(255,255,255,0.15);
+        box-shadow: 0 6px 18px rgba(0,0,0,0.4);
+        transition: all 0.3s ease;
+    }
+
+    .side-actions a:hover {
+        transform: translateX(-6px);
+        background: var(--accent);
+        color: #fff;
+    }
+
+    .media-card {
+        width: 100%;
+        background: var(--panel);
+        border-radius: 18px;
+        border: 1px solid rgba(255,255,255,0.08);
+        backdrop-filter: blur(12px);
+        padding-bottom: 10px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+        transition: transform 0.3s ease;
+    }
+
+    .media-card:hover {
+        transform: translateY(-5px);
+        background: rgba(255,255,255,0.1);
+    }
+
+    .media-area {
+        height: 320px;
+        background: var(--bg2);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-top-left-radius: 18px;
+        border-top-right-radius: 18px;
+        overflow: hidden;
+    }
+
+    .media-area video,
+    .media-area img {
+        max-height: 100%;
+        max-width: 100%;
+        object-fit: contain;
+    }
+
+    .media-area audio {
+        width: 70%;
+    }
+
+    .post-header {
+        font-weight: 600;
+        padding: 16px 20px;
+        font-size: 18px;
+        color: #fff;
+    }
+
+    .description-box {
+        padding: 0 18px 10px 18px;
+        color: var(--muted);
+        font-size: 15px;
+    }
+
+    .like-btn {
+        border-radius: 25px;
+        background: var(--accent);
+        color: #fff;
+        border: none;
+        transition: 0.3s ease;
+    }
+
+    .like-btn:hover {
+        background: #ff2d55;
+    }
+
+    .comments-box {
+        max-height: 160px;
+        overflow-y: auto;
+        padding: 12px 18px;
+        background: rgba(255,255,255,0.08);
+        border-radius: 12px;
+        color: #fff;
+    }
+
+    .comments-box p {
+        margin-bottom: 8px;
+    }
+
+    .btn-back {
+        margin: 15px;
+        background: var(--panel);
+        color: #fff;
+        border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .btn-back:hover {
+        background: var(--accent);
+        color: #fff;
+    }
+
+    </style>
+</head>
+
+<body>
+
+<nav>
+    <a href="{% url 'trainerhome' %}">Home</a>
+    <a href="/upload/">Upload Media</a>
+    <a href="/my_uploads/">My Uploads</a>
+</nav>
+
+<a href="{% url 'trainerhome' %}" class="btn btn-back">⬅ Back</a>
+
+<div class="container">
+    <h2>Media Gallery</h2>
+    <p class="text-muted" style="text-align:center; color: var(--muted);">Videos • Images • Audio</p>
+
+    {% for v in videos %}
+    <div class="media-card">
+
+        <div class="media-area">
+            {% if v.media_type == "video" %}
+                <video controls>
+                    <source src="{{ v.mediapath.url }}">
+                </video>
+            {% elif v.media_type == "image" %}
+                <img src="{{ v.mediapath.url }}">
+            {% elif v.media_type == "audio" %}
+                <audio controls>
+                    <source src="{{ v.mediapath.url }}">
+                </audio>
+            {% endif %}
+        </div>
+
+        <div class="post-header">{{ v.name }}</div>
+
+        <p class="description-box">{{ v.description|slice:":200" }}...</p>
+
+        <div class="px-3 pb-2">
+            <button class="like-btn" data-id="{{ v.id }}">❤️ Like</button>
+            <span class="ms-2">{{ v.videolike_set.count }}</span> Likes
+        </div>
+
+        <hr style="border-color: rgba(255,255,255,0.08);">
+
+        <div class="px-3">
+            <form action="/comment_video/{{ v.id }}/" method="POST">
+                {% csrf_token %}
+                <textarea name="comment" class="form-control" placeholder="Write a comment..." required
+                style="background: var(--bg2); color: #fff; border:1px solid rgba(255,255,255,0.08);"></textarea>
+                <button class="btn btn-primary btn-sm mt-2" style="background: var(--accent); border:none;">Comment</button>
+            </form>
+        </div>
+
+        <div class="comments-box mt-3">
+            {% for c in v.videocomment_set.all %}
+                <p><b>{{ c.username }}:</b> {{ c.comment }}</p>
+            {% empty %}
+                <p class="text-muted">No comments yet.</p>
+            {% endfor %}
+        </div>
+
+    </div>
+    {% endfor %}
+</div>
+
+<script>
+$(document).on("click", ".like-btn", function(){
+    var video_id = $(this).data("id");
+    $.ajax({
+        url: "/like_video/" + video_id + "/",
+        type: "POST",
+        data: { csrfmiddlewaretoken: '{{ csrf_token }}' },
+        success: function(resp){
+            if(resp.status === "login_required"){
+                alert("Please login first!");
+            } else {
+                location.reload();
+            }
+        }
+    });
+});
+</script>
+
+</body>
+</html>

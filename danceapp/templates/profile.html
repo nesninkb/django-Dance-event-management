@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="ml">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Profile - Trainer Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --bg1:#000000;
+  --bg2:#0a0a0a;
+  --bg3:#141414;
+  --accent:#ffffff;
+  --text:#ffffff;
+  --muted:#bfbfbf;
+  --panel:rgba(255,255,255,0.06);
+  --radius:20px;
+}
+
+*{
+box-sizing:border-box;
+margin:0;
+padding:0;
+font-family:'Poppins',sans-serif;
+}
+
+body{
+background:linear-gradient(135deg,var(--bg1),var(--bg3));
+color:var(--text);
+display:flex;
+justify-content:center;
+padding:30px 12px;
+min-height:100vh;
+}
+
+.phone{
+width:100%;
+max-width:420px;
+}
+
+header.appbar{
+display:flex;
+align-items:center;
+justify-content:center;
+margin-bottom:16px;
+}
+
+h1{
+font-size:26px;
+font-weight:700;
+color:#ffffff;
+letter-spacing:1px;
+text-shadow:0 0 8px rgba(255,255,255,0.5);
+}
+
+.back-wrap{
+text-align:left;
+margin-bottom:12px;
+}
+
+.back-btn{
+text-decoration:none;
+color:#ffffff;
+font-weight:600;
+transition:0.3s;
+}
+
+.back-btn:hover{
+opacity:0.7;
+transform:translateX(-4px);
+}
+
+/* Card panel */
+
+main.card{
+background:var(--panel);
+backdrop-filter:blur(18px);
+border-radius:var(--radius);
+padding:22px;
+border:1px solid rgba(255,255,255,0.15);
+box-shadow:0 10px 35px rgba(255,255,255,0.1);
+animation:fadeUp 0.8s ease;
+}
+
+/* Fade animation */
+
+@keyframes fadeUp{
+from{opacity:0;transform:translateY(25px);}
+to{opacity:1;transform:translateY(0);}
+}
+
+/* Profile row */
+
+.profile-row{
+display:flex;
+align-items:center;
+gap:16px;
+padding-bottom:14px;
+border-bottom:1px solid rgba(255,255,255,0.1);
+}
+
+.avatar{
+position:relative;
+width:90px;
+height:90px;
+border-radius:50%;
+background:#111;
+display:grid;
+place-items:center;
+overflow:hidden;
+border:2px solid #fff;
+box-shadow:0 0 12px rgba(255,255,255,0.6);
+}
+
+.avatar img{
+width:100%;
+height:100%;
+object-fit:cover;
+}
+
+/* Fields */
+
+.fields{
+flex:1;
+}
+
+.label{
+font-size:13px;
+color:var(--muted);
+font-weight:600;
+}
+
+.username{
+font-weight:600;
+font-size:16px;
+color:var(--text);
+}
+
+/* List rows */
+
+.list{
+margin-top:18px;
+display:flex;
+flex-direction:column;
+gap:14px;
+}
+
+.row{
+display:flex;
+align-items:center;
+justify-content:space-between;
+padding:14px;
+border-radius:var(--radius);
+background:rgba(255,255,255,0.05);
+border:1px solid rgba(255,255,255,0.1);
+transition:0.3s;
+}
+
+.row:hover{
+transform:translateY(-3px);
+background:rgba(255,255,255,0.08);
+box-shadow:0 0 10px rgba(255,255,255,0.15);
+}
+
+.row .left{
+display:flex;
+flex-direction:column;
+gap:6px;
+}
+
+.row .title{
+font-weight:600;
+color:var(--text);
+}
+
+.row .sub{
+color:var(--muted);
+font-size:13px;
+}
+
+/* Bio */
+
+.bio-label{
+margin-top:6px;
+color:var(--muted);
+font-weight:600;
+}
+
+textarea.bio{
+width:100%;
+min-height:100px;
+margin-top:8px;
+border-radius:var(--radius);
+padding:12px;
+font-size:15px;
+color:var(--text);
+background:rgba(255,255,255,0.06);
+border:1px solid rgba(255,255,255,0.15);
+outline:none;
+transition:0.3s;
+}
+
+textarea.bio:focus{
+border-color:#fff;
+box-shadow:0 0 8px rgba(255,255,255,0.5);
+background:rgba(255,255,255,0.08);
+}
+
+/* Links */
+
+.links{
+margin-top:12px;
+color:var(--muted);
+font-weight:600;
+}
+
+.add-link{
+margin-top:8px;
+color:#ffffff;
+font-weight:600;
+cursor:pointer;
+transition:0.3s;
+}
+
+.add-link:hover{
+opacity:0.7;
+transform:translateX(4px);
+}
+</style>
+</head>
+
+<body>
+<div class="phone">
+
+<header class="appbar">
+<h1>Profile</h1>
+</header>
+
+<div class="back-wrap">
+<a href="{% url 'home' %}" class="back-btn">&larr; Back to Home</a>
+</div>
+
+<main class="card">
+
+<section class="profile-row">
+
+<div class="avatar">
+{% if user.image %}
+<img id="avatarImg" src="{{ user.image.url }}" alt="avatar">
+{% endif %}
+</div>
+
+<div class="fields">
+<div class="label">Username</div>
+<div class="username" id="username">{{ user.username }}</div>
+</div>
+
+</section>
+
+<div class="list">
+
+<div class="row">
+<div class="left">
+<div class="title">Email</div>
+<div class="sub" id="nameSub">{{ user.email }}</div>
+</div>
+</div>
+
+<div>
+<div class="bio-label">Bio</div>
+<textarea class="bio" id="bio" readonly>{{ user.bio }}</textarea>
+</div>
+
+<div>
+<div class="links">{{ user.links }}</div>
+<a href="/editprofile/"><div class="add-link">Edit Profile</div></a>
+</div>
+
+</div>
+
+</main>
+</div>
+</body>
+</html>

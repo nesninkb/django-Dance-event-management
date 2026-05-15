@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+{% load static %}
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Edit Trainer Profile</title>
+
+<style>
+:root{
+  --bg:#000;
+  --panel:#111;
+  --card:#0d0d0d;
+  --border:#222;
+  --text:#fff;
+  --muted:#aaa;
+  --accent:#fff;
+  font-family:'Segoe UI',system-ui,sans-serif;
+}
+
+body{
+  margin:0;
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:var(--bg);
+  color:var(--text);
+  padding:20px;
+}
+
+.form-box{
+  width:100%;
+  max-width:460px;
+  background:var(--panel);
+  padding:35px;
+  border-radius:18px;
+  border:1px solid var(--border);
+  box-shadow:0 0 40px rgba(255,255,255,0.05);
+}
+
+h2{
+  text-align:center;
+  margin-bottom:25px;
+  font-weight:600;
+  letter-spacing:0.5px;
+}
+
+label{
+  font-size:13px;
+  display:block;
+  margin-top:15px;
+  color:var(--muted);
+}
+
+input,select{
+  width:100%;
+  padding:11px;
+  margin-top:6px;
+  border-radius:10px;
+  border:1px solid var(--border);
+  background:var(--card);
+  color:var(--text);
+  outline:none;
+  transition:0.3s ease;
+}
+
+input:focus,select:focus{
+  border-color:#fff;
+}
+
+input[type="file"]{
+  padding:8px;
+  background:var(--card);
+  cursor:pointer;
+}
+
+button{
+  width:100%;
+  margin-top:25px;
+  padding:12px;
+  border:none;
+  border-radius:25px;
+  font-weight:600;
+  background:#fff;
+  color:#000;
+  cursor:pointer;
+  transition:0.3s ease;
+}
+
+button:hover{
+  background:#ccc;
+  transform:translateY(-2px);
+}
+
+@media(max-width:480px){
+  .form-box{
+    padding:25px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="form-box">
+  <h2>Edit Profile</h2>
+
+  <form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <label>Name</label>
+    <input type="text" name="name" value="{{ trainer.name }}">
+
+    <label>Phone</label>
+    <input type="text" name="phone" value="{{ trainer.phone }}">
+
+    <label>Experience (years)</label>
+    <input type="number" name="experience" value="{{ trainer.experience }}">
+
+    <label>Gender</label>
+    <select name="gender">
+      <option value="">Select</option>
+      <option value="M" {% if trainer.gender == 'M' %}selected{% endif %}>Male</option>
+      <option value="F" {% if trainer.gender == 'F' %}selected{% endif %}>Female</option>
+      <option value="O" {% if trainer.gender == 'O' %}selected{% endif %}>Other</option>
+    </select>
+
+    <label>Profile Image</label>
+    <input type="file" name="image">
+
+    <button type="submit">Update Profile</button>
+  </form>
+</div>
+
+</body>
+</html>

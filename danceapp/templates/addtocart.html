@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Add to Cart</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --bg:#0a0a0a;
+  --panel:#111;
+  --card:#1a1a1a;
+  --border:#222;
+  --text:#ffffff;
+  --muted:#aaaaaa;
+}
+
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'Poppins',sans-serif;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  min-height:100vh;
+  padding:20px;
+}
+
+.card{
+  width:420px;
+  background:var(--panel);
+  padding:30px;
+  border-radius:20px;
+  border:1px solid var(--border);
+  box-shadow:0 0 40px rgba(255,255,255,0.05);
+  text-align:center;
+}
+
+.card img{
+  width:100%;
+  height:220px;
+  object-fit:cover;
+  border-radius:15px;
+  margin-bottom:20px;
+}
+
+.title{
+  font-size:22px;
+  font-weight:600;
+}
+
+.variant{
+  margin-top:10px;
+  color:var(--muted);
+}
+
+.price{
+  margin-top:15px;
+  font-size:18px;
+  font-weight:600;
+}
+
+input[type="number"]{
+  width:100%;
+  padding:12px;
+  margin-top:20px;
+  border-radius:12px;
+  border:1px solid var(--border);
+  background:var(--card);
+  color:white;
+  text-align:center;
+}
+
+button{
+  width:100%;
+  padding:14px;
+  margin-top:20px;
+  border-radius:30px;
+  border:none;
+  background:white;
+  color:black;
+  font-weight:600;
+  cursor:pointer;
+  transition:0.3s;
+}
+
+button:hover{
+  transform:scale(1.05);
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+
+<h2>Add to Cart</h2>
+
+<img src="{{ costume.image.url }}" alt="{{ costume.name }}">
+
+<div class="title">{{ costume.name }}</div>
+
+<div class="variant">
+Size: {{ variant.size }} <br>
+Color: <span style="display:inline-block;width:15px;height:15px;
+background:{{ variant.color }};
+border-radius:50%;margin-left:5px;"></span>
+</div>
+
+<div class="price">₹ {{ costume.rate }}</div>
+
+<form method="POST" action="{% url 'addtocart' costume.id %}">
+{% csrf_token %}
+<input type="hidden" name="variant_id" value="{{ variant.id }}">
+
+<input type="number"
+       name="quantity"
+       min="1"
+       max="{{ variant.quantity }}"
+       value="1"
+       required>
+
+<button type="submit">Confirm Add to Cart</button>
+</form>
+
+</div>
+
+</body>
+</html>

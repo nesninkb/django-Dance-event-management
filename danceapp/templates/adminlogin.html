@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Trainer Login | Dance App</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --bg1: #000000;
+      --bg2: #111111;
+      --primary: #ffffff;
+      --accent: #cccccc;
+      --text: #ffffff;
+      --muted: #aaaaaa;
+      --panel: rgba(255, 255, 255, 0.05);
+      --border: rgba(255, 255, 255, 0.15);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(135deg, var(--bg1), var(--bg2));
+      color: var(--text);
+    }
+
+    .login-container {
+      width: 360px;
+      padding: 40px;
+      border-radius: 20px;
+      background: var(--panel);
+      backdrop-filter: blur(15px);
+      border: 1px solid var(--border);
+      box-shadow: 0 10px 30px rgba(255, 255, 255, 0.08);
+      text-align: center;
+      animation: fadeIn 0.8s ease;
+    }
+
+    .login-container h2 {
+      font-size: 26px;
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+
+    .login-container p {
+      font-size: 14px;
+      margin-bottom: 20px;
+      color: var(--muted);
+    }
+
+    .brand {
+      font-size: 22px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      margin-bottom: 25px;
+      color: var(--primary);
+    }
+
+    .input-box {
+      margin-bottom: 18px;
+      text-align: left;
+    }
+
+    .input-box label {
+      font-size: 13px;
+      margin-bottom: 6px;
+      display: block;
+      color: var(--muted);
+    }
+
+    .input-box input {
+      width: 100%;
+      padding: 12px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.08);
+      color: var(--text);
+      font-size: 14px;
+      outline: none;
+      transition: 0.3s ease;
+    }
+
+    .input-box input:focus {
+      border: 1px solid #ffffff;
+      background: rgba(255,255,255,0.12);
+    }
+
+    .input-box input::placeholder {
+      color: #bbbbbb;
+    }
+
+    .login-btn {
+      width: 100%;
+      padding: 12px;
+      border-radius: 25px;
+      border: none;
+      margin-top: 10px;
+      background: #ffffff;
+      color: #000000;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.3s ease;
+    }
+
+    .login-btn:hover {
+      background: #dddddd;
+      transform: translateY(-2px);
+    }
+
+    .extra-links {
+      margin-top: 18px;
+      font-size: 13px;
+    }
+
+    .extra-links a {
+      color: #ffffff;
+      text-decoration: none;
+    }
+
+    .extra-links a:hover {
+      text-decoration: underline;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-15px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+  </style>
+</head>
+
+<body>
+
+  <div class="login-container">
+    <h2>Admin Login</h2>
+    <p>Access your dance training dashboard</p>
+    <div class="brand">LUMINA</div>
+
+    <form method="POST">
+      {% csrf_token %}
+
+      <div class="input-box">
+        <label>Username</label>
+        <input type="text" name="username" placeholder="Enter your username" required />
+      </div>
+
+      <div class="input-box">
+        <label>Password</label>
+        <input type="password" name="password" placeholder="Enter your password" required />
+      </div>
+
+      <button type="submit" class="login-btn">Login</button>
+    </form>
+
+    <div class="extra-links">
+      <p><a href="#">Forgot Password?</a></p>
+    </div>
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Membership Plans</title>
+    <style>
+        /* Global Styles */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            background: #000000; /* Black background */
+            color: #fff; /* White text */
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding-top: 40px;
+        }
+
+        .container {
+            background-color: #222222; /* Dark gray background */
+            width: 95%;
+            max-width: 1200px;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+            overflow: hidden;
+        }
+
+        /* Title Styles */
+        .title {
+            text-align: center;
+            color: #fff; /* White color */
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            font-weight: bold;
+        }
+
+        /* Table Styling */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #222222; /* Dark background for table */
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        thead {
+            background-color: #333333; /* Dark gray for header */
+            color: #fff; /* White text */
+        }
+
+        thead th {
+            padding: 15px 20px;
+            font-size: 1.2em;
+        }
+
+        tbody tr {
+            border-bottom: 1px solid #555;
+            transition: background-color 0.2s ease-in-out;
+        }
+
+        tbody td {
+            padding: 15px 20px;
+            text-align: center;
+            color: #ddd; /* Light gray text */
+            font-size: 1em;
+        }
+
+        tbody tr:hover {
+            background-color: #444; /* Darker background on hover */
+        }
+
+        tbody tr td img {
+            border-radius: 8px;
+            width: 60px;
+            height: 60px;
+        }
+
+        /* No Data Message */
+        .no-users {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 1.4em;
+            color: #fff;
+        }
+
+        /* Button Styling */
+        .delete {
+            background-color: #d9534f;
+            padding: 10px 18px;
+            border: none;
+            color: #fff;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .delete:hover {
+            background-color: #c9302c;
+            transform: translateY(-3px);
+        }
+
+        .delete:active {
+            transform: translateY(1px);
+        }
+
+        .actions {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        /* Additional Responsive Styling */
+        @media screen and (max-width: 768px) {
+            .container {
+                width: 90%;
+                padding: 20px;
+            }
+
+            .title {
+                font-size: 2em;
+            }
+
+            table {
+                font-size: 0.9em;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1 class="title">Membership Plans</h1>
+
+        {% if data %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Trainer choice</th>
+                    <th>Package</th>
+                    <th>Description</th>
+                    <th>Fees</th>
+                    <th>Duration</th>
+                    <th>How</th>
+                    <th>Image</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for user in data %}
+                <tr>
+                    <td>{{ user.type }}</td>
+                    <td>{{ user.package_name}}</td>
+                    <td>{{ user.description }}</td>
+                    <td>{{ user.fees }}</td>
+                    <td>{{ user.duration }}</td>
+                    <td>{{ user.how }}</td>
+                    <td>
+                        {% if user.image %}
+                            <img src="{{ user.image.url }}" alt="Image">
+                        {% else %}
+                            No Image
+                        {% endif %}
+                    </td>
+                    <td><a href="{% url 'buypackage' user.id%}" class="delete">Buy</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        {% else %}
+        <div class="no-users">No Membership Plans Found.</div>
+        {% endif %}
+    </div>
+</body>
+</html>

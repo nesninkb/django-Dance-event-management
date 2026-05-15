@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="en">
+{% load static %}
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Add Dance Course</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg1: #000;
+  --bg2: #111;
+  --bg3: #222;
+  --glass: rgba(255, 255, 255, 0.08);
+  --accent: #fff;
+  font-family: 'Poppins', system-ui, sans-serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  min-height: 100vh;
+  background: linear-gradient(135deg, var(--bg1), var(--bg2), var(--bg3));
+  padding: 24px;
+  color: #fff;
+  font-size: 14px;
+}
+
+.container {
+  max-width: 600px;
+  margin: auto;
+  background: var(--glass);
+  padding: 20px;
+  border-radius: 16px;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 12px 25px rgba(0,0,0,0.45);
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 16px;
+  font-weight: 600;
+}
+
+label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+
+input, select, textarea {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 12px;
+  border-radius: 12px;
+  border: none;
+  background: rgba(255,255,255,0.08);
+  color: #fff;
+}
+
+textarea { resize: vertical; }
+
+button {
+  padding: 10px 18px;
+  border: none;
+  border-radius: 20px;
+  background: #555;
+  color: #fff;
+  cursor: pointer;
+  font-weight: 700;
+  transition: 0.3s;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.4);
+}
+button:hover {
+  transform: scale(1.05);
+  filter: brightness(1.2);
+}
+
+/* Trainer details section */
+.trainer-details {
+  background: rgba(255,255,255,0.05);
+  padding: 10px;
+  border-radius: 12px;
+  margin-bottom: 12px;
+  display: none;
+  backdrop-filter: blur(8px);
+}
+.trainer-details img {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  float: right;
+  border-radius: 50%;
+}
+
+/* Dropdown fixes */
+select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background: rgba(255,255,255,0.08);
+  color: #fff;
+  padding: 8px;
+  border-radius: 12px;
+  border: none;
+  width: 100%;
+  cursor: pointer;
+  position: relative;
+  margin-bottom: 12px;
+}
+
+select option {
+  color: #000;
+  background: #fff;
+}
+
+select {
+  background-image: url("data:image/svg+xml;charset=US-ASCII,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12'><polygon points='0,0 12,0 6,6' fill='white'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 12px;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Add Dance Course</h2>
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <label>Course Name</label>
+        <input type="text" name="course_name" required>
+
+        <label>Description</label>
+        <textarea name="description"></textarea>
+
+        <label>Course Type</label>
+        <select name="course_type" required>
+            <option value="CL">Classical</option>
+            <option value="HP">Hip Hop</option>
+            <option value="KS">Kathak</option>
+            <option value="BS">Bharatanatyam</option>
+            <option value="MO">Mohiniyattam</option>
+            <option value="OT">Other</option>
+        </select>
+
+        <label>Duration (weeks)</label>
+        <input type="number" name="duration_in_weeks" min="1" required>
+
+        <label>Schedule</label>
+        <input type="text" name="schedule" placeholder="Mon, Wed, Fri - 5:00 PM to 6:00 PM" required>
+
+        <label>Number of Classes</label>
+        <input type="number" name="number_of_classes" min="1" required>
+
+        <label>Tutor</label>
+        <select name="tutor" id="tutor-select">
+            <option value="">-- Select Tutor --</option>
+            {% for t in trainers %}
+            <option value="{{ t.id }}">{{ t.full_name }}</option>
+            {% endfor %}
+        </select>
+
+        <div class="trainer-details" id="trainer-details">
+            <h4 id="trainer-name"></h4>
+            <p><strong>Gender:</strong> <span id="trainer-gender"></span></p>
+            <p><strong>Phone:</strong> <span id="trainer-phone"></span></p>
+            <p><strong>Email:</strong> <span id="trainer-email"></span></p>
+            <p><strong>Dance Styles:</strong> <span id="trainer-styles"></span></p>
+            <p><strong>Experience:</strong> <span id="trainer-exp"></span> years</p>
+            <img id="trainer-photo" src="" alt="">
+        </div>
+
+        <label>Fees per Head</label>
+        <input type="number" name="fees_per_head" step="0.01" min="0" required>
+
+        <label>Extra Details</label>
+        <textarea name="extra_details"></textarea>
+
+        <label>Course Poster (optional)</label>
+        <input type="file" name="poster">
+
+        <button type="submit">Add Course</button>
+    </form>
+</div>
+
+<script>
+const trainers = {
+    {% for t in trainers %}
+    "{{ t.id }}": {
+        "name": "{{ t.full_name|escapejs }}",
+        "gender": "{{ t.get_gender_display }}",
+        "phone": "{{ t.phone_number }}",
+        "email": "{{ t.email }}",
+        "styles": "{{ t.dance_styles|escapejs }}",
+        "exp": "{{ t.teaching_experience }}",
+        "photo": "{% if t.photo %}{{ t.photo.url }}{% else %}{% static 'images/default_trainer.jpg' %}{% endif %}"
+    },
+    {% endfor %}
+};
+
+const select = document.getElementById('tutor-select');
+const details = document.getElementById('trainer-details');
+select.addEventListener('change', function() {
+    const val = this.value;
+    if(val && trainers[val]){
+        details.style.display = 'block';
+        document.getElementById('trainer-name').textContent = trainers[val].name;
+        document.getElementById('trainer-gender').textContent = trainers[val].gender;
+        document.getElementById('trainer-phone').textContent = trainers[val].phone;
+        document.getElementById('trainer-email').textContent = trainers[val].email;
+        document.getElementById('trainer-styles').textContent = trainers[val].styles;
+        document.getElementById('trainer-exp').textContent = trainers[val].exp;
+        document.getElementById('trainer-photo').src = trainers[val].photo;
+    } else {
+        details.style.display = 'none';
+    }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Paid Media List</title>
+
+  <style>
+    :root {
+      --bg1: #ff6a00;
+      --bg2: #ee0979;
+      --text: #ffffff;
+      --accent: #00eaff;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, var(--bg1), var(--bg2));
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      padding-top: 40px;
+      color: var(--text);
+    }
+
+    .list-container {
+      width: 90%;
+      max-width: 900px;
+      padding: 30px;
+      background: rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(12px);
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      box-shadow: 0 0 18px rgba(0,0,0,0.4);
+    }
+
+    h2 {
+      text-align: center;
+      color: var(--accent);
+      margin-bottom: 20px;
+      font-weight: 600;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+      color: var(--text);
+    }
+
+    th, td {
+      padding: 12px 10px;
+      text-align: left;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.25);
+    }
+
+    th {
+      color: var(--accent);
+      font-size: 15px;
+    }
+
+    tr:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .btn {
+      padding: 6px 12px;
+      border-radius: 8px;
+      border: none;
+      font-size: 13px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .view-btn {
+      background: var(--accent);
+      color: #000;
+    }
+
+    .delete-btn {
+      background: red;
+      color: #fff;
+    }
+
+  </style>
+</head>
+
+<body>
+
+  <div class="list-container">
+
+    <h2>Paid Media Sessions List 🎥</h2>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Session Name</th>
+          <th>Trainer Email</th>
+          <th>Language</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+
+      <tbody>
+
+        {% for item in paidmedia %}
+        <tr>
+          <td>{{ item.session_name }}</td>
+          <td>{{ item.trainer_email }}</td>
+          <td>{{ item.language }}</td>
+          <td>{{ item.status }}</td>
+          <td>
+            <a href="/paidmedia/view/{{ item.id }}/">
+              <button class="btn view-btn">Edit</button>
+            </a>
+
+            <a href="/paidmedia/delete/{{ item.id }}/">
+              <button class="btn delete-btn">Delete</button>
+            </a>
+          </td>
+        </tr>
+        {% endfor %}
+
+      </tbody>
+    </table>
+
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Orders</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:"Poppins",sans-serif;
+}
+
+body{
+  background:#000;
+  min-height:100vh;
+  padding:40px 20px;
+  color:#fff;
+}
+
+.container-box{
+  max-width:1100px;
+  margin:auto;
+}
+
+.back-home-btn{
+  display:inline-block;
+  margin-bottom:25px;
+  padding:10px 20px;
+  border-radius:30px;
+  background:#fff;
+  color:#000;
+  text-decoration:none;
+  font-weight:600;
+  transition:0.3s;
+}
+.back-home-btn:hover{
+  transform:scale(1.05);
+}
+
+.glass-card{
+  background:rgba(255,255,255,0.08);
+  backdrop-filter:blur(15px);
+  border-radius:20px;
+  border:1px solid rgba(255,255,255,0.2);
+  padding:30px;
+}
+
+.card-header{
+  text-align:center;
+  margin-bottom:25px;
+}
+
+.card-header h2{
+  font-size:28px;
+}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+}
+
+th{
+  padding:15px;
+  border-bottom:1px solid rgba(255,255,255,0.3);
+}
+
+td{
+  padding:15px;
+  text-align:center;
+  border-bottom:1px solid rgba(255,255,255,0.1);
+}
+
+tr:hover{
+  background:rgba(255,255,255,0.05);
+}
+
+.product-img{
+  width:80px;
+  height:70px;
+  object-fit:cover;
+  border-radius:10px;
+}
+
+.status-badge{
+  padding:6px 14px;
+  border-radius:20px;
+  font-size:13px;
+  font-weight:600;
+  border:1px solid #fff;
+}
+
+/* Status Colors */
+.dispatched{ color:#4caf50; border-color:#4caf50; }
+.outfordelivery{ color:#ff9800; border-color:#ff9800; }
+.delivered{ color:#00c853; border-color:#00c853; }
+.cancelled{ color:#f44336; border-color:#f44336; }
+
+.empty-state{
+  padding:40px;
+  text-align:center;
+  color:#aaa;
+}
+
+@media(max-width:768px){
+  table, thead, tbody, th, td, tr{
+    display:block;
+  }
+
+  th{ display:none; }
+
+  tr{
+    margin-bottom:20px;
+    padding:15px;
+    border-radius:15px;
+    background:rgba(255,255,255,0.05);
+  }
+
+  td{
+    text-align:left;
+    border:none;
+    padding:8px 0;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container-box">
+
+<a href="/listcostumes/" class="back-home-btn">
+← Back
+</a>
+
+<div class="glass-card">
+
+<div class="card-header">
+<h2>My Orders</h2>
+</div>
+
+{% if orders %}
+<table>
+<tr>
+<th>Image</th>
+<th>Product</th>
+<th>Variant</th>
+<th>Quantity</th>
+<th>Total</th>
+<th>Date</th>
+<th>Status</th>
+</tr>
+
+{% for order in orders %}
+<tr>
+<td>
+<img src="{{ order.product.image.url }}" class="product-img">
+</td>
+
+<td>
+<strong>{{ order.product.name }}</strong><br>
+<small>Order: {{ order.order_number }}</small>
+</td>
+
+<td>
+Size: {{ order.variant.size }}<br>
+Color:
+<span style="display:inline-block;width:15px;height:15px;
+background:{{ order.variant.color }};
+border-radius:50%;margin-left:5px;">
+</span>
+</td>
+
+<td>{{ order.quantity }}</td>
+
+<td>₹ {{ order.total_price }}</td>
+
+<td>{{ order.created_at|date:"d M Y • H:i" }}</td>
+
+<td>
+<span class="status-badge {{ order.status }}">
+{{ order.get_status_display }}
+</span>
+</td>
+</tr>
+{% endfor %}
+
+</table>
+
+{% else %}
+<div class="empty-state">
+<h3>No Orders Yet</h3>
+<p>Once you place an order, it will appear here.</p>
+</div>
+{% endif %}
+
+</div>
+</div>
+
+</body>
+</html>

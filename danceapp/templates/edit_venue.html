@@ -1,0 +1,217 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Edit Bus – Sanchari Tours</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+    --primary: #3f7fffff;
+    --secondary: #0985c9ff;
+}
+* { box-sizing: border-box; margin:0; padding:0; font-family:'Poppins',sans-serif; }
+
+body {
+    background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)),
+                      url('https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?q=80&w=2070&auto=format&fit=crop');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 50px 10px;
+    color: white;
+}
+
+.form-container {
+    width: 100%;
+    max-width: 800px;
+    background: rgba(255,255,255,0.12);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,255,255,0.25);
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+    animation: fadeIn 1s ease-out;
+}
+
+h1 {
+    text-align: center;
+    font-size: 2.4rem;
+    margin-bottom: 10px;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.4);
+}
+
+p.subtitle {
+    text-align: center;
+    margin-bottom: 30px;
+    color: rgba(255,255,255,0.9);
+    font-size: 1.1rem;
+}
+
+.card {
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 16px;
+    padding: 30px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+}
+
+.card h2 {
+    color: white;
+    font-size: 1.6rem;
+    margin-bottom: 20px;
+    border-bottom: 2px solid var(--primary);
+    padding-bottom: 8px;
+    display: inline-block;
+}
+
+.form-group {
+    margin-bottom: 24px;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: white;
+}
+
+input, textarea {
+    width: 100%;
+    padding: 14px 16px;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.3);
+    background: rgba(255,255,255,0.1);
+    color: white;
+    font-size: 1rem;
+    transition: 0.3s;
+}
+
+input::placeholder, textarea::placeholder {
+    color: rgba(255,255,255,0.6);
+}
+
+input:focus, textarea:focus {
+    outline: none;
+    border-color: var(--primary);
+    background: rgba(255,255,255,0.2);
+    box-shadow: 0 0 0 3px rgba(63,127,255,0.3);
+}
+
+textarea {
+    resize: vertical;
+    min-height: 120px;
+}
+
+.button-group {
+    display: flex;
+    gap: 16px;
+    margin-top: 30px;
+    justify-content: center;
+}
+
+.submit-btn, .cancel-btn {
+    padding: 14px 30px;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 1.1rem;
+    text-decoration: none;
+    transition: all 0.3s;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+}
+
+.submit-btn {
+    background: linear-gradient(90deg, var(--primary), var(--secondary));
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.submit-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(63,127,255,0.5);
+}
+
+.cancel-btn {
+    background: rgba(255,255,255,0.15);
+    color: white;
+    border: 1px solid rgba(255,255,255,0.3);
+}
+
+.cancel-btn:hover {
+    background: rgba(255,255,255,0.25);
+    transform: translateY(-3px);
+}
+
+.back-link {
+    display: inline-block;
+    margin-bottom: 20px;
+    color: white;
+    background: rgba(0,0,0,0.4);
+    padding: 10px 20px;
+    border-radius: 10px;
+    text-decoration: none;
+    backdrop-filter: blur(8px);
+}
+
+.back-link:hover {
+    background: var(--primary);
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 768px) {
+    .form-container { padding: 30px 20px; }
+    h1 { font-size: 2rem; }
+}
+</style>
+</head>
+<body>
+<div class="form-container">
+    <a href="{% url 'venue_list' %}" class="back-link">← Back to My Venue</a>
+
+    <h1>Edit Venue</h1>
+    <p class="subtitle">Update your venue details and seat layout – perfect for viewing group Programs! ✨</p>
+
+    <form method="post">
+        {% csrf_token %}
+
+        <div class="card">
+            <h2>Venue Details</h2>
+
+            <div class="form-group">
+                <label>Venue Name</label>
+                <input type="text" name="name" value="{{ venue.name }}" required placeholder="e.g., Luxury Explorer">
+            </div>
+
+            <div class="form-group">
+                <label>Total Seats</label>
+                <input type="number" name="total_seats" min="1" value="{{ venue.total_seats }}" required>
+            </div>
+
+            <div class="form-group">
+                <label>Seat Layout (comma-separated)</label>
+                <textarea name="seat_layout" rows="5" required placeholder="e.g., A1, A2, A3, B1, B2, B3...">{{ venue.seat_layout|join:", " }}</textarea>
+                <p class="text-sm opacity-80 mt-2">Enter all seat names exactly as you want them to appear (e.g., AB1, GK2, W1). Must match total seats count.</p>
+            </div>
+        </div>
+
+        <div class="button-group">
+            <button type="submit" class="submit-btn">💾 Save Changes</button>
+            <a href="{% url 'venue_list' %}" class="cancel-btn">Cancel</a>
+        </div>
+    </form>
+</div>
+</body>
+</html>

@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dance Institutions | Find Quality Dance Schools</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg1: #000000; /* Black background */
+            --bg2: #1a1a1a; /* Dark grey */
+            --primary: #ffffff; /* White color */
+            --secondary: #888888; /* Muted grey */
+            --text: #ffffff; /* White text */
+            --muted: #bdbdbd; /* Light grey for muted text */
+            --panel: rgba(255, 255, 255, 0.08); /* Semi-transparent background for panels */
+            --error: #ff4c4c; /* Red for error */
+        }
+
+        body {
+            background: #000000; /* Black background */
+            color: var(--text); /* White text */
+            font-family: 'Poppins', sans-serif;
+        }
+
+        /* Back Button */
+        .back-home-btn {
+            margin: 1.5rem;
+            display: inline-block;
+            text-decoration: none;
+            font-weight: 500;
+            color: white;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            padding: 0.6rem 1.5rem;
+            border-radius: 30px;
+            box-shadow: 0 0 15px rgba(255,0,170,0.4);
+            transition: 0.3s ease;
+        }
+
+        .back-home-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0 25px rgba(255,0,200,0.7);
+            color: white;
+        }
+
+        /* Header */
+        .page-header {
+            text-align: center;
+            padding: 2.5rem 0;
+            margin-bottom: 2.5rem;
+        }
+
+        .page-header h1 {
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            color: transparent;
+            font-weight: 700;
+        }
+
+        .page-header p {
+            color: var(--muted);
+        }
+
+        /* Card */
+        .institution-card {
+            background: var(--panel);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 0 20px rgba(255,0,150,0.15);
+            transition: 0.3s ease;
+            color: #ffffff;
+        }
+
+        .institution-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 0 30px rgba(255,0,200,0.5);
+        }
+
+        .card-img-top-wrapper {
+            height: 160px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+            background: rgba(255,255,255,0.05);
+        }
+
+        .institution-logo {
+            max-width: 130px;
+            max-height: 130px;
+            object-fit: contain;
+            transition: transform 0.4s ease;
+        }
+
+        .institution-card:hover .institution-logo {
+            transform: scale(1.1);
+        }
+
+        .card-body {
+            padding: 1.5rem;
+        }
+
+        .card-title {
+            font-weight: 600;
+            color: white;
+        }
+
+        .meta-item {
+            font-size: 0.95rem;
+            margin-bottom: 0.5rem;
+            color: var(--muted);
+        }
+
+        .meta-label {
+            font-weight: 600;
+            color: white;
+            min-width: 80px;
+            display: inline-block;
+        }
+
+        .description {
+            color: var(--muted);
+            line-height: 1.6;
+            margin: 1rem 0;
+            font-size: 0.95rem;
+        }
+
+        .status-badge {
+            font-size: 0.8rem;
+            padding: 0.5em 1.1em;
+            border-radius: 25px;
+            color: #fff;
+        }
+
+        .btn-view-courses {
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            border: none;
+            padding: 0.7rem 1.4rem;
+            border-radius: 30px;
+            font-weight: 500;
+            transition: 0.3s ease;
+        }
+
+        .btn-view-courses:hover {
+            box-shadow: 0 0 20px rgba(255,0,200,0.6);
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            .card-img-top-wrapper {
+                height: 140px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Back Button -->
+    <a href="/home/" class="back-home-btn">
+        <i class="fas fa-home me-2"></i>Back to Home
+    </a>
+
+    <!-- Header -->
+    <header class="page-header">
+        <div class="container">
+            <h1 class="display-5 mb-2">Dance Institutions</h1>
+            <p class="lead">Discover quality dance schools and academies near you</p>
+        </div>
+    </header>
+
+    <div class="container pb-5">
+        {% if institution %}
+            <div class="row g-4">
+                {% for inst in institution %}
+                    <div class="col-lg-6 col-xl-4">
+                        <div class="card institution-card h-100 d-flex flex-column">
+
+                            <div class="card-img-top-wrapper">
+                                {% if inst.logo %}
+                                    <img src="{{ inst.logo.url }}" alt="{{ inst.name }} Logo" class="institution-logo">
+                                {% else %}
+                                    <div class="text-muted fs-4">
+                                        <i class="fas fa-building fa-3x opacity-50"></i>
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                            <div class="card-body d-flex flex-column">
+                                <h5 class="card-title mb-3">{{ inst.name }}</h5>
+
+                                <div class="mb-3">
+                                    <div class="meta-item"><span class="meta-label">Owner:</span> {{ inst.owner_name|default:"—" }}</div>
+                                    <div class="meta-item"><span class="meta-label">Email:</span> {{ inst.email|default:"—" }}</div>
+                                    <div class="meta-item"><span class="meta-label">Phone:</span> {{ inst.phone|default:"—" }}</div>
+                                    <div class="meta-item"><span class="meta-label">District:</span> {{ inst.district|default:"—" }}</div>
+                                </div>
+
+                                {% if inst.description %}
+                                    <p class="description">{{ inst.description|truncatewords:35 }}</p>
+                                {% endif %}
+
+                                <div class="mt-auto">
+
+                                    {% if inst.certificate %}
+                                        <p>
+                                            <a href="{{ inst.certificate.url }}" target="_blank" class="text-decoration-none text-info">
+                                                <i class="fas fa-certificate me-1"></i> View Certificate
+                                            </a>
+                                        </p>
+                                    {% endif %}
+
+                                    <div class="mb-3">
+                                        <strong>Status:</strong>
+                                        {% if inst.isapproved %}
+                                            <span class="badge bg-success status-badge">
+                                                <i class="fas fa-check-circle me-1"></i>Approved
+                                            </span>
+                                        {% elif inst.isrejected %}
+                                            <span class="badge bg-danger status-badge">
+                                                <i class="fas fa-times-circle me-1"></i>Rejected
+                                            </span>
+                                        {% else %}
+                                            <span class="badge bg-warning text-dark status-badge">
+                                                <i class="fas fa-hourglass-half me-1"></i>Pending
+                                            </span>
+                                        {% endif %}
+                                    </div>
+
+                                    <a href="{% url 'institution_courses' inst.id %}" 
+                                       class="btn btn-view-courses w-100 text-white">
+                                        <i class="fas fa-arrow-right me-2"></i>View Courses
+                                    </a>
+
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="text-center py-5 my-5">
+                <i class="fas fa-building fa-4x text-muted mb-3 d-block"></i>
+                <h4 class="text-muted">No dance institutions found</h4>
+                <p class="text-muted">Check back later or try different filters.</p>
+            </div>
+        {% endif %}
+    </div>
+
+</body>
+</html>

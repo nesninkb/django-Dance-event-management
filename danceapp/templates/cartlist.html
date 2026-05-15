@@ -1,0 +1,249 @@
+<html>
+<head>
+    <title>Cart List</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+:root {
+  --bg: #000000;
+  --primary: #ffffff;
+  --secondary: #bdbdbd;
+  --text: #ffffff;
+  --muted: #888888;
+  --glass: rgba(255, 255, 255, 0.08);
+  --danger: #ff4c4c;
+}
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:'Poppins',sans-serif;
+}
+
+body {
+    background: var(--bg);
+    min-height: 100vh;
+    padding: 50px 20px;
+    color: var(--text);
+}
+
+/* Back Button */
+.back-btn {
+    display: inline-block;
+    margin-bottom: 30px;
+    padding: 10px 25px;
+    border-radius: 25px;
+    font-weight: 600;
+    background: var(--primary);
+    color: #000;
+    border: none;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.back-btn:hover {
+    opacity: 0.8;
+}
+
+/* Title */
+h2 {
+    text-align: center;
+    margin-bottom: 40px;
+    font-size: 34px;
+    color: var(--primary);
+}
+
+/* Glass Container */
+.table-container {
+    max-width: 1100px;
+    margin: auto;
+    background: var(--glass);
+    backdrop-filter: blur(18px);
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 0 25px rgba(255,255,255,0.2);
+}
+
+/* Table */
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th {
+    padding: 15px;
+    font-size: 14px;
+    color: var(--secondary);
+    border-bottom: 1px solid rgba(255,255,255,0.2);
+}
+
+td {
+    padding: 18px;
+    text-align: center;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+tr:hover {
+    background: rgba(255,255,255,0.05);
+}
+
+/* Image */
+img {
+    width: 100px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+/* Price */
+.price {
+    font-weight: 600;
+    color: var(--primary);
+}
+
+/* Remove Button */
+.delete-btn {
+    padding: 8px 18px;
+    border-radius: 20px;
+    background: var(--danger);
+    color: white;
+    text-decoration: none;
+    font-size: 14px;
+    transition: 0.3s;
+}
+
+.delete-btn:hover {
+    opacity: 0.8;
+}
+
+/* Buy Now Button */
+.buy-container {
+    text-align: center;
+    margin-top: 35px;
+}
+
+.buy-btn {
+    padding: 14px 45px;
+    border-radius: 25px;
+    font-size: 16px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    background: var(--primary);
+    color: #000;
+    transition: 0.3s;
+}
+
+.buy-btn:hover {
+    opacity: 0.85;
+}
+
+/* Empty Cart */
+.empty-cart {
+    text-align: center;
+    margin-top: 120px;
+    font-size: 22px;
+    color: var(--secondary);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    table, thead, tbody, th, td, tr {
+        display: block;
+    }
+
+    th { display: none; }
+
+    tr {
+        margin-bottom: 20px;
+        background: var(--glass);
+        padding: 15px;
+        border-radius: 15px;
+    }
+
+    td {
+        border: none;
+        text-align: left;
+        padding: 8px 0;
+    }
+}
+    </style>
+</head>
+
+<body>
+
+<div style="max-width:1100px;margin:auto;">
+   <a href="{% url 'listcostumes' %}" class="back-btn">
+    ← Continue Shopping
+</a>
+</div>
+
+<h2>Your Cart</h2>
+
+{% if cart_items %}
+<div class="table-container">
+
+    <table>
+        <thead>
+            <tr>
+                <th>Image</th>
+                <th>Costume</th>
+                <th>Quantity</th>
+                <th>Total Price</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+      <tbody>
+{% for item in cart_items %}
+<tr>
+    <td>
+        <img src="{{ item.costume.image.url }}" alt="{{ item.costume.name }}">
+    </td>
+
+    <td>
+        <strong>{{ item.costume.name }}</strong><br>
+        <small>
+            Size: {{ item.variant.size }} <br>
+            Color:
+            <span style="display:inline-block;
+                         width:15px;height:15px;
+                         background:{{ item.variant.color }};
+                         border-radius:50%;
+                         vertical-align:middle;">
+            </span>
+        </small>
+    </td>
+
+    <td>{{ item.quantity }}</td>
+
+    <td class="price">₹{{ item.totalprice }}</td>
+
+    <td>
+        <a href="{% url 'removecart' item.id %}" class="delete-btn">
+            Remove
+        </a>
+    </td>
+</tr>
+{% endfor %}
+</tbody>
+    </table>
+<div style="text-align:right;margin-top:20px;font-size:18px;">
+    <strong>Grand Total: ₹{{ grand_total }}</strong>
+</div>
+    <div class="buy-container">
+        <a href="/buynow/">
+            <button type="button" class="buy-btn">
+                🛍 BUY NOW
+            </button>
+        </a>
+    </div>
+
+</div>
+{% else %}
+<p class="empty-cart">🛒 Your cart is empty!</p>
+{% endif %}
+
+</body>
+</html>

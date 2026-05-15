@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Register Event</title>
+
+  <style>
+    :root{
+      --accent:#5382C8;
+      --accent-dark:#2B66A6;
+      --muted: rgba(255,255,255,0.75);
+    }
+    body{
+      font-family:'Poppins',sans-serif;
+      margin:0;
+
+      background:linear-gradient(180deg,#003C8F 0%,#001C3D 40%,#000000 100%);
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      padding:40px;
+      color:#fff;
+    }
+
+    .container{
+      width:100%;
+      max-width:480px;
+      background:linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.01));
+      padding:30px;
+      border-radius:18px;
+      box-shadow:0 10px 30px rgba(0,0,0,0.6);
+      backdrop-filter:blur(8px);
+    }
+
+    h2{
+      text-align:center;
+      margin-bottom:10px;
+      color:#fff;
+    }
+
+    label{
+      font-size:14px;
+      margin-top:10px;
+      display:block;
+    }
+
+    input, select, textarea{
+      width:100%;
+      padding:12px;
+      margin-top:5px;
+      border:none;
+      border-radius:10px;
+      background:rgba(255,255,255,0.08);
+      color:#fff;
+      outline:none;
+    }
+
+    .btn{
+      margin-top:20px;
+      width:100%;
+      padding:12px;
+      border-radius:999px;
+      border:none;
+      background:linear-gradient(90deg,var(--accent),var(--accent-dark));
+      font-size:16px;
+      font-weight:600;
+      color:#fff;
+      cursor:pointer;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h2>Register for {{ event.event_name }}</h2>
+
+  <form method="POST">
+    {% csrf_token %}
+
+    <label>Full Name</label>
+    <input type="text" name="full_name" required />
+
+    <label>Email</label>
+    <input type="email" name="email" required />
+
+    <label>Phone</label>
+    <input type="text" name="phone" required />
+
+    <label>Batch Time</label>
+    <select name="batch_time" required>
+      <option value="Morning">Morning</option>
+      <option value="Evening">Evening</option>
+    </select>
+
+    <label>Age Category</label>
+    <select name="age_category" required>
+      <option>Kids</option>
+      <option>Teens</option>
+      <option>Adults</option>
+    </select>
+
+    <label>Skill Level</label>
+    <select name="skill_level" required>
+      <option>Beginner</option>
+      <option>Intermediate</option>
+      <option>Advanced</option>
+    </select>
+
+    <label>Costume Required?</label>
+    <select name="costume_required">
+      <option value="no">No</option>
+      <option value="yes">Yes</option>
+    </select>
+
+    <label>Costume Size (Optional)</label>
+    <input type="text" name="costume_size" placeholder="S / M / L / XL" />
+
+    <label>Medical Notes (Optional)</label>
+    <textarea name="medical_notes" rows="3"></textarea>
+
+    <button class="btn" type="submit">Register</button>
+  </form>
+</div>
+
+</body>
+</html>

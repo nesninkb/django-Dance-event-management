@@ -1,0 +1,202 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Students Course Orders</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: #0a0a0a;
+    color: #fff;
+}
+
+/* Header */
+.header {
+    background: #111;
+    color: white;
+    padding: 20px;
+    text-align: center;
+    position: relative;
+}
+
+.header h1 {
+    margin: 0;
+    font-size: 26px;
+}
+
+/* Back Button */
+.back-btn {
+    position: absolute;
+    left: 20px;
+    top: 20px;
+    background: rgba(255,255,255,0.1);
+    color: white;
+    padding: 8px 14px;
+    border-radius: 25px;
+    text-decoration: none;
+    font-size: 14px;
+    transition: 0.3s;
+}
+.back-btn:hover {
+    background: rgba(255,255,255,0.25);
+}
+
+/* Container */
+.container {
+    width: 95%;
+    max-width: 1200px;
+    margin: 30px auto;
+    background: #111;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 5px 20px rgba(255,255,255,0.05);
+}
+
+/* Table */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+    color: #fff;
+}
+
+th, td {
+    padding: 12px;
+    border-bottom: 1px solid rgba(255,255,255,0.15);
+    text-align: left;
+    font-size: 14px;
+}
+
+th {
+    background-color: #222;
+    color: #fff;
+    text-transform: uppercase;
+    font-size: 13px;
+    letter-spacing: 0.5px;
+}
+
+tr:hover {
+    background-color: rgba(255,255,255,0.05);
+}
+
+/* Images */
+img {
+    max-width: 50px;
+    border-radius: 6px;
+}
+
+/* Status Badges */
+.status-pending {
+    background-color: #ffc107;
+    color: #000;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+}
+.status-paid {
+    background-color: #28a745;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+/* No Data Message */
+.no-data {
+    text-align: center;
+    padding: 20px;
+    color: #aaa;
+    font-size: 16px;
+}
+
+/* Links */
+a.link-btn {
+    color: #fff;
+    text-decoration: underline;
+    font-weight: 500;
+}
+a.link-btn:hover {
+    color: #ccc;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="header">
+    <a href="javascript:history.back()" class="back-btn">⬅ Back</a>
+    <h1>Students Who Booked Courses</h1>
+</div>
+
+<div class="container">
+
+    {% if students %}
+    <table>
+        <thead>
+            <tr>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Course</th>
+                <th>Qty</th>
+                <th>Total Price</th>
+                <th>Ordered At</th>
+                <th>Status</th>
+                <th>Gender</th>
+                <th>District</th>
+                <th>Bio</th>
+                <th>Links</th>
+                <th>Image</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for s in students %}
+            <tr>
+                <td>{{ s.user.username }}</td>
+                <td>{{ s.user.email }}</td>
+                <td>{{ s.course.course_name }}</td>
+                <td>{{ s.quantity }}</td>
+                <td>₹{{ s.total_price }}</td>
+                <td>{{ s.ordered_at|date:"Y-m-d H:i" }}</td>
+                <td>
+                    <span class="status-{{ s.payment_status|lower }}">
+                        {{ s.payment_status }}
+                    </span>
+                </td>
+                <td>{{ s.user.gender|default:"N/A" }}</td>
+                <td>{{ s.user.DISTRICT|default:"N/A" }}</td>
+                <td>{{ s.user.bio|default:"N/A" }}</td>
+                <td>
+                    {% if s.user.links %}
+                        <a href="{{ s.user.links }}" target="_blank" class="link-btn">View</a>
+                    {% else %}
+                        N/A
+                    {% endif %}
+                </td>
+                <td>
+                    {% if s.user.image %}
+                        <img src="{{ s.user.image.url }}" alt="Image">
+                    {% else %}
+                        N/A
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+        <div class="no-data">
+            No students have booked any courses yet.
+        </div>
+    {% endif %}
+
+</div>
+
+</body>
+</html>

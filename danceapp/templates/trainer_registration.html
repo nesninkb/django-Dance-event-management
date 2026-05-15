@@ -1,0 +1,232 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dance App - Trainer Register</title>
+
+<style>
+:root {
+  --bg1: #000000;
+  --bg2: #1a1a1a;
+  --bg3: #2b2b2b;
+  --text: #ffffff;
+  --muted: #bfbfbf;
+  --panel: rgba(255, 255, 255, 0.06);
+  --error: #ff4c4c;
+  --success: #4dff9f;
+}
+
+* {
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:'Poppins', sans-serif;
+}
+
+body {
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background:linear-gradient(135deg,var(--bg1),var(--bg2),var(--bg3));
+  color:var(--text);
+  padding:20px;
+}
+
+.register-container {
+  background:var(--panel);
+  backdrop-filter:blur(15px);
+  border-radius:20px;
+  padding:30px;
+  width:100%;
+  max-width:420px;
+  box-shadow:0 0 30px rgba(255,255,255,0.08);
+  text-align:center;
+  border:1px solid rgba(255,255,255,0.08);
+}
+
+h2 {
+  font-size:26px;
+  margin-bottom:5px;
+  color:#ffffff;
+  letter-spacing:1px;
+}
+
+p {
+  font-size:14px;
+  margin-bottom:18px;
+  color:var(--muted);
+}
+
+.input-box {
+  margin:12px 0;
+  text-align:left;
+}
+
+.input-box input {
+  width:100%;
+  padding:11px;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,0.2);
+  background:rgba(255,255,255,0.05);
+  color:var(--text);
+  outline:none;
+  transition:0.3s;
+}
+
+.input-box input:focus {
+  border-color:#ffffff;
+  box-shadow:0 0 8px rgba(255,255,255,0.3);
+}
+
+.input-box input.valid {
+  box-shadow:0 0 8px var(--success);
+}
+
+.input-box input.invalid {
+  box-shadow:0 0 8px var(--error);
+}
+
+.error-msg {
+  font-size:12px;
+  color:var(--error);
+  display:none;
+  margin-top:4px;
+}
+
+.gender-options {
+  display:flex;
+  gap:14px;
+  margin-top:6px;
+  font-size:14px;
+  color:var(--muted);
+}
+
+.gender-options input {
+  accent-color:#ffffff;
+}
+
+.register-btn {
+  width:100%;
+  padding:12px;
+  margin-top:18px;
+  border-radius:25px;
+  border:none;
+  background:#ffffff;
+  color:#000000;
+  font-size:15px;
+  font-weight:bold;
+  cursor:not-allowed;
+  opacity:0.6;
+  transition:0.3s;
+}
+
+.register-btn.enabled {
+  cursor:pointer;
+  opacity:1;
+}
+
+.register-btn.enabled:hover {
+  background:#e6e6e6;
+  transform:scale(1.05);
+}
+</style>
+</head>
+
+<body>
+
+<div class="register-container">
+<h2>Dance App</h2>
+<p>Create your trainer account</p>
+
+<form id="registerForm" method="POST" enctype="multipart/form-data">
+{% csrf_token %}
+
+<div class="input-box">
+  <input type="text" name="name" id="name" placeholder="Name">
+  <span class="error-msg">Name must be at least 3 characters</span>
+</div>
+
+<div class="input-box">
+  <input type="email" name="email" id="email" placeholder="Email">
+  <span class="error-msg">Invalid email format</span>
+</div>
+
+<div class="input-box">
+  <input type="password" name="password" id="password" placeholder="Password">
+  <span class="error-msg">Min 8 chars, 1 number & 1 symbol</span>
+</div>
+
+<div class="input-box">
+  <input type="text" name="phone" id="phone" placeholder="Phone">
+  <span class="error-msg">Phone must be 10 digits</span>
+</div>
+
+<div class="input-box">
+  <input type="number" name="experience" id="experience" placeholder="Experience (0–80)">
+  <span class="error-msg">Must be between 0 and 80</span>
+</div>
+
+<div class="input-box">
+  <div class="gender-options">
+    <label><input type="radio" name="gender" value="Male"> M</label>
+    <label><input type="radio" name="gender" value="Female"> F</label>
+    <label><input type="radio" name="gender" value="Other"> O</label>
+  </div>
+</div>
+
+<div class="input-box">
+  <label>ID Proof</label>
+  <input type="file" name="idproof">
+</div>
+
+<div class="input-box">
+  <label>Profile Image</label>
+  <input type="file" name="image">
+</div>
+
+<button type="submit" class="register-btn" id="submitBtn" disabled>
+Register
+</button>
+
+</form>
+</div>
+
+<script>
+const submitBtn = document.getElementById("submitBtn");
+
+const fields = {
+  name:{el:document.getElementById("name"),check:v=>v.length>=3},
+  email:{el:document.getElementById("email"),check:v=>/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)},
+  password:{el:document.getElementById("password"),check:v=>/^(?=.*\d)(?=.*[@$!%*?&]).{8,}$/.test(v)},
+  phone:{el:document.getElementById("phone"),check:v=>/^\d{10}$/.test(v)},
+  experience:{el:document.getElementById("experience"),check:v=>v>=0 && v<=80}
+};
+
+function validateField(field){
+  const input=field.el;
+  const error=input.nextElementSibling;
+  const valid=field.check(input.value);
+
+  input.classList.toggle("valid",valid);
+  input.classList.toggle("invalid",!valid);
+  error.style.display=valid?"none":"block";
+  return valid;
+}
+
+function checkForm(){
+  const allValid=Object.values(fields).every(f=>validateField(f));
+  submitBtn.classList.toggle("enabled",allValid);
+  submitBtn.disabled=!allValid;
+}
+
+Object.values(fields).forEach(field=>{
+  field.el.addEventListener("input",checkForm);
+});
+</script>
+
+</body>
+</html>

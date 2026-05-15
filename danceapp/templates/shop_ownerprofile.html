@@ -1,0 +1,196 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shop Owner Profile</title>
+
+  <style>
+    :root {
+      --bg: #000;
+      --panel: #111;
+      --card: #0d0d0d;
+      --border: #222;
+      --text: #ffffff;
+      --muted: #aaaaaa;
+      --accent: #ffffff;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Poppins", sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+    }
+
+    /* Profile Card */
+    .profile-card {
+      background: var(--panel);
+      padding: 40px;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      box-shadow: 0 0 40px rgba(255,255,255,0.05);
+      width: 90%;
+      max-width: 600px;
+      text-align: center;
+      margin-top: 80px;
+      animation: fadeIn 0.8s ease;
+    }
+
+    .avatar {
+      width: 110px;
+      height: 110px;
+      border-radius: 50%;
+      background: var(--card);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 40px;
+      color: var(--text);
+      margin: 0 auto 20px;
+      border: 2px solid var(--border);
+      overflow: hidden;
+    }
+
+    .avatar img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    .profile-card h2 {
+      font-size: 26px;
+      margin-bottom: 15px;
+      font-weight: 600;
+    }
+
+    .info {
+      text-align: left;
+      margin-top: 25px;
+    }
+
+    .info p {
+      margin: 12px 0;
+      font-size: 15px;
+      background: var(--card);
+      padding: 12px 15px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+    }
+
+    .info strong {
+      color: var(--muted);
+      width: 120px;
+      display: inline-block;
+    }
+
+    .proof {
+      margin-top: 25px;
+      text-align: center;
+    }
+
+    .proof a {
+      display: inline-block;
+      background: #ffffff;
+      padding: 10px 22px;
+      border-radius: 25px;
+      color: #000;
+      font-weight: 600;
+      text-decoration: none;
+      transition: 0.3s ease;
+      margin: 8px;
+    }
+
+    .proof a:hover {
+      background: #cccccc;
+      transform: scale(1.05);
+    }
+
+    /* Back Button */
+    .back-btn {
+      background: transparent !important;
+      color: #ffffff !important;
+      border: 1px solid #ffffff;
+    }
+
+    .back-btn:hover {
+      background: #ffffff !important;
+      color: #000 !important;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      .profile-card {
+        width: 90%;
+        padding: 25px;
+        margin-top: 50px;
+      }
+      .profile-card h2 {
+        font-size: 22px;
+      }
+      .info p {
+        font-size: 14px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="profile-card">
+    <div class="avatar">
+      {% if owner.image %}
+        <img src="{{ owner.image.url }}" alt="Profile Image">
+      {% else %}
+        <span>{{ owner.name|first|upper }}</span>
+      {% endif %}
+    </div>
+
+    <h2>{{ owner.name }}</h2>
+
+    <div class="info">
+      <p><strong>Email:</strong> {{ owner.email }}</p>
+      <p><strong>Phone:</strong> {{ owner.phone }}</p>
+      <p><strong>Shop Name:</strong> {{ owner.shopname }}</p>
+      <p><strong>License No:</strong> {{ owner.licenseno }}</p>
+      <p><strong>Status:</strong> 
+        {% if owner.isapproved %}
+          ✅ Approved
+        {% elif owner.isrejected %}
+          ❌ Rejected
+        {% else %}
+          ⏳ Pending
+        {% endif %}
+      </p>
+    </div>
+
+    <div class="proof">
+      {% if owner.proof %}
+        <a href="{{ owner.proof.url }}" target="_blank">View Proof Document</a>
+      {% else %}
+        <a href="/ownereditprofile/">Edit</a>
+      {% endif %}
+      <a href="/ownerhome/" class="back-btn">← Back to Home</a>
+    </div>
+
+  </div>
+
+</body>
+</html>

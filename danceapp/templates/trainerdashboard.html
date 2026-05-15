@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trainer Home - Dance App</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --bg1: #000000;
+  --bg2: #1a1a1a;
+  --bg3: #2b2b2b;
+  --text: #ffffff;
+  --muted: #bfbfbf;
+  --panel: rgba(255, 255, 255, 0.06);
+}
+
+*{
+  box-sizing:border-box;
+}
+
+body{
+  font-family:'Poppins',sans-serif;
+  margin:0;
+  background: radial-gradient(circle at top, var(--bg3), var(--bg1));
+  background-attachment: fixed;
+  color:var(--text);
+  min-height:100vh;
+}
+
+/* NAVBAR */
+nav{
+  background: rgba(0,0,0,0.85);
+  backdrop-filter: blur(12px);
+  padding:15px 30px;
+  display:flex;
+  justify-content:center;
+  flex-wrap:wrap;
+  gap:18px;
+  border-bottom:1px solid rgba(255,255,255,0.08);
+  position:sticky;
+  top:0;
+  z-index:100;
+}
+
+nav a{
+  color:var(--text);
+  text-decoration:none;
+  font-weight:500;
+  padding:8px 14px;
+  border-radius:20px;
+  transition:0.3s ease;
+}
+
+nav a:hover{
+  background:#ffffff;
+  color:#000000;
+}
+
+/* HERO */
+.hero{
+  text-align:center;
+  padding:50px 20px 20px;
+}
+
+.hero h1{
+  font-size:36px;
+  font-weight:700;
+  color:#ffffff;
+  letter-spacing:1px;
+}
+
+.hero p{
+  color:var(--muted);
+  margin-top:10px;
+}
+
+/* CONTAINER */
+.container{
+  max-width:1100px;
+  margin:auto;
+  padding:30px;
+  display:flex;
+  flex-direction:column;
+  gap:25px;
+}
+
+/* METRICS */
+.metrics{
+  display:flex;
+  gap:20px;
+  flex-wrap:wrap;
+}
+
+.metric-box{
+  flex:1;
+  text-align:center;
+  font-weight:bold;
+  font-size:18px;
+  padding:30px;
+  border-radius:18px;
+  background:var(--panel);
+  backdrop-filter:blur(12px);
+  border:1px solid rgba(255,255,255,0.08);
+  transition:0.3s ease;
+}
+
+.metric-box:hover{
+  transform:translateY(-5px);
+  background:rgba(255,255,255,0.12);
+}
+
+/* CARD */
+.card{
+  background:var(--panel);
+  border-radius:18px;
+  padding:22px;
+  backdrop-filter:blur(12px);
+  border:1px solid rgba(255,255,255,0.08);
+  transition:0.3s ease;
+}
+
+.card:hover{
+  transform:translateY(-5px);
+  background:rgba(255,255,255,0.1);
+}
+
+h2,h3{
+  color:#ffffff;
+  font-weight:600;
+  margin-bottom:15px;
+}
+
+/* TABLE */
+table{
+  width:100%;
+  border-collapse:collapse;
+}
+
+th,td{
+  padding:12px;
+  border-bottom:1px solid rgba(255,255,255,0.08);
+  font-size:14px;
+  text-align:left;
+}
+
+th{
+  color:var(--muted);
+  font-weight:500;
+}
+
+tbody tr:hover{
+  background:rgba(255,255,255,0.05);
+}
+
+/* Responsive */
+@media(max-width:768px){
+  .metrics{flex-direction:column;}
+  .hero h1{font-size:28px;}
+}
+</style>
+</head>
+
+<body>
+
+<nav>
+  <a href="#">Home</a>
+  <a href="/videos/">My Portfolio</a>
+  <a href="/dancepackages/">Dance Packages</a>
+  <a href="/trainerpackagelist/">View Packages</a>
+  <a href="/subscriptionlist/">Students</a>
+  <a href="/chat_list/">Chat</a>
+  <a href="/trainerprofile/">Profile</a>
+  <a href="/logout/">Logout</a>
+</nav>
+
+<div class="hero">
+  <h1>Welcome Trainer</h1>
+  <p>Manage your sessions, students & grow your dance career</p>
+</div>
+
+<div class="container">
+
+  <div class="metrics">
+    <div class="metric-box">
+      {{ total_packages }} Packages
+    </div>
+    <div class="metric-box">
+      {{ active_students }} Active Students
+    </div>
+    <div class="metric-box">
+      ₹{{ earnings }} Earnings
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Upcoming Schedule</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Package</th>
+          <th>Date</th>
+          <th>Student</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+<tbody>
+{% for order in recent_orders %}
+<tr>
+    <td>{{ order.package.package_name|default:"N/A" }}</td>
+    <td>{{ order.ordered_at|date:"M d, Y" }}</td>
+    <td>{{ order.user.username|default:"N/A" }}</td>
+    <td>{{ order.payment_status }}</td>
+</tr>
+{% empty %}
+<tr>
+    <td colspan="4">No recent purchases</td>
+</tr>
+{% endfor %}
+</tbody>
+    </table>
+  </div>
+
+</div>
+
+</body>
+</html>

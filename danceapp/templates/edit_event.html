@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="en">
+{% load static %}
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Edit Event</title>
+
+<style>
+:root{
+  --bg1:#000;
+  --bg2:#111;
+  --glass:rgba(255,255,255,0.08);
+  --glass-hover:rgba(255,255,255,0.15);
+  --accent:#fff;
+  font-family:'Poppins',system-ui,sans-serif;
+}
+
+body{
+  margin:0;
+  min-height:100vh;
+  background:linear-gradient(135deg,var(--bg1),var(--bg2));
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:#fff;
+}
+
+.form-box{
+  width:100%;
+  max-width:520px;
+  background:var(--glass);
+  backdrop-filter:blur(18px);
+  padding:26px;
+  border-radius:24px;
+  box-shadow:0 20px 45px rgba(0,0,0,.7);
+}
+
+h2{
+  text-align:center;
+  margin-bottom:18px;
+  color:var(--accent);
+}
+
+label{
+  font-size:13px;
+  font-weight:600;
+}
+
+input, textarea, select{
+  width:100%;
+  padding:10px 14px;
+  border-radius:14px;
+  border:none;
+  margin:6px 0 14px;
+  font-size:13px;
+  background:rgba(255,255,255,0.12);
+  color:#fff;
+}
+
+input::placeholder, textarea::placeholder{
+  color:#ccc;
+}
+
+textarea{resize:none}
+
+select{
+  background:rgba(255,255,255,0.12);
+  color:#fff;
+}
+
+.btn-row{
+  display:flex;
+  gap:12px;
+  justify-content:center;
+}
+
+.btn{
+  padding:10px 22px;
+  border-radius:30px;
+  font-weight:800;
+  border:none;
+  cursor:pointer;
+  transition:.3s;
+}
+
+.save{
+  background:#fff;
+  color:#111;
+}
+
+.cancel{
+  background:rgba(255,255,255,0.2);
+  color:#fff;
+  text-decoration:none;
+}
+
+.btn:hover{
+  transform:scale(1.08);
+  filter: brightness(1.2);
+}
+</style>
+</head>
+
+<body>
+
+<div class="form-box">
+  <h2>Edit Event</h2>
+
+  <form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <label>Event Name</label>
+    <input type="text" name="name" value="{{ event.name }}" required>
+
+    <label>Description</label>
+    <textarea name="description" rows="3">{{ event.description }}</textarea>
+
+    <label>Trainer</label>
+    <select name="trainer">
+      <option value="">-- Select Trainer --</option>
+      {% for trainer in trainers %}
+        <option value="{{ trainer.id }}"
+          {% if event.trainer and event.trainer.id == trainer.id %}selected{% endif %}>
+          {{ trainer.full_name }}
+        </option>
+      {% endfor %}
+    </select>
+
+    <label>Trainer Position</label>
+    <input type="text" name="trainer_position" value="{{ event.trainer_position }}">
+
+    <label>Date</label>
+    <input type="date" name="date" value="{{ event.date|date:'Y-m-d' }}" required>
+
+    <label>Start Time</label>
+    <input type="time" name="start_time"
+       value="{{ event.start_time|default_if_none:'' }}">
+
+    <label>End Time</label>
+    <input type="time" name="end_time" value="{{ event.end_time|default_if_none:'' }}">
+
+    <label>Location</label>
+    <input type="text" name="location" value="{{ event.location }}">
+
+    <div class="form-group">
+      <label>Age Category</label>
+      <select name="age_category">
+        <option value="">-- Select Age Category --</option>
+        <option value="kids" {% if event.age_category == 'kids' %}selected{% endif %}>Kids</option>
+        <option value="teens" {% if event.age_category == 'teens' %}selected{% endif %}>Teens</option>
+        <option value="adults" {% if event.age_category == 'adults' %}selected{% endif %}>Adults</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Status</label>
+      <select name="status">
+        {% for key, value in status_choices %}
+          <option value="{{ key }}" {% if event.status == key %}selected{% endif %}>
+            {{ value }}
+          </option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Price Per Person</label>
+      <input type="number" name="priceperperson" value="{{ event.priceperperson }}">
+    </div>
+
+    <label>Poster (optional)</label>
+    <input type="file" name="poster">
+
+    <label>Venue</label>
+    <select name="venue">
+      <option value="">-- No Venue Assigned --</option>
+      {% for v in venues %}
+        <option value="{{ v.id }}"
+          {% if event.venue and event.venue.id == v.id %}selected{% endif %}>
+          {{ v.name }} ({{ v.total_seats }} seats)
+        </option>
+      {% endfor %}
+    </select>
+
+    <div class="btn-row">
+      <button type="submit" class="btn save">Save Changes</button>
+      <a href="{% url 'institution_events' %}" class="btn cancel">Cancel</a>
+    </div>
+  </form>
+</div>
+
+</body>
+</html>

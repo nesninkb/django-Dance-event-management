@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="en">
+{% load static %}
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ institution.name }} — Institution Profile</title>
+
+<style>
+/* ===============================
+   BLACK & WHITE THEME
+   =============================== */
+:root{
+  --bg-start:#000000;
+  --bg-mid:#111111;
+  --bg-end:#222222;
+  --accent:#ffffff;
+  --glass:rgba(255,255,255,0.08);
+  --glass-dark:rgba(255,255,255,0.06);
+  font-family:'Poppins',system-ui,sans-serif;
+}
+
+*{box-sizing:border-box}
+
+html,body{
+  margin:0;
+  height:100%;
+}
+
+body{
+  background:linear-gradient(135deg,var(--bg-start),var(--bg-mid),var(--bg-end));
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:30px;
+  color:#fff;
+}
+
+/* ===============================
+   BACK BUTTON
+   =============================== */
+.back-wrap{
+  position:absolute;
+  left:30px;
+  top:50%;
+  transform:translateY(-50%);
+}
+
+.back-btn{
+  background:#ffffff;
+  padding:12px 26px;
+  border-radius:30px;
+  color:#000;
+  font-weight:800;
+  text-decoration:none;
+  border:1px solid #ffffff;
+  box-shadow:0 10px 25px rgba(255,255,255,0.15);
+  transition:.3s;
+}
+
+.back-btn:hover{
+  background:#000;
+  color:#fff;
+  border:1px solid #ffffff;
+  transform:scale(1.08);
+}
+
+/* ===============================
+   MAIN CONTAINER
+   =============================== */
+.container{
+  width:100%;
+  max-width:950px;
+  background:var(--glass-dark);
+  border-radius:28px;
+  padding:30px;
+  display:grid;
+  grid-template-columns:300px 1fr;
+  gap:24px;
+  backdrop-filter:blur(20px);
+  border:1px solid rgba(255,255,255,0.15);
+  box-shadow:0 30px 70px rgba(255,255,255,0.08);
+}
+
+/* ===============================
+   LEFT PROFILE CARD
+   =============================== */
+.profile{
+  background:rgba(255,255,255,0.05);
+  border-radius:24px;
+  padding:26px;
+  text-align:center;
+  border:1px solid rgba(255,255,255,0.15);
+}
+
+.avatar{
+  width:140px;
+  height:140px;
+  border-radius:50%;
+  margin:0 auto 16px;
+  overflow:hidden;
+  border:3px solid #ffffff;
+  box-shadow:0 0 25px rgba(255,255,255,0.4);
+}
+
+.avatar img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+.profile h2{
+  margin:8px 0 4px;
+  font-size:22px;
+  text-shadow:0 0 8px rgba(255,255,255,0.4);
+}
+
+.profile .email{
+  font-size:13px;
+  opacity:0.8;
+}
+
+.profile .owner{
+  margin-top:14px;
+  font-size:14px;
+}
+
+.edit-btn{
+  display:inline-block;
+  margin-top:18px;
+  padding:12px 30px;
+  border-radius:30px;
+  background:#ffffff;
+  color:#000;
+  font-weight:800;
+  text-decoration:none;
+  border:1px solid #ffffff;
+  transition:.3s;
+}
+
+.edit-btn:hover{
+  background:#000;
+  color:#fff;
+  border:1px solid #ffffff;
+  transform:scale(1.1);
+}
+
+/* ===============================
+   RIGHT SIDE
+   =============================== */
+.section{
+  background:rgba(255,255,255,0.05);
+  border-radius:20px;
+  padding:18px;
+  margin-bottom:18px;
+  border:1px solid rgba(255,255,255,0.12);
+}
+
+.section h3{
+  margin:0 0 12px;
+  color:#ffffff;
+  font-size:15px;
+  letter-spacing:1px;
+}
+
+/* Stats */
+.stats{
+  display:flex;
+  flex-wrap:wrap;
+  gap:12px;
+}
+
+.stat{
+  background:rgba(255,255,255,0.08);
+  padding:14px;
+  border-radius:16px;
+  flex:1 1 160px;
+  text-align:center;
+  border:1px solid rgba(255,255,255,0.15);
+  box-shadow:0 10px 25px rgba(255,255,255,0.05);
+}
+
+.stat h4{
+  margin:0;
+  font-size:15px;
+}
+
+.stat p{
+  margin:4px 0 0;
+  font-size:12px;
+  opacity:.8;
+}
+
+/* ===============================
+   MOBILE
+   =============================== */
+@media(max-width:900px){
+  .container{
+    grid-template-columns:1fr;
+  }
+  .back-wrap{
+    position:static;
+    transform:none;
+    margin-bottom:20px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<!-- Back Button -->
+<div class="back-wrap">
+  <a href="{% url 'institutionhome' %}" class="back-btn">&larr; Back to Home</a>
+</div>
+
+<!-- Main Container -->
+<div class="container">
+
+  <!-- LEFT -->
+  <div class="profile">
+    {% if institution.logo %}
+      <div class="avatar">
+        <img src="{{ institution.logo.url }}" alt="Logo">
+      </div>
+    {% else %}
+      <div class="avatar">
+        <img src="{% static 'images/default_profile.png' %}" alt="No Logo">
+      </div>
+    {% endif %}
+
+    <h2>{{ institution.name }}</h2>
+    <div class="email">{{ institution.email }}</div>
+    <div class="owner">Owner: {{ institution.owner_name }}</div>
+
+    <a href="{% url 'edit_profile_institution' %}" class="edit-btn">EDIT</a>
+  </div>
+
+  <!-- RIGHT -->
+  <div>
+    <div class="section">
+      <h3>About</h3>
+      <p style="font-size:13px;margin:0">
+        Phone: {{ institution.phone }}
+      </p>
+    </div>
+
+    <div class="section">
+      <h3>Stats</h3>
+      <div class="stats">
+        <div class="stat">
+          <h4>{{ institution.name }}</h4>
+          <p>Name</p>
+        </div>
+        <div class="stat">
+          <h4>{{ institution.owner_name }}</h4>
+          <p>Owner</p>
+        </div>
+        <div class="stat">
+          <h4>{{ institution.email }}</h4>
+          <p>Email</p>
+        </div>
+        <div class="stat">
+          <h4>{{ institution.phone }}</h4>
+          <p>Phone</p>
+        </div>
+        <div class="stat">
+          <h4>{% if institution.logo %}Logo Uploaded{% else %}No Logo{% endif %}</h4>
+          <p>Logo</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

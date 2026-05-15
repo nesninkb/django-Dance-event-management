@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edit Profile - Institution</title>
+
+  <style>
+    :root {
+      --bg1: #000000;
+      --bg2: #111111;
+      --bg3: #222222;
+      --accent: #ffffff;
+      --secondary: #dddddd;
+      --text: #ffffff;
+      --muted: #bbbbbb;
+      --panel: rgba(255, 255, 255, 0.08);
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: "Poppins", sans-serif;
+      background: linear-gradient(135deg, var(--bg1), var(--bg2), var(--bg3));
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .edit-container {
+      background: var(--panel);
+      width: 90%;
+      max-width: 420px;
+      padding: 30px;
+      border-radius: 20px;
+      backdrop-filter: blur(14px);
+      border: 1px solid rgba(255,255,255,0.15);
+      box-shadow: 0 15px 35px rgba(255,255,255,0.08);
+      animation: fadeUp 0.8s ease;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(25px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--accent);
+      text-shadow: 0 0 10px rgba(255,255,255,0.4);
+    }
+
+    label {
+      font-weight: 600;
+      display: block;
+      margin-top: 12px;
+      margin-bottom: 5px;
+      color: var(--text);
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 10px;
+      outline: none;
+      background: rgba(255,255,255,0.05);
+      font-size: 15px;
+      margin-bottom: 10px;
+      color: var(--text);
+      backdrop-filter: blur(6px);
+    }
+
+    input::placeholder,
+    textarea::placeholder {
+      color: var(--muted);
+    }
+
+    input:focus, textarea:focus {
+      background: rgba(255,255,255,0.1);
+      box-shadow: 0 0 10px rgba(255,255,255,0.4);
+    }
+
+    textarea {
+      resize: none;
+      height: 90px;
+    }
+
+    .btn {
+      margin-top: 20px;
+      width: 100%;
+      padding: 12px;
+      border-radius: 12px;
+      font-size: 16px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: 0.3s;
+    }
+
+    .save-btn {
+      background: #ffffff;
+      color: #000000;
+      border: 1px solid #ffffff;
+    }
+
+    .save-btn:hover {
+      background: #000000;
+      color: #ffffff;
+      border: 1px solid #ffffff;
+      transform: scale(1.05);
+    }
+
+    .back-btn {
+      background: #000000;
+      color: #ffffff;
+      border: 1px solid #ffffff;
+      margin-top: 10px;
+    }
+
+    .back-btn:hover {
+      background: #ffffff;
+      color: #000000;
+      transform: scale(1.05);
+    }
+
+    .profile-pic {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .profile-pic img {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      border: 3px solid #ffffff;
+      object-fit: cover;
+      margin-bottom: 10px;
+      box-shadow: 0 0 20px rgba(255,255,255,0.4);
+    }
+
+    .profile-pic input {
+      cursor: pointer;
+      color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+  <div class="edit-container">
+    <h2>Edit Profile</h2>
+
+    <form method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
+
+      <div class="profile-pic">
+        {% if institution.logo %}
+          <img src="{{ institution.logo.url }}" id="preview">
+        {% else %}
+          <img src="https://via.placeholder.com/150" id="preview">
+        {% endif %}
+        <input type="file" accept="image/*" name="logo" onchange="loadFile(event)">
+      </div>
+
+      <label>Name</label>
+      <input type="text" name="name" value="{{ institution.name }}" required>
+
+      <label>Owner Name</label>
+      <input type="text" name="owner_name" value="{{ institution.owner_name }}">
+
+      <label>Email</label>
+      <input type="email" name="email" value="{{ institution.email }}">
+
+      <label>Phone</label>
+      <input type="text" name="phone" value="{{ institution.phone }}">
+
+      <button type="submit" class="btn save-btn">Save Changes</button>
+      <button type="button" onclick="history.back()" class="btn back-btn">Back</button>
+    </form>
+  </div>
+
+  <script>
+    const loadFile = (event) => {
+      const preview = document.getElementById("preview");
+      preview.src = URL.createObjectURL(event.target.files[0]);
+      preview.onload = () => URL.revokeObjectURL(preview.src);
+    };
+  </script>
+</body>
+</html>

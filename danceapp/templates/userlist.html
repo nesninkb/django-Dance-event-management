@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Users List — Dance App</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --bg-dark:#000000;
+  --panel:rgba(255,255,255,0.06);
+  --card-bg:rgba(255,255,255,0.05);
+  --text:#ffffff;
+  --muted:#bfbfbf;
+  --accent:#ffffff;
+  --radius:14px;
+  --shadow:0 10px 30px rgba(0,0,0,0.8);
+}
+
+*{
+box-sizing:border-box;
+}
+
+body{
+margin:0;
+font-family:'Poppins',sans-serif;
+background:linear-gradient(135deg,#000,#111,#1a1a1a);
+color:var(--text);
+display:flex;
+justify-content:center;
+min-height:100vh;
+padding:30px;
+}
+
+/* Container */
+
+.container{
+width:100%;
+max-width:800px;
+background:var(--panel);
+backdrop-filter:blur(12px);
+border-radius:var(--radius);
+padding:25px;
+box-shadow:var(--shadow);
+border:1px solid rgba(255,255,255,0.1);
+}
+
+/* Heading */
+
+h1{
+text-align:center;
+font-size:28px;
+margin-bottom:20px;
+font-weight:700;
+color:#ffffff;
+letter-spacing:1px;
+text-shadow:0 0 8px rgba(255,255,255,0.4);
+}
+
+/* Back button */
+
+.back-btn{
+display:inline-block;
+background:#111;
+color:#fff;
+padding:12px 24px;
+text-decoration:none;
+border-radius:var(--radius);
+font-size:16px;
+font-weight:600;
+margin-bottom:20px;
+border:1px solid rgba(255,255,255,0.2);
+transition:0.3s;
+}
+
+.back-btn:hover{
+transform:scale(1.05);
+box-shadow:0 0 10px rgba(255,255,255,0.5);
+}
+
+/* Search + Filter */
+
+.search-bar{
+display:flex;
+gap:10px;
+flex-wrap:wrap;
+margin-bottom:20px;
+}
+
+.search-bar input{
+flex:1;
+padding:12px 14px;
+border-radius:var(--radius);
+border:1px solid rgba(255,255,255,0.2);
+background:rgba(255,255,255,0.06);
+color:var(--text);
+font-size:14px;
+outline:none;
+transition:0.3s;
+}
+
+.search-bar input:focus{
+box-shadow:0 0 10px rgba(255,255,255,0.5);
+}
+
+/* Filter Buttons */
+
+.filter{
+background:#111;
+border:1px solid rgba(255,255,255,0.2);
+padding:10px 16px;
+border-radius:var(--radius);
+color:#fff;
+font-weight:600;
+cursor:pointer;
+transition:0.3s;
+}
+
+.filter:hover{
+transform:scale(1.05);
+box-shadow:0 0 10px rgba(255,255,255,0.5);
+}
+
+/* User Cards */
+
+.user-list{
+display:flex;
+flex-direction:column;
+gap:16px;
+}
+
+.user-card{
+display:flex;
+align-items:center;
+background:var(--card-bg);
+padding:16px;
+border-radius:var(--radius);
+transition:0.3s;
+border-left:4px solid #fff;
+}
+
+.user-card:hover{
+transform:translateY(-3px);
+box-shadow:0 8px 25px rgba(255,255,255,0.15);
+}
+
+/* Avatar */
+
+.avatar{
+width:55px;
+height:55px;
+border-radius:50%;
+overflow:hidden;
+margin-right:16px;
+border:2px solid #fff;
+transition:0.3s;
+}
+
+.avatar img{
+width:100%;
+height:100%;
+object-fit:cover;
+}
+
+.avatar:hover{
+transform:scale(1.1);
+box-shadow:0 0 15px rgba(255,255,255,0.6);
+}
+
+/* Info */
+
+.info{
+flex:1;
+}
+
+.name{
+font-size:16px;
+font-weight:600;
+margin:0;
+}
+
+.sub{
+font-size:13px;
+color:var(--muted);
+margin-top:2px;
+}
+
+/* Delete Button */
+
+.delete-btn{
+padding:8px 16px;
+background:#111;
+border-radius:var(--radius);
+color:#fff;
+font-weight:600;
+font-size:14px;
+border:1px solid rgba(255,255,255,0.2);
+cursor:pointer;
+transition:0.3s;
+}
+
+.delete-btn:hover{
+transform:scale(1.05);
+box-shadow:0 0 10px rgba(255,255,255,0.6);
+}
+
+/* Responsive */
+
+@media(max-width:500px){
+
+.user-card{
+flex-direction:column;
+align-items:flex-start;
+}
+
+.delete-btn{
+width:100%;
+margin-top:8px;
+}
+
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>Users</h1>
+
+<a href="/adminhome/" class="back-btn">Back</a>
+
+<div class="search-bar">
+<input id="searchInput" type="text" placeholder="Search users...">
+
+<button class="filter" onclick="filterLevel('Beginner')">Beginner</button>
+<button class="filter" onclick="filterLevel('Intermediate')">Intermediate</button>
+<button class="filter" onclick="filterLevel('Advanced')">Advanced</button>
+</div>
+
+<div class="user-list" id="userList">
+
+{% for u in user %}
+
+<div class="user-card" data-name="{{u.username}}" data-email="{{u.email}}" data-level="Beginner">
+
+<div class="avatar">
+{% if u.image %}
+<img src="{{u.image.url}}">
+{% endif %}
+</div>
+
+<div class="info">
+<p class="name">{{u.username}}</p>
+<p class="sub">{{u.email}}</p>
+</div>
+
+<a href="/deleteuser/{{u.id}}">
+<button class="delete-btn" onclick="return confirm('Are you sure?');">Delete</button>
+</a>
+
+</div>
+
+{% endfor %}
+
+</div>
+</div>
+
+<script>
+const searchInput=document.getElementById("searchInput");
+const userCards=document.querySelectorAll(".user-card");
+
+let activeFilter="";
+
+searchInput.addEventListener("keyup",filterUsers);
+
+function filterLevel(level){
+activeFilter=level;
+filterUsers();
+}
+
+function filterUsers(){
+const text=searchInput.value.toLowerCase();
+
+userCards.forEach(card=>{
+const name=card.getAttribute("data-name").toLowerCase();
+const email=card.getAttribute("data-email").toLowerCase();
+const level=card.getAttribute("data-level");
+
+const matchText=name.includes(text)||email.includes(text)||level.toLowerCase().includes(text);
+const matchLevel=activeFilter===""||activeFilter===level;
+
+card.style.display=(matchText&&matchLevel)?"flex":"none";
+});
+}
+</script>
+
+</body>
+</html>

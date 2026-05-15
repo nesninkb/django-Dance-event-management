@@ -1,0 +1,145 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+:root {
+--primary: #3f7fffff;
+--secondary: #0985c9ff;
+--bg: #f0f2f5;
+--card-bg: rgba(255,255,255,0.05);
+--text: #ffffff;
+--text-secondary: rgba(255,255,255,0.8);
+--shadow: rgba(0,0,0,0.37);
+--border-glass: rgba(255,255,255,0.18);
+--input-bg: rgba(255,255,255,0.1);
+--input-border: rgba(255,255,255,0.3);
+--placeholder: rgba(255,255,255,0.6);
+}
+* { box-sizing: border-box; margin:0; padding:0; font-family:'Poppins',sans-serif; }
+body {
+background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)),
+url('https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?q=80&w=2070&auto=format&fit=crop');
+background-size: cover;
+background-position: center;
+background-repeat: no-repeat;
+background-attachment: fixed;
+min-height: 100vh;
+display: flex;
+justify-content: center;
+align-items: flex-start;
+padding: 50px 10px;
+color: var(--text);
+}
+.form-container {
+width: 100%;
+max-width: 850px;
+background: rgba(255,255,255,0.1);
+backdrop-filter: blur(20px);
+border: 1px solid var(--border-glass);
+border-radius: 20px;
+padding: 40px;
+box-shadow: 0 8px 32px var(--shadow);
+animation: fadeIn 1s ease-out;
+}
+h1 { text-align: center; color: var(--primary); margin-bottom: 10px; font-size:2rem; }
+p.subtitle { text-align:center; margin-bottom:30px; color: var(--text-secondary); }
+.card {
+background: var(--card-bg);
+backdrop-filter: blur(10px);
+border: 1px solid var(--border-glass);
+border-radius: 12px;
+padding: 25px;
+margin-bottom: 25px;
+box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.card:hover {
+transform: translateY(-4px);
+box-shadow: 0 6px 24px rgba(0,0,0,0.3);
+}
+.card h2 {
+color: var(--primary);
+margin-bottom: 20px;
+font-size: 1.4rem;
+border-bottom:2px solid var(--primary);
+padding-bottom:5px;
+display:inline-block;
+}
+.grid {
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+gap:20px;
+}
+.form-group { display:flex; flex-direction:column; }
+.form-group.full { grid-column:1/-1; }
+label { margin-bottom:6px; font-weight:500; color: var(--text); }
+input, select, textarea {
+padding:10px 12px;
+border-radius:8px;
+border:1px solid var(--input-border);
+font-size:1rem;
+transition:0.3s;
+background: var(--input-bg);
+color: var(--text);
+}
+input::placeholder, textarea::placeholder { color: var(--placeholder); }
+input:focus, select:focus, textarea:focus {
+outline:none;
+border-color:var(--primary);
+box-shadow:0 0 0 3px rgba(63,127,255,0.2);
+}
+textarea { resize:vertical; }
+.checkbox-group { display:flex; align-items:center; gap:10px; margin-top:10px; }
+.checkbox-group input { width:auto; accent-color: var(--primary); }
+.submit-btn {
+width:100%;
+padding:15px;
+font-size:1.1rem;
+font-weight:600;
+background:linear-gradient(90deg,var(--primary),var(--secondary));
+color:#fff;
+border:none;
+border-radius:10px;
+cursor:pointer;
+transition: transform 0.3s, box-shadow 0.3s;
+}
+.submit-btn:hover { transform:translateY(-2px); box-shadow:0 6px 20px rgba(63,127,255,0.4); }
+a.back-btn {
+display:inline-block;
+margin-bottom:20px;
+color:var(--text);
+background:var(--input-bg);
+padding:8px 14px;
+border-radius:8px;
+text-decoration:none;
+transition:0.3s;
+border:1px solid var(--input-border);
+}
+a.back-btn:hover { background: rgba(255,255,255,0.2); transform: translateY(-2px); }
+@keyframes fadeIn { from {opacity:0; transform:translateY(20px);} to {opacity:1; transform:translateY(0);} }
+@media(max-width:768px){ .grid{grid-template-columns:1fr;} }
+</style><!-- (styles from addpackage, adjusted for glass) -->
+</head>
+<body>
+<div class="form-container">  <!-- Glass style as before -->
+    <h1>Add New Venue</h1>
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <label>Venue Name</label>
+            <input type="text" name="name" required>
+        </div>
+        <div class="form-group">
+            <label>Total Seats</label>
+            <input type="number" name="total_seats" min="1" required>
+        </div>
+        <div class="form-group full">
+            <label>Custom Seat Names (comma-separated, e.g., AB1,GK2)</label>
+            <textarea name="seat_layout" rows="3" required></textarea>
+        </div>
+        <button type="submit" class="submit-btn">Create Venue 🚌</button>
+    </form>
+</div>
+</body>
+</html>

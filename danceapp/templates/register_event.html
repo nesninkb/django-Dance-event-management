@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Register for Event</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root {
+    --bg1: #000000;
+    --bg2: #111111;
+    --bg3: #1a1a1a;
+    --primary: #ffffff;
+    --secondary: #e6e6e6;
+    --text: #ffffff;
+    --muted: #bfbfbf;
+    --glass: rgba(255,255,255,0.05);
+    --hover-glow: 0 4px 15px rgba(255,255,255,0.4);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    background: linear-gradient(135deg, var(--bg1), var(--bg2), var(--bg3));
+    padding: 20px;
+    color: var(--text);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+}
+
+h1 {
+    text-align: center;
+    color: var(--primary);
+    font-size: 2rem;
+    margin: 25px 0;
+    text-shadow: 0 0 8px rgba(255,255,255,0.4);
+}
+
+.button-row {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 480px;
+    margin-bottom: 20px;
+}
+
+.btn-small {
+    padding: 10px 16px;
+    border-radius: 25px;
+    border: 1px solid var(--primary);
+    background: transparent;
+    color: var(--primary);
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    text-align: center;
+    transition: 0.3s;
+    box-shadow: 0 0 10px rgba(255,255,255,0.2);
+}
+
+.btn-small:hover {
+    background: var(--primary);
+    color: #000;
+    box-shadow: var(--hover-glow);
+    transform: translateY(-2px);
+}
+
+.container {
+    max-width: 480px;
+    width: 100%;
+    margin: auto;
+    padding: 30px;
+    border-radius: 16px;
+    border: 1px solid rgba(255,255,255,0.08);
+    background: var(--glass);
+    backdrop-filter: blur(14px);
+    box-shadow: 0 0 25px rgba(255,255,255,0.08);
+    animation: fadeIn 1s ease;
+}
+
+label {
+    font-weight: 600;
+    display: block;
+    margin-bottom: 6px;
+    color: var(--muted);
+}
+
+input {
+    padding: 12px;
+    width: 100%;
+    margin-bottom: 18px;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.2);
+    background: #0f0f0f;
+    color: var(--text);
+    font-size: 15px;
+    transition: 0.3s ease;
+    outline: none;
+}
+
+input:focus {
+    border-color: var(--primary);
+    background: #1a1a1a;
+    box-shadow: var(--hover-glow);
+}
+
+.btn-primary {
+    display: inline-block;
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 12px;
+    background: linear-gradient(90deg, #ffffff, #d9d9d9);
+    color: #000;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 15px;
+    margin-top: 10px;
+    transition: 0.3s;
+    text-align: center;
+    text-decoration: none;
+    box-shadow: 0 0 10px rgba(255,255,255,0.3);
+}
+
+.btn-primary:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 20px rgba(255,255,255,0.6);
+}
+
+.error-msg {
+    text-align: center;
+    color: #ff4f4f;
+    font-weight: 600;
+    margin-bottom: 15px;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@media(max-width: 500px) {
+    .container {
+        padding: 20px;
+        width: 90%;
+    }
+
+    .button-row {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .btn-small {
+        width: 100%;
+    }
+}
+</style>
+</head>
+<body>
+
+<div class="button-row">
+    <a href="/usereventlist/" class="btn-small">← Back</a>
+    <a href="{% url 'eventdetails' event.id %}" class="btn-small">View Details</a>
+</div>
+
+<h1>Event Registration</h1>
+
+{% if error %}
+<p class="error-msg">{{ error }}</p>
+{% endif %}
+
+<div class="container">
+    <form method="post">
+        {% csrf_token %}
+
+        <label>Event Name</label>
+        <input type="text" value="{{ event.name }}" readonly>
+
+        <label>Your Name</label>
+        <input type="text" value="{{ user.username }}" readonly>
+
+        <label>Age Category</label>
+        <input type="text" value="{{ age_category }}" readonly>
+
+        {% if booking.status == 'pending' and event.venue %}
+            <a href="{% url 'user_seat_selection' booking.id %}" class="btn-primary">
+                Select Seats 🪑
+            </a>
+        {% else %}
+            <div class="btn-primary">
+                ✓ Already Booked
+            </div>
+        {% endif %}
+    </form>
+</div>
+
+</body>
+</html>

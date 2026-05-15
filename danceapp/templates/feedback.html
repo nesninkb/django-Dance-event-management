@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dance App - Feedback</title>
+
+  <style>
+    :root {
+      --bg1: #000000;
+      --bg2: #111111;
+      --bg3: #1a1a1a;
+      --accent: #ffffff;
+      --secondary: #cccccc;
+      --text: #ffffff;
+      --muted: #aaaaaa;
+      --panel: rgba(255, 255, 255, 0.05);
+    }
+
+    body {
+      font-family: "Poppins", sans-serif;
+      background: linear-gradient(135deg, var(--bg1), var(--bg2), var(--bg3));
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .feedback-card {
+      background: var(--panel);
+      padding: 2rem;
+      border-radius: 1.5rem;
+      box-shadow: 0 15px 35px rgba(255,255,255,0.08);
+      width: 90%;
+      max-width: 450px;
+      color: var(--text);
+      backdrop-filter: blur(12px);
+      position: relative;
+      animation: fadeUp 0.8s ease;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(25px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .home-btn {
+      position: absolute;
+      left: 0;
+      top: -55px;
+      background: #ffffff;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 0.9em;
+      color: #000000;
+      text-decoration: none;
+      font-weight: 600;
+      transition: 0.3s;
+      box-shadow: 0 6px 16px rgba(255,255,255,0.2);
+    }
+
+    .home-btn:hover {
+      transform: scale(1.08);
+      background: #e6e6e6;
+    }
+
+    h2 {
+      text-align: center;
+      color: var(--accent);
+      margin-bottom: 1.5rem;
+      text-shadow: 0 0 10px rgba(255,255,255,0.3);
+    }
+
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 0.4rem;
+      color: var(--text);
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 0.7rem;
+      border-radius: 0.8rem;
+      border: 1px solid rgba(255,255,255,0.2);
+      font-size: 1rem;
+      background: rgba(255,255,255,0.08);
+      color: var(--text);
+      outline: none;
+    }
+
+    input::placeholder,
+    textarea::placeholder {
+      color: var(--muted);
+    }
+
+    textarea {
+      resize: none;
+      height: 100px;
+    }
+
+    .rating {
+      display: flex;
+      justify-content: space-between;
+      margin: 0.6rem 0;
+    }
+
+    .rating input {
+      display: none;
+    }
+
+    .rating label {
+      font-size: 1.8rem;
+      color: rgba(255,255,255,0.3);
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .rating input:checked ~ label,
+    .rating label:hover,
+    .rating label:hover ~ label {
+      color: #ffffff;
+      text-shadow: 0 0 8px rgba(255,255,255,0.8);
+    }
+
+    button {
+      background: #ffffff;
+      color: #000000;
+      border: none;
+      padding: 0.9rem;
+      font-size: 1rem;
+      border-radius: 0.8rem;
+      cursor: pointer;
+      width: 100%;
+      font-weight: 600;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background: #e6e6e6;
+      transform: scale(1.05);
+    }
+
+    button:active {
+      transform: scale(0.95);
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="feedback-card">
+    
+    <a href="/home/" class="home-btn">← Home</a>
+
+    <h2>Share Your Feedback</h2>
+    <form method="POST">
+      {% csrf_token %}
+      <div class="form-group">
+        <label for="name">Name</label>
+        <input type="text" id="name" name="name" placeholder="Enter your name" required>
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" placeholder="Enter your email" required>
+      </div>
+
+      <div class="form-group">
+        <label for="message">Message</label>
+        <textarea id="message" name="message" placeholder="Write your feedback..." required></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>Rating</label>
+        <div class="rating">
+          <input type="radio" id="star5" name="rating" value="5"><label for="star5">&#9733;</label>
+          <input type="radio" id="star4" name="rating" value="4"><label for="star4">&#9733;</label>
+          <input type="radio" id="star3" name="rating" value="3"><label for="star3">&#9733;</label>
+          <input type="radio" id="star2" name="rating" value="2"><label for="star2">&#9733;</label>
+          <input type="radio" id="star1" name="rating" value="1"><label for="star1">&#9733;</label>
+        </div>
+      </div>
+
+      <button type="submit">Submit Feedback</button>
+    </form>
+  </div>
+
+</body>
+</html>

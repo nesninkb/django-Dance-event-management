@@ -1,0 +1,171 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Institution Dashboard</title>
+
+    <style>
+        :root {
+            --bg-dark: #000000;
+            --bg-light: #121212;
+            --card: rgba(255, 255, 255, 0.05);
+            --border: rgba(255, 255, 255, 0.15);
+            --text: #ffffff;
+            --muted: #bfbfbf;
+        }
+
+        body {
+            margin: 0;
+            font-family: Poppins, sans-serif;
+            background: linear-gradient(135deg, var(--bg-dark), var(--bg-light));
+            min-height: 100vh;
+            color: var(--text);
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            padding: 28px;
+            font-size: 24px;
+            font-weight: 600;
+            background: rgba(255,255,255,0.04);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+            letter-spacing: 1px;
+        }
+
+        /* Container Grid */
+        .container {
+            width: 90%;
+            margin: 40px auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+            gap: 25px;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--card);
+            padding: 25px;
+            border-radius: 16px;
+            text-align: center;
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--border);
+            transition: 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 12px 30px rgba(255,255,255,0.08);
+        }
+
+        .card h3 {
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .card p {
+            font-size: 14px;
+            color: var(--muted);
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-block;
+            padding: 9px 18px;
+            margin-top: 15px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            color: #ffffff;
+            border: 1px solid #ffffff;
+            background: transparent;
+            transition: 0.3s ease;
+        }
+
+        .btn:hover {
+            background: #ffffff;
+            color: #000000;
+        }
+
+        /* Logout special */
+        .logout {
+            border: 1px solid #ffffff;
+        }
+
+        .logout:hover {
+            background: #ffffff;
+            color: #000000;
+        }
+
+        @media (max-width: 600px) {
+            .header {
+                font-size: 20px;
+            }
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <div class="header">
+        Institution Dashboard
+    </div>
+
+    <div class="container">
+
+        <div class="card">
+            <h3>Manage Courses</h3>
+            <p>Add and manage dance Courses</p>
+            <a href="/list_courses/" class="btn">Open</a>
+        </div>
+
+        <div class="card">
+            <h3>Manage Events</h3>
+            <p>Create and view events</p>
+            <a href="/institution_events/" class="btn">Open</a>
+        </div>
+
+        <div class="card">
+            <h3>Manage Venue</h3>
+            <p>Create and view Venue</p>
+            <a href="/venue_list/" class="btn">Open</a>
+        </div>
+
+        <div class="card">
+            <h3>Manage Reels</h3>
+            <p>Add and manage Reels</p>
+            <a href="/institute_my_reels/" class="btn">Open</a>
+        </div>
+
+        <div class="card">
+            <h3>Students</h3>
+            <p>View registered students</p>
+            <a href="/studentslist/" class="btn">Open</a>
+        </div>
+
+        <div class="card">
+            <h3>Trainers</h3>
+            <p>View / assign trainers</p>
+            <a href="/listTrainer/" class="btn">Open</a>
+        </div>
+
+        <div class="card">
+            <h3>Profile</h3>
+            <p>View and update institution details</p>
+            <a href="/profile_institution/" class="btn">Open</a>
+        </div>
+
+        <div class="card">
+            <h3>Logout</h3>
+            <p>Exit institution dashboard</p>
+            <a href="{% url 'logout' %}" class="btn logout">Logout</a>
+        </div>
+
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Trainer Media Gallery</title>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <meta name="csrf-token" content="{{ csrf_token }}">
+
+    <style>
+
+    /* ===== Black and White Background and Text ===== */
+    body {
+        font-family: 'Poppins', sans-serif;
+        background: #000000; /* Black background */
+        color: #ffffff; /* White text */
+        margin: 0;
+        padding: 0;
+    }
+
+    .gallery-title {
+        text-align: center;
+        color: white;
+        font-weight: 700;
+        margin-bottom: 5px;
+    }
+
+    .gallery-sub {
+        text-align: center;
+        color: #ddd; /* Muted white for description */
+        margin-bottom: 40px;
+    }
+
+    /* ===== Media Card ===== */
+    .media-card {
+        width: 48%;
+        margin: 0 auto 40px auto;
+        background: rgba(0, 0, 0, 0.7); /* Darker background for the container */
+        border-radius: 20px;
+        backdrop-filter: blur(15px);
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
+        overflow: hidden;
+        transition: 0.4s;
+        animation: fadeInUp 0.8s ease;
+    }
+
+    .media-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
+    }
+
+    @media (max-width: 768px) {
+        .media-card { width: 95%; }
+    }
+
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(25px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ===== Media Area ===== */
+    .media-area {
+        height: 350px;
+        background: #000;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .media-area video,
+    .media-area img {
+        max-height: 100%;
+        max-width: 100%;
+        object-fit: contain;
+    }
+
+    .media-area audio {
+        width: 70%;
+    }
+
+    /* ===== Content ===== */
+    .post-header {
+        padding: 18px 20px 8px;
+        font-size: 20px;
+        font-weight: 600;
+        color: #fff;
+    }
+
+    .description-box {
+        padding: 0 20px 10px;
+        color: #ddd;
+        font-size: 14px;
+    }
+
+    /* ===== Like Section ===== */
+    .like-section {
+        padding: 0 20px 10px;
+    }
+
+    .like-btn {
+        border-radius: 25px;
+        padding: 6px 18px;
+        font-weight: 500;
+        background: #ffffff; /* White background for like button */
+        color: #000000; /* Black text for like button */
+    }
+
+    .like-count {
+        color: #ffcccc;
+        margin-left: 10px;
+    }
+
+    /* ===== Comment Form ===== */
+    .comment-form textarea {
+        resize: none;
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.1); /* Light gray background */
+        color: white;
+        border: 1px solid #ffffff;
+    }
+
+    .comment-form button {
+        border-radius: 20px;
+        background: #ffffff;
+        color: #000;
+    }
+
+    /* ===== Comments Box ===== */
+    .comments-box {
+        max-height: 180px;
+        overflow-y: auto;
+        padding: 12px 20px;
+        background: rgba(255, 255, 255, 0.12);
+        border-top: 1px solid rgba(255, 255, 255, 0.2);
+        color: white;
+    }
+
+    .comment-item {
+        margin-bottom: 8px;
+    }
+
+    .no-comment {
+        color: #ddd;
+        font-size: 13px;
+    }
+
+    </style>
+</head>
+
+<body>
+
+<div class="container mt-4">
+
+    <h2 class="gallery-title">Media Gallery</h2>
+    <p class="gallery-sub">Videos • Images • Audio</p>
+
+    {% for v in medias %}
+    <div class="media-card">
+
+        <!-- Media Section -->
+        <div class="media-area">
+            {% if v.mediatypes == "video" %}
+                <video controls>
+                    <source src="{{ v.mediapath.url }}">
+                </video>
+            {% elif v.mediatypes == "image" %}
+                <img src="{{ v.mediapath.url }}">
+            {% elif v.mediatypes == "audio" %}
+                <audio controls>
+                    <source src="{{ v.mediapath.url }}">
+                </audio>
+            {% endif %}
+        </div>
+
+        <!-- Title -->
+        <div class="post-header">{{ v.name }}</div>
+
+        <!-- Description -->
+        <p class="description-box">
+            {{ v.description|truncatechars:200 }}
+        </p>
+
+        <!-- Like -->
+        <div class="like-section">
+            <button class="btn btn-danger like-btn" data-id="{{ v.id }}">
+                ❤️ Like
+            </button>
+            <span class="like-count" id="like-count-{{ v.id }}">
+                {{ v.videolike_set.count }}
+            </span> Likes
+        </div>
+
+        <!-- Comment Form -->
+        <div class="px-3 comment-form">
+            <form action="/comment_video/{{ v.id }}/" method="POST">
+                {% csrf_token %}
+                <textarea name="comment"
+                          class="form-control"
+                          placeholder="Write a comment..."
+                          required></textarea>
+                <button class="btn btn-primary btn-sm mt-2">
+                    Comment
+                </button>
+            </form>
+        </div>
+
+        <!-- Comments -->
+        <div class="comments-box">
+            {% for c in v.videocomment_set.all %}
+                <div class="comment-item">
+                    <b>{{ c.username }}:</b> {{ c.comment }}
+                </div>
+            {% empty %}
+                <div class="no-comment">No comments yet.</div>
+            {% endfor %}
+        </div>
+
+    </div>
+    {% empty %}
+        <div class="text-center text-white">
+            <h5>No media uploaded yet.</h5>
+        </div>
+    {% endfor %}
+
+</div>
+
+<script>
+function getCSRFToken() {
+    return document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+}
+
+$(document).on("click", ".like-btn", function () {
+    let video_id = $(this).data("id");
+
+    $.ajax({
+        url: "/like_video/" + video_id + "/",
+        type: "POST",
+        headers: {
+            "X-CSRFToken": getCSRFToken()
+        },
+        success: function (resp) {
+            if (resp.status === "login_required") {
+                alert("Please login first!");
+            } else {
+                $("#like-count-" + video_id).text(resp.new_like_count);
+            }
+        },
+        error: function () {
+            alert("Error processing like");
+        }
+    });
+});
+</script>
+
+</body>
+</html>

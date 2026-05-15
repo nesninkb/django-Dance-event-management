@@ -1,0 +1,115 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{ trainer.full_name }} — Feedback</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+:root {
+  --bg: linear-gradient(135deg, #0a0a0a, #1a1a1a);
+  --panel: rgba(255,255,255,0.08);
+  --panel-hover: rgba(255,255,255,0.15);
+  --text: #fff;
+  --accent: #fff;
+  --btn-bg: rgba(255,255,255,0.1);
+  --btn-hover: rgba(255,255,255,0.2);
+  --rating: gold;
+}
+
+body {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  padding: 20px;
+}
+
+/* Container */
+.container {
+  max-width: 800px;
+  margin: auto;
+  background: var(--panel);
+  border-radius: 20px;
+  padding: 24px;
+  backdrop-filter: blur(12px);
+}
+
+/* Headings */
+h1 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* Back Button */
+.back-btn {
+  display: inline-block;
+  margin-bottom: 20px;
+  padding: 8px 16px;
+  border-radius: 10px;
+  text-decoration: none;
+  background: linear-gradient(135deg, #020004, #7b7879);
+  color: white;
+  transition: 0.3s;
+}
+.back-btn:hover {
+  opacity: 0.9;
+}
+
+/* Feedback Card */
+.feedback-card {
+  background: var(--panel);
+  padding: 16px;
+  border-radius: 14px;
+  margin-bottom: 16px;
+  transition: 0.3s;
+}
+.feedback-card:hover {
+  background: var(--panel-hover);
+}
+
+/* Rating */
+.rating {
+  color: var(--rating);
+  font-weight: bold;
+  display: inline-block;
+  margin-top: 5px;
+}
+
+/* Feedback Details */
+.feedback-card p {
+  margin: 8px 0;
+}
+.feedback-card small {
+  opacity: 0.7;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <a href="javascript:history.back()" class="back-btn">← Back</a>
+
+  <h1>{{ trainer.full_name }} — Feedback</h1>
+
+  {% for f in feedbacks %}
+    <div class="feedback-card">
+      <strong>{{ f.name }}</strong>
+      <span class="rating">Rating: {{ f.ratings }}/5</span>
+      <p>{{ f.message }}</p>
+      <small>{{ f.created_at|date:"M d, Y" }}</small>
+    </div>
+  {% empty %}
+    <p style="text-align:center;">No feedback available.</p>
+  {% endfor %}
+
+</div>
+
+</body>
+</html>

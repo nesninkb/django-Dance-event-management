@@ -1,0 +1,25 @@
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+<script>
+var options = {
+    "key": "{{ api_key }}",
+    "amount": "{{ amount|floatformat:0 }}00",
+    "currency": "INR",
+    "name": "Dance Training App",
+    "description": "Package Payment",
+    "order_id": "{{ order_id }}",
+    "handler": function (response){
+        window.location.href = "{% url 'pack_payment_success' package_id %}";
+    },
+    "prefill": {
+        "name": "{{ user.name }}",
+        "email": "{{ user.email }}"
+    },
+    "theme": {
+        "color": "#F37254"
+    }
+};
+
+var rzp1 = new Razorpay(options);
+rzp1.open();
+</script>

@@ -1,0 +1,195 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trainer List — Dance App</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+:root {
+  --bg1: #0a0a0a;
+  --bg2: #1a1a1a;
+  --panel: rgba(255,255,255,0.08);
+  --panel-hover: rgba(255,255,255,0.15);
+  --text: #fff;
+  --accent: #fff;
+  --btn-bg: rgba(255,255,255,0.1);
+  --btn-hover: rgba(255,255,255,0.2);
+}
+
+body {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  color: var(--text);
+  background: linear-gradient(135deg, #0a0a0a, #1a1a1a);
+  min-height: 100vh;
+  padding: 20px;
+}
+
+/* Container */
+.container {
+  max-width: 900px;
+  margin: auto;
+  background: var(--panel);
+  border-radius: 20px;
+  padding: 24px;
+  backdrop-filter: blur(12px);
+}
+
+/* Headings */
+h1 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* Top Actions */
+.top-actions {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+.book-btn {
+  display: inline-block;
+  padding: 8px 14px;
+  background: var(--btn-bg);
+  color: var(--text);
+  border-radius: 10px;
+  text-decoration: none;
+  text-align: center;
+  font-size: 14px;
+  transition: 0.3s;
+}
+.book-btn:hover {
+  background: var(--btn-hover);
+}
+
+/* Trainer Card */
+.trainer-card {
+  display: flex;
+  gap: 18px;
+  background: var(--panel);
+  border-left: 4px solid var(--accent);
+  border-radius: 14px;
+  padding: 16px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  transition: 0.3s;
+}
+.trainer-card:hover {
+  background: var(--panel-hover);
+}
+
+/* Avatar */
+.avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Details */
+.details span {
+  font-size: 12px;
+  background: rgba(255,255,255,0.1);
+  padding: 4px 8px;
+  border-radius: 10px;
+  margin-right: 5px;
+}
+
+/* Portfolio Preview */
+video, iframe, img {
+  max-width: 100%;
+  border-radius: 8px;
+  margin-top: 10px;
+}
+
+/* Actions inside card */
+.trainer-card > div:last-child a.book-btn {
+  display: block;
+  margin-bottom: 8px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+  <h1>Our Trainers</h1>
+
+  <!-- Top Action Buttons -->
+  <div class="top-actions">
+    <a href="{% url 'add_trainer' %}" class="book-btn">
+      + Add Trainer
+    </a>
+    <a href="{% url 'institutionhome' %}" class="book-btn">
+      ← Back to Home
+    </a>
+  </div>
+
+  {% for t in trainer %}
+  <div class="trainer-card">
+
+    <!-- Avatar -->
+    <div class="avatar">
+      {% if t.photo %}
+        <img src="{{ t.photo.url }}" alt="{{ t.full_name }}">
+      {% else %}
+        <img src="{% static 'images/default_user.png' %}" alt="Default User">
+      {% endif %}
+    </div>
+
+    <!-- Details -->
+    <div style="flex:1;">
+      <strong>{{ t.full_name }}</strong>
+      <p>{{ t.email }} | {{ t.phone_number }}</p>
+
+      <div class="details">
+        <span>{{ t.get_gender_display }}</span>
+        <span>{{ t.years_of_experience }} yrs exp</span>
+        <span>Status: {% if t.is_active %}Active{% else %}Inactive{% endif %}</span>
+      </div>
+
+      <!-- Portfolio Preview -->
+      {% if t.portfolio %}
+        {% with fname=t.portfolio.name|lower %}
+          {% if fname|slice:"-4:" in ".mp4 .mov .avi .mkv .webm .ogg" %}
+            <video controls width="100%" height="260">
+              <source src="{{ t.portfolio.url }}">
+            </video>
+          {% elif fname|slice:"-4:" == ".pdf" %}
+            <iframe src="{{ t.portfolio.url }}" width="100%" height="300"></iframe>
+          {% elif fname|slice:"-4:" in ".jpg .png .gif .bmp" or fname|slice:"-5:" in ".jpeg .webp" %}
+            <img src="{{ t.portfolio.url }}" alt="Portfolio">
+          {% else %}
+            <a href="{{ t.portfolio.url }}" target="_blank">Download File</a>
+          {% endif %}
+        {% endwith %}
+      {% endif %}
+    </div>
+
+    <!-- Actions -->
+    <div>
+      <a href="{% url 'trainer_feedback' t.id %}" class="book-btn">View Feedback</a>
+      <a href="{% url 'edit_trainer' t.id %}" class="book-btn">Edit</a>
+      <a href="{% url 'delete_trainer' t.id %}" class="book-btn" onclick="return confirm('Are you sure?');">Delete</a>
+    </div>
+
+  </div>
+  {% empty %}
+    <p style="text-align:center;">No trainers found.</p>
+  {% endfor %}
+
+</div>
+
+</body>
+</html>

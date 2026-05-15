@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cart List</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:"Poppins",sans-serif;
+}
+
+/* Dark Animated Background (Same as Login) */
+body{
+  background: linear-gradient(-45deg,#0a0016,#280042,#52008a,#7a00ff);
+  background-size:400% 400%;
+  animation: gradientMove 12s ease infinite;
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:20px;
+  color:white;
+}
+
+/* Main Container */
+.container{
+  width:100%;
+  max-width:1100px;
+  background: rgba(255,255,255,0.08);
+  padding:40px;
+  border-radius:30px;
+  backdrop-filter:blur(20px);
+  box-shadow:0 25px 60px rgba(0,0,0,0.6);
+  border:1px solid rgba(255,255,255,0.15);
+  animation: fadeIn 0.8s ease;
+}
+
+/* Title */
+h2{
+  text-align:center;
+  font-size:34px;
+  font-weight:700;
+  color:#ff4de7;
+  margin-bottom:35px;
+  text-shadow:0 0 20px rgba(255,77,231,0.9);
+  letter-spacing:1px;
+}
+
+/* Table */
+table{
+  width:100%;
+  border-collapse:collapse;
+  background: rgba(255,255,255,0.05);
+  border-radius:20px;
+  overflow:hidden;
+}
+
+/* Header */
+th{
+  background: linear-gradient(135deg,#ff4de7,#7a00ff);
+  padding:18px;
+  font-size:15px;
+  letter-spacing:1px;
+}
+
+/* Cells */
+td{
+  padding:18px;
+  text-align:center;
+  border-bottom:1px solid rgba(255,255,255,0.1);
+}
+
+tr:last-child td{
+  border-bottom:none;
+}
+
+tr{
+  transition:0.3s ease;
+}
+
+tr:hover{
+  background: rgba(255,255,255,0.08);
+  transform:scale(1.01);
+}
+
+/* Buttons */
+.btn{
+  padding:10px 20px;
+  border:none;
+  border-radius:30px;
+  cursor:pointer;
+  font-weight:600;
+  color:white;
+  transition:0.3s ease;
+}
+
+/* Remove Button */
+.btn-remove{
+  background: linear-gradient(90deg,#ff4b2b,#ff0000);
+}
+
+.btn-remove:hover{
+  transform:scale(1.1);
+  box-shadow:0 10px 25px rgba(255,0,0,0.6);
+}
+
+/* Total Section */
+.total-section{
+  margin-top:30px;
+  text-align:right;
+  font-size:20px;
+  font-weight:600;
+  color:#fff;
+}
+
+/* Checkout Button */
+.checkout-btn{
+  margin-top:15px;
+  padding:12px 28px;
+  border-radius:30px;
+  border:none;
+  cursor:pointer;
+  font-weight:600;
+  background: linear-gradient(90deg,#ff4de7,#7a00ff);
+  color:white;
+  transition:0.3s ease;
+}
+
+.checkout-btn:hover{
+  transform:scale(1.08);
+  box-shadow:0 10px 25px rgba(255,77,231,0.7);
+}
+
+/* Animations */
+@keyframes gradientMove{
+  0%{background-position:0% 50%;}
+  50%{background-position:100% 50%;}
+  100%{background-position:0% 50%;}
+}
+
+@keyframes fadeIn{
+  from{opacity:0;transform:translateY(-30px);}
+  to{opacity:1;transform:translateY(0);}
+}
+
+/* Responsive */
+@media(max-width:768px){
+  .container{
+    padding:25px;
+  }
+  h2{
+    font-size:24px;
+  }
+  table,th,td{
+    font-size:13px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+  <h2>🛒 My Cart</h2>
+
+  <table>
+    <tr>
+      <th>Costume</th>
+      <th>Price</th>
+      <th>Quantity</th>
+      <th>Total</th>
+      <th>Action</th>
+    </tr>
+
+    {% for item in cart_items %}
+    <tr>
+      <td>{{ item.costume.name }}</td>
+      <td>₹ {{ item.costume.price }}</td>
+      <td>{{ item.quantity }}</td>
+      <td>₹ {{ item.total_price }}</td>
+      <td>
+        <a href="/removecart/{{item.id}}/">
+          <button class="btn btn-remove">Remove</button>
+        </a>
+      </td>
+    </tr>
+    {% endfor %}
+  </table>
+
+  <div class="total-section">
+    Grand Total: ₹ {{ grand_total }}
+    <br>
+    <a href="/checkout/">
+      <button class="checkout-btn">Proceed to Checkout</button>
+    </a>
+  </div>
+
+</div>
+
+</body>
+</html>

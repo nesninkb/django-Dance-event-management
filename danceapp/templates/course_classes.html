@@ -1,0 +1,150 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{ course.course_name }} - Classes</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root {
+    --bg1: #000000;
+    --bg2: #1a1a1a;
+    --bg3: #2b2b2b;
+    --text: #ffffff;
+    --muted: #bfbfbf;
+    --accent: #ff0099;
+    --accent2: #7a00ff;
+    --panel: rgba(255,255,255,0.06);
+    --radius: 20px;
+}
+
+/* Body */
+body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    background: radial-gradient(circle at top, var(--bg3), var(--bg1));
+    color: var(--text);
+    min-height: 100vh;
+    padding: 30px 20px;
+}
+
+/* Back Button */
+.btn-back {
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border: none;
+    border-radius: var(--radius);
+    font-weight: 600;
+    color: var(--text);
+    padding: 10px 20px;
+    margin-bottom: 25px;
+    display: inline-block;
+    transition: 0.3s;
+    text-decoration: none;
+}
+.btn-back:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 15px var(--accent);
+}
+
+/* Page Title */
+h1 {
+    text-align: center;
+    margin-bottom: 30px;
+    color: var(--accent);
+}
+
+/* Class Cards */
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.card {
+    background: var(--panel);
+    border-radius: var(--radius);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,255,255,0.08);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.5);
+    padding: 20px;
+    flex: 1 1 calc(50% - 20px);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.card:hover {
+    transform: scale(1.02);
+    box-shadow: 0 25px 50px rgba(0,0,0,0.6);
+}
+
+/* Card Titles */
+.card h5 {
+    color: var(--accent);
+    font-weight: 600;
+    margin-bottom: 15px;
+}
+
+/* Labels */
+.card p strong {
+    color: var(--accent2);
+}
+
+/* Video Styling */
+video {
+    border-radius: var(--radius);
+    margin-top: 10px;
+    max-height: 300px;
+    width: 100%;
+}
+
+/* Responsive */
+@media(max-width:768px){
+    .card {
+        flex: 1 1 100%;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <a href="{% url 'institution_courses' course.institution.id %}" class="btn-back">
+        ← Back to Courses
+    </a>
+
+    <h1>{{ course.course_name }} - Classes</h1>
+
+    {% if classes %}
+    <div class="row">
+        {% for cls in classes %}
+        <div class="card">
+            <h5>{{ cls.name }}</h5>
+
+            <p><strong>Course:</strong> {% if cls.course %}{{ cls.course.course_name }}{% else %}Not Assigned{% endif %}</p>
+            <p><strong>Trainer:</strong> {% if cls.trainer %}{{ cls.trainer.full_name }}{% else %}Not Assigned{% endif %}</p>
+            <p><strong>Dance Style:</strong> {{ cls.get_dance_style_display }}</p>
+
+            {% if cls.description %}
+            <p>{{ cls.description }}</p>
+            {% endif %}
+
+            {% if cls.uploaded_video %}
+            <video controls>
+                <source src="{{ cls.uploaded_video.url }}">
+                Your browser does not support the video tag.
+            </video>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+        <p style="text-align:center; color: var(--accent); margin-top:20px;">No classes available for this course.</p>
+    {% endif %}
+
+</div>
+
+</body>
+</html>

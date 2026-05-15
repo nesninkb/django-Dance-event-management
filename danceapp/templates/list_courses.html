@@ -1,0 +1,284 @@
+<!doctype html>
+<html lang="en">
+{% load static %}
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dance Courses</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg1: #000;       /* main black background */
+  --bg2: #111;       /* dark gray for gradient */
+  --bg3: #222;       /* deeper shade for depth */
+  --glass: rgba(255, 255, 255, 0.08); /* glass effect */
+  --accent: #fff;    /* white accent for buttons/text */
+  font-family: 'Poppins', system-ui, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  min-height: 100vh;
+  background: linear-gradient(135deg, var(--bg1), var(--bg2), var(--bg3));
+  padding: 20px;
+  color: #fff;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.header {
+  max-width: 1000px;
+  margin: 0 auto 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background: rgba(255,255,255,0.05);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.5);
+}
+
+.header h2 {
+  font-weight: 600;
+}
+
+.header-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.back-btn,
+.add-btn {
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-weight: 700;
+  font-size: 12px;
+  text-decoration: none;
+  transition: 0.3s;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+}
+
+.back-btn { 
+  background: #333; 
+  color: #fff; 
+}
+.add-btn { 
+  background: #555; 
+  color: #fff; 
+}
+.back-btn:hover, .add-btn:hover { 
+  transform: scale(1.08); 
+  filter: brightness(1.3);
+  box-shadow: 0 6px 16px rgba(255,255,255,0.3);
+}
+
+/* GRID */
+.course-grid {
+  max-width: 1000px;
+  margin: auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 14px;
+}
+
+.course-card {
+  background: var(--glass);
+  border-radius: 16px;
+  overflow: hidden;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.35);
+  transition: transform 0.3s, box-shadow 0.3s, border 0.3s;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid rgba(255,255,255,0.05);
+  animation: fadeIn 0.5s ease forwards;
+  opacity: 0;
+}
+
+@keyframes fadeIn {
+  to { opacity: 1; }
+}
+
+.course-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 16px 35px rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.2);
+}
+
+.poster {
+  height: 110px;
+  background: #111;
+  overflow: hidden;
+  position: relative;
+}
+
+.poster img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s;
+}
+
+.course-card:hover .poster img {
+  transform: scale(1.05);
+}
+
+.course-body {
+  padding: 10px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.course-body h3 {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.desc {
+  font-size: 12px;
+  opacity: 0.85;
+  color: #ddd;
+  transition: color 0.3s;
+}
+
+.course-card:hover .desc {
+  color: #fff;
+}
+
+.meta {
+  font-size: 11px;
+  line-height: 1.4;
+  opacity: 0.9;
+  color: #ccc;
+}
+
+.status {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 14px;
+  font-size: 10px;
+  font-weight: 700;
+  margin-bottom: 4px;
+  background: #444;
+  color: #fff;
+  transition: background 0.3s, color 0.3s;
+}
+
+.course-card:hover .status {
+  background: #fff;
+  color: #000;
+}
+
+.course-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 6px;
+  font-size: 10px;
+  opacity: 0.8;
+  color: #bbb;
+}
+
+.actions {
+  display: flex;
+  gap: 6px;
+}
+
+.edit-btn, .delete-btn {
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 10px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: transform 0.3s, background 0.3s;
+}
+
+.edit-btn { 
+  background: #666; 
+  color: #fff; 
+}
+.delete-btn { 
+  background: #900; 
+  color: #fff; 
+}
+.edit-btn:hover, .delete-btn:hover { 
+  transform: scale(1.08); 
+  filter: brightness(1.2);
+}
+
+.empty {
+  text-align: center;
+  font-size: 13px;
+  opacity: 0.8;
+  padding: 40px 0;
+}
+
+@media (max-width: 480px) {
+  .poster { height: 90px; }
+  .course-body h3 { font-size: 13px; }
+  .meta { font-size: 9px; }
+  .actions { gap: 4px; }
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h2>Dance Courses</h2>
+  <div class="header-actions">
+    <a href="{% url 'add_course' %}" class="add-btn">+ Add Course</a>
+    <a href="{% url 'institutionhome' %}" class="back-btn">&larr; Back</a>
+  </div>
+</div>
+
+<div class="course-grid">
+{% for course in courses %}
+  <div class="course-card">
+    <div class="poster">
+      {% if course.poster %}
+        <img src="{{ course.poster.url }}" alt="{{ course.course_name }}">
+      {% else %}
+        <img src="{% static 'images/default_course.jpg' %}" alt="No Poster">
+      {% endif %}
+    </div>
+    <div class="course-body">
+      <span class="status">{{ course.get_course_type_display }}</span>
+      <h3>{{ course.course_name }}</h3>
+      {% if course.description %}
+        <div class="desc">{{ course.description|truncatechars:50 }}</div>
+      {% endif %}
+      <div class="meta">
+        <strong>Duration:</strong> {{ course.duration_in_weeks }} w<br>
+        <strong>Classes:</strong> {{ course.number_of_classes }}<br>
+        <strong>Fees:</strong> ${{ course.fees_per_head }}<br>
+        {% if course.tutor %}
+          <strong>Tutor:</strong> {{ course.tutor.full_name }}<br>
+        {% else %}
+          <strong>Tutor:</strong> Not assigned<br>
+        {% endif %}
+      </div>
+      <div class="course-footer">
+        <span>{{ course.created_at|date:"d M Y" }}</span>
+        <div class="actions">
+          <a href="{% url 'list_class' course.id %}" class="edit-btn">Classes</a>
+          <a href="{% url 'edit_course' course.id %}" class="edit-btn">Edit</a>
+          <a href="{% url 'delete_course' course.id %}" class="delete-btn" onclick="return confirm('Delete this course?');">Delete</a>
+        </div>
+      </div>
+    </div>
+  </div>
+{% empty %}
+  <div class="empty">No courses available yet.</div>
+{% endfor %}
+</div>
+
+</body>
+</html>

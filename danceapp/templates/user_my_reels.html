@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Uploads</title>
+
+<!-- Bootstrap 5 CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+:root {
+    --bg1: #0a0016; /* Dark purple/black */
+    --bg2: #1a1a2e; /* Panel background */
+    --text: #040303;
+    --muted: #bfbfbf;
+    --accent1: #ff0099;
+    --accent2: #7a00ff;
+    --hover-shadow: 0 8px 20px rgba(255, 77, 231, 0.4);
+    --radius: 12px;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background: var(--bg1);
+    color: var(--text);
+    margin: 0;
+    padding: 30px 15px;
+}
+
+/* Back button */
+.back-btn {
+    display: inline-block;
+    margin-bottom: 20px;
+    padding: 8px 16px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--text);
+    background: var(--bg2);
+    border-radius: var(--radius);
+    text-decoration: none;
+    border: 1px solid var(--muted);
+    transition: all 0.2s ease;
+}
+.back-btn:hover {
+    background: linear-gradient(90deg, var(--accent1), var(--accent2));
+    color: #fff;
+    transform: translateY(-2px);
+}
+
+/* Heading */
+.heading {
+    font-weight: 700;
+    font-size: 1.75rem;
+    color: var(--accent1);
+}
+
+/* Card for table */
+.card {
+    border-radius: var(--radius);
+    background: var(--bg2);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.6);
+    padding: 20px;
+}
+
+/* Buttons */
+.btn-success {
+    background: linear-gradient(90deg, var(--accent1), var(--accent2));
+    border: none;
+    color: #fff;
+    transition: all 0.3s ease;
+}
+.btn-success:hover {
+    background: linear-gradient(90deg, var(--accent2), var(--accent1));
+    box-shadow: var(--hover-shadow);
+    transform: translateY(-2px);
+}
+
+.btn-primary {
+    background: transparent;
+    border: 1px solid var(--accent1);
+    color: var(--accent1);
+    transition: all 0.3s ease;
+}
+.btn-primary:hover {
+    background: var(--accent1);
+    color: #fff;
+    box-shadow: var(--hover-shadow);
+}
+
+.btn-danger {
+    background: #ff4d4d;
+    border: none;
+    color: #fff;
+    transition: all 0.3s ease;
+}
+.btn-danger:hover {
+    background: #ff1a1a;
+    box-shadow: 0 8px 20px rgba(255,0,0,0.4);
+    transform: translateY(-2px);
+}
+
+/* Table styles */
+.table-responsive {
+    margin-top: 15px;
+    overflow-x: auto;
+}
+
+.table thead {
+    background: #1f1f3a;
+    color: var(--accent1);
+}
+.table tbody tr:hover {
+    background: rgba(255,0,150,0.1);
+}
+.table td, .table th {
+    vertical-align: middle;
+    color: var(--text);
+}
+
+/* Info alert for no uploads */
+.alert-info {
+    background: rgba(255,255,255,0.05);
+    color: var(--text);
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+/* Responsive */
+@media(max-width:768px){
+    .heading { font-size: 1.5rem; }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+    <!-- Back Button -->
+    <a href="/reels_view/" class="back-btn">← Back</a>
+    
+    <div class="text-center mb-4">
+        <h2 class="heading">📁 My Uploaded Media</h2>
+        <p class="text-muted">View all files you have uploaded</p>
+        <a href="/add_user_reels/" class="btn btn-success btn-sm mt-2">+ Add Reels</a>
+    </div>
+
+    <div class="card p-3">
+        {% if media_list %}
+        <div class="table-responsive">
+        <table class="table table-bordered table-hover text-center align-middle">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Type</th>
+                    <th>Category</th>
+                    <th>Media File</th>
+                    <th>Uploaded At</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for item in media_list %}
+                <tr>
+                    <td>{{ item.name }}</td>
+                    <td>{{ item.mediatypes }}</td>
+                    <td>{{ item.categories }}</td>
+                    <td>
+                        <a href="{{ item.mediapath.url }}" class="btn btn-primary btn-sm" target="_blank">
+                            View File
+                        </a>
+                    </td>
+                    <td>{{ item.created_at }}</td>
+                    <td>
+                        <a href="{% url 'user_delete_reels' item.id %}" 
+                           class="btn btn-danger btn-sm"
+                           onclick="return confirm('Are you sure you want to delete this media?');">
+                           Delete
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        </div>
+        {% else %}
+            <div class="alert alert-info text-center">No media uploaded yet.</div>
+        {% endif %}
+    </div>
+</div>
+
+</body>
+</html>

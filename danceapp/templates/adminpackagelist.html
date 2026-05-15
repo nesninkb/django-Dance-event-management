@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Package List</title>
+
+<style>
+
+/* Global Styles */
+body{
+    margin:0;
+    padding:0;
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    min-height:100vh;
+    background:#000;
+    color:#fff;
+    display:flex;
+    justify-content:center;
+    align-items:flex-start;
+    padding-top:40px;
+}
+
+/* Container */
+.container{
+    background:#111;
+    width:95%;
+    max-width:1200px;
+    padding:30px;
+    border-radius:15px;
+    box-shadow:0 15px 30px rgba(0,0,0,0.6);
+}
+
+/* Title */
+.title{
+    text-align:center;
+    color:#fff;
+    font-size:2.5em;
+    margin-bottom:30px;
+    font-weight:bold;
+}
+
+/* Back Button */
+.backbtn{
+    display:inline-block;
+    background:#fff;
+    color:#000;
+    padding:10px 20px;
+    text-decoration:none;
+    border-radius:8px;
+    font-size:15px;
+    font-weight:600;
+    margin-bottom:20px;
+    transition:0.3s;
+}
+
+.backbtn:hover{
+    background:#ddd;
+}
+
+/* Table */
+table{
+    width:100%;
+    border-collapse:collapse;
+    background:#000;
+    border-radius:10px;
+    overflow:hidden;
+}
+
+/* Header */
+thead{
+    background:#fff;
+    color:#000;
+}
+
+thead th{
+    padding:15px 20px;
+    font-size:1.1em;
+}
+
+/* Body Rows */
+tbody tr{
+    border-bottom:1px solid #333;
+    transition:0.2s;
+}
+
+tbody td{
+    padding:15px 20px;
+    text-align:center;
+    color:#ddd;
+}
+
+tbody tr:hover{
+    background:#111;
+}
+
+/* Image */
+tbody tr td img{
+    border-radius:8px;
+    width:60px;
+    height:60px;
+    object-fit:cover;
+}
+
+/* Delete Button */
+.delete{
+    background:#fff;
+    color:#000;
+    padding:6px 14px;
+    border-radius:6px;
+    text-decoration:none;
+    font-weight:600;
+    transition:0.3s;
+}
+
+.delete:hover{
+    background:#ccc;
+}
+
+/* No Data */
+.no-users{
+    text-align:center;
+    margin-top:20px;
+    font-size:1.3em;
+    color:#fff;
+}
+
+/* Responsive */
+@media screen and (max-width:768px){
+
+.container{
+    width:90%;
+    padding:20px;
+}
+
+.title{
+    font-size:2em;
+}
+
+table{
+    font-size:0.9em;
+}
+
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1 class="title">Package List</h1>
+
+<a href="/adminhome/" class="backbtn">Back</a>
+
+{% if data %}
+
+<table>
+
+<thead>
+<tr>
+<th>Trainer choice</th>
+<th>Package</th>
+<th>Description</th>
+<th>Fees</th>
+<th>Duration</th>
+<th>How</th>
+<th>Image</th>
+<th>Delete</th>
+</tr>
+</thead>
+
+<tbody>
+
+{% for user in data %}
+
+<tr>
+<td>{{ user.type }}</td>
+<td>{{ user.package_name }}</td>
+<td>{{ user.description }}</td>
+<td>{{ user.fees }}</td>
+<td>{{ user.duration }}</td>
+<td>{{ user.how }}</td>
+
+<td>
+{% if user.image %}
+<img src="{{ user.image.url }}" alt="Image">
+{% else %}
+No Image
+{% endif %}
+</td>
+
+<td>
+<a href="{% url 'deletepackage' user.id %}" class="delete">Delete</a>
+</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+</table>
+
+{% else %}
+
+<div class="no-users">No packagelist Plans Found.</div>
+
+{% endif %}
+
+</div>
+
+</body>
+</html>
